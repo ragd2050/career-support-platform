@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
+import { getAdminUser } from "@/lib/admin-auth";
 import { PreviewClient } from "@/components/preview/PreviewClient";
 
 export const dynamic = "force-dynamic";
@@ -16,11 +17,12 @@ export default async function PreviewPage({ params }: Props) {
 
   const { id } = await params;
 
+  // Admins can view any student's resume (needed for the "View Resume"
+  // link on the admin Users page); everyone else only their own.
+  const admin = await getAdminUser();
+
   const resume = await prisma.resume.findFirst({
-    where: {
-      id,
-      user: { clerkId: userId }, // ✅ only this user's resume
-    },
+    where: admin ? { id } : { id, user: { clerkId: userId } },
     include: {
       personalInfo: true,
       summary: true,
