@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title data-ar="لوحة الإدارة | منصة الدعم المهني" data-en="Admin Dashboard | Career Support Platform">لوحة الإدارة | منصة الدعم المهني</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* =============================================
+   ADMIN DASHBOARD — DAH Design System v2
+   ============================================= */
+
+:root {
+  --maroon:        #8B1E24;
+  --maroon-dark:   #7A1820;
+  --maroon-deep:   #6A1218;
+  --maroon-soft:   rgba(139,30,36,.07);
+  --gold:          #D4A63A;
+  --gold-light:    #E6C36A;
+  --gold-subtle:   rgba(212,166,58,.12);
+  --bg:            #F4F5F7;
+  --bg-subtle:     #FAFAFA;
+  --white:         #FFFFFF;
+  --text-dark:     #111827;
+  --text-body:     #374151;
+  --text-muted:    #6B7280;
+  --text-faint:    #9CA3AF;
+  --border:        #E5E7EB;
+  --border-strong: #D1D5DB;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.05);
+  --shadow-xl: 0 20px 48px rgba(0,0,0,.14);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --transition: all .2s ease;
+  --transition-slow: all .35s ease;
+  --font-ar: 'Cairo', sans-serif;
+  --font-en: 'Poppins', sans-serif;
+  --nav-h: 68px;
+  --green:       #059669;
+  --green-light: #D1FAE5;
+  --green-mid:   rgba(5,150,105,.12);
+  --blue:        #2563EB;
+  --blue-light:  #DBEAFE;
+  --blue-mid:    rgba(37,99,235,.1);
+  --amber:       #D97706;
+  --amber-light: #FEF3C7;
+  --amber-mid:   rgba(217,119,6,.1);
+  --rose:        #E11D48;
+  --rose-light:  #FFE4E6;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-ar);
+  background: var(--bg);
+  color: var(--text-body);
+  line-height: 1.7;
+  direction: rtl;
+  overflow-x: hidden;
+}
+body.ltr { direction: ltr; font-family: var(--font-en); }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--maroon); }
+
+/* ── TOPBAR — stripped to essentials ── */
+.topbar {
+  background: var(--maroon-deep);
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+.topbar-inner {
+  max-width: 1380px; margin: 0 auto; padding: 0 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%;
+}
+.topbar-brand {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(212,166,58,.2); color: var(--gold-light);
+  border: 1px solid rgba(212,166,58,.3); border-radius: 100px;
+  padding: .12rem .7rem; font-size: .7rem; font-weight: 700; letter-spacing: .4px;
+}
+.lang-switch { display: flex; align-items: center; gap: 2px; }
+.lang-switch button {
+  color: rgba(255,255,255,.55); font-weight: 600; font-size: .72rem;
+  padding: .1rem .5rem; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 3px; transition: var(--transition); background: none;
+}
+.lang-switch button.active { color: var(--maroon-deep); background: var(--gold-light); border-color: var(--gold-light); }
+
+/* ── NAVBAR ── */
+.navbar {
+  position: sticky; top: 0; left: 0; right: 0; z-index: 900;
+  background: var(--white);
+  border-bottom: 2px solid var(--maroon);
+  height: var(--nav-h);
+  display: flex; align-items: center;
+  padding: 0 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+.nav-inner {
+  max-width: 1380px; margin: 0 auto; width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+}
+.nav-logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+.nav-logo-mark {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; border-radius: 0; background: transparent;
+}
+.nav-logo-mark img { width: 100%; height: 100%; object-fit: contain; }
+.nav-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+.nav-logo-ar { font-size: .97rem; font-weight: 800; color: var(--maroon); }
+.nav-logo-en { font-size: .58rem; font-weight: 600; color: var(--text-muted); letter-spacing: 1.2px; text-transform: uppercase; margin-top: 1px; }
+.nav-divider { width: 1px; height: 30px; background: var(--border); flex-shrink: 0; }
+
+.nav-links { display: flex; align-items: center; gap: .1rem; flex: 1; justify-content: center; }
+.nav-links a {
+  color: var(--text-muted); font-size: .875rem; font-weight: 600;
+  padding: .55rem 1rem; border-radius: var(--radius-sm);
+  transition: var(--transition); white-space: nowrap;
+}
+.nav-links a:hover { color: var(--maroon); background: var(--maroon-soft); }
+.nav-links a.active { color: var(--maroon); background: var(--maroon-soft); font-weight: 700; }
+
+.nav-admin-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: var(--maroon-soft); color: var(--maroon);
+  border: 1px solid rgba(139,30,36,.15);
+  border-radius: 100px; padding: .3rem .9rem;
+  font-size: .75rem; font-weight: 800;
+}
+.nav-actions { display: flex; align-items: center; gap: .6rem; flex-shrink: 0; }
+
+.btn-nav-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); border: 1px solid var(--border);
+  transition: var(--transition); position: relative; background: white;
+}
+.btn-nav-icon:hover { border-color: var(--maroon); color: var(--maroon); background: var(--maroon-soft); }
+.notif-dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold); border: 1.5px solid white;
+}
+body.ltr .notif-dot { right: auto; left: 4px; }
+
+.btn-nav-logout {
+  display: inline-flex; align-items: center; gap: .4rem;
+  color: var(--text-muted); font-size: .82rem; font-weight: 600;
+  padding: .45rem .9rem; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); transition: var(--transition); background: white;
+}
+.btn-nav-logout:hover { border-color: var(--rose); color: var(--rose); background: var(--rose-light); }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; }
+.hamburger span { width: 22px; height: 2px; background: var(--maroon); border-radius: 2px; transition: var(--transition); display: block; }
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+.mobile-menu {
+  display: none; position: fixed; top: calc(var(--nav-h) + 36px); left: 0; right: 0;
+  background: white; border-top: 2px solid var(--maroon);
+  border-bottom: 1px solid var(--border);
+  padding: .6rem; z-index: 899; flex-direction: column; gap: 2px;
+  box-shadow: var(--shadow-md);
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  color: var(--text-body); font-size: .9rem; font-weight: 600;
+  padding: .75rem 1rem; border-radius: var(--radius-sm); transition: var(--transition);
+}
+.mobile-menu a:hover { background: var(--maroon-soft); color: var(--maroon); }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: .65rem 1.5rem; border-radius: var(--radius-sm);
+  font-weight: 700; font-size: .875rem; transition: var(--transition);
+  cursor: pointer; border: 1.5px solid transparent; white-space: nowrap; font-family: inherit;
+}
+.btn-primary { background: var(--maroon); color: white; border-color: var(--maroon); }
+.btn-primary:hover { background: var(--maroon-dark); box-shadow: 0 4px 12px rgba(139,30,36,.3); }
+.btn-outline { background: transparent; color: var(--maroon); border-color: var(--maroon); }
+.btn-outline:hover { background: var(--maroon); color: white; }
+.btn-gold { background: var(--gold); color: var(--maroon-deep); border-color: var(--gold); font-weight: 800; }
+.btn-gold:hover { background: var(--gold-light); box-shadow: 0 4px 12px rgba(212,166,58,.35); }
+.btn-white { background: white; color: var(--text-dark); border-color: rgba(255,255,255,.3); }
+.btn-white:hover { background: rgba(255,255,255,.9); }
+.btn-sm { padding: .42rem 1rem; font-size: .8rem; }
+.btn-xs { padding: .28rem .65rem; font-size: .73rem; }
+.btn-ghost { background: transparent; color: var(--text-muted); border-color: var(--border); }
+.btn-ghost:hover { border-color: var(--maroon); color: var(--maroon); background: var(--maroon-soft); }
+.btn-danger { background: transparent; color: var(--rose); border-color: var(--rose-light); }
+.btn-danger:hover { background: var(--rose-light); }
+.container { max-width: 1380px; margin: 0 auto; padding: 0 1.5rem; }
+
+/* ── PAGE HEADER — compact ── */
+.page-header {
+  background: linear-gradient(130deg, var(--maroon-deep) 0%, var(--maroon) 60%, #A0282E 100%);
+  padding: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.page-header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.5rem; flex-wrap: wrap; position: relative; z-index: 1;
+}
+.page-header-left { display: flex; flex-direction: column; gap: .25rem; }
+.breadcrumb {
+  display: flex; align-items: center; gap: .4rem;
+  font-size: .73rem; color: rgba(255,255,255,.5);
+}
+.breadcrumb a { color: rgba(255,255,255,.75); transition: var(--transition); }
+.breadcrumb a:hover { color: var(--gold-light); }
+.breadcrumb span { color: rgba(255,255,255,.25); }
+.page-header-eyebrow {
+  display: inline-flex; align-items: center; gap: .4rem;
+  color: var(--gold-light); font-size: .7rem; font-weight: 700;
+  letter-spacing: 1.8px; text-transform: uppercase; margin: .3rem 0 .2rem;
+}
+.page-header-title {
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  font-weight: 800; color: white; line-height: 1.25;
+}
+.page-header-desc { color: rgba(255,255,255,.65); font-size: .82rem; max-width: 480px; line-height: 1.5; margin-top: .2rem; }
+.page-header-actions { display: flex; gap: .65rem; flex-wrap: wrap; align-items: center; }
+
+/* ── ADMIN TABS NAV ── */
+.admin-tabs-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: var(--nav-h); z-index: 800;
+}
+.admin-tabs-inner {
+  max-width: 1380px; margin: 0 auto; padding: 0 1.5rem;
+  display: flex; align-items: center; overflow-x: auto;
+  scrollbar-width: none;
+}
+.admin-tabs-inner::-webkit-scrollbar { display: none; }
+.admin-tab {
+  display: flex; align-items: center; gap: .45rem;
+  padding: .85rem 1.2rem; font-size: .84rem; font-weight: 700;
+  color: var(--text-muted); border-bottom: 2px solid transparent;
+  transition: var(--transition); cursor: pointer; white-space: nowrap;
+  background: transparent; margin-bottom: -1px;
+}
+.admin-tab:hover { color: var(--text-dark); }
+.admin-tab.active { color: var(--maroon); border-bottom-color: var(--maroon); }
+.admin-tab svg { flex-shrink: 0; opacity: .7; }
+.admin-tab.active svg { opacity: 1; }
+.tab-count {
+  background: var(--border); color: var(--text-muted);
+  border-radius: 100px; padding: .06rem .48rem;
+  font-size: .68rem; font-weight: 800; line-height: 1.5;
+}
+.admin-tab.active .tab-count { background: var(--maroon); color: white; }
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── MAIN CONTENT ── */
+.admin-content { padding: 1.75rem 0 4rem; }
+
+/* ── OVERVIEW LAYOUT ── */
+.overview-layout { display: flex; flex-direction: column; gap: 1.5rem; }
+
+/* ── STAT CARDS ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  box-shadow: var(--shadow-xs);
+  transition: var(--transition-slow);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+}
+.stat-card::before {
+  content: '';
+  position: absolute; top: 0; right: 0; left: 0;
+  height: 2px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.stat-card.maroon::before { background: var(--maroon); }
+.stat-card.green::before  { background: var(--green); }
+.stat-card.gold::before   { background: var(--gold); }
+.stat-card.blue::before   { background: var(--blue); }
+.stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--border-strong); }
+
+.stat-card-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.stat-icon {
+  width: 42px; height: 42px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.stat-card.maroon .stat-icon { background: var(--maroon-soft); color: var(--maroon); }
+.stat-card.green  .stat-icon { background: var(--green-mid);  color: var(--green); }
+.stat-card.gold   .stat-icon { background: var(--gold-subtle); color: var(--amber); }
+.stat-card.blue   .stat-icon { background: var(--blue-mid);   color: var(--blue); }
+
+.stat-trend {
+  display: inline-flex; align-items: center; gap: .25rem;
+  font-size: .7rem; font-weight: 700; padding: .18rem .5rem;
+  border-radius: 100px;
+}
+.stat-trend.up      { background: var(--green-light); color: var(--green); }
+.stat-trend.neutral { background: var(--border); color: var(--text-muted); }
+
+.stat-value { font-size: 2rem; font-weight: 800; color: var(--text-dark); line-height: 1; letter-spacing: -1px; }
+.stat-label { font-size: .78rem; color: var(--text-muted); font-weight: 600; }
+.stat-sub   { font-size: .72rem; color: var(--text-faint); margin-top: .1rem; }
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;
+}
+.section-title {
+  font-size: .95rem; font-weight: 800; color: var(--text-dark);
+  display: flex; align-items: center; gap: .5rem;
+}
+.section-title-accent { width: 3px; height: 16px; background: var(--maroon); border-radius: 2px; flex-shrink: 0; }
+
+/* ── MAIN DASHBOARD GRID — overview only has one column now ── */
+.dashboard-main { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* ── PANEL ── */
+.panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.panel:hover { box-shadow: var(--shadow-sm); }
+.panel-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+  gap: 1rem; flex-wrap: wrap;
+}
+.panel-title {
+  font-size: .9rem; font-weight: 800; color: var(--text-dark);
+  display: flex; align-items: center; gap: .5rem;
+}
+.panel-title-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--maroon); flex-shrink: 0; }
+.panel-body { padding: 1.25rem 1.5rem; }
+.panel-body-tight { padding: 0; }
+.panel-footer {
+  padding: .8rem 1.5rem; border-top: 1px solid var(--border);
+  background: var(--bg-subtle); display: flex; align-items: center; justify-content: space-between;
+}
+.panel-footer-text { font-size: .75rem; color: var(--text-faint); }
+.panel-link { font-size: .78rem; font-weight: 700; color: var(--maroon); transition: var(--transition); }
+.panel-link:hover { text-decoration: underline; }
+
+/* ── BAR CHART ── */
+.chart-bars {
+  display: flex; align-items: flex-end; gap: .45rem;
+  padding-bottom: .2rem;
+}
+.chart-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: .35rem; flex: 1; }
+.chart-bar {
+  width: 100%; border-radius: 4px 4px 0 0; min-height: 4px;
+  background: linear-gradient(180deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+  transition: opacity .15s; cursor: pointer;
+}
+.chart-bar.gold-bar { background: linear-gradient(180deg, var(--gold) 0%, #b8882a 100%); }
+.chart-bar:hover { opacity: .75; }
+.chart-bar-label { font-size: .67rem; color: var(--text-faint); font-weight: 600; white-space: nowrap; }
+.chart-legend { display: flex; gap: 1rem; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: .35rem; font-size: .75rem; color: var(--text-muted); font-weight: 600; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── DONUT CHART ── */
+.donut-wrap { display: flex; align-items: center; gap: 1.5rem; }
+.donut-svg { flex-shrink: 0; }
+.donut-legend { display: flex; flex-direction: column; gap: .55rem; flex: 1; }
+.donut-item { display: flex; align-items: center; gap: .55rem; font-size: .8rem; }
+.donut-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.donut-item-label { color: var(--text-muted); flex: 1; }
+.donut-item-val { font-weight: 800; color: var(--text-dark); }
+
+/* ── SYSTEM STATUS BAR ── */
+.system-status {
+  display: flex; align-items: center; justify-content: space-between;
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: .8rem 1.25rem;
+  box-shadow: var(--shadow-xs); gap: 1rem; flex-wrap: wrap;
+}
+.status-items { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.status-item { display: flex; align-items: center; gap: .4rem; font-size: .78rem; font-weight: 600; color: var(--text-muted); }
+.status-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.status-badge-dot.warn { background: var(--amber); }
+.status-timestamp { font-size: .72rem; color: var(--text-faint); }
+
+/* ── TOP FEATURES ── */
+.feature-row {
+  display: flex; align-items: center; gap: .9rem;
+  padding: .8rem 1.5rem; border-bottom: 1px solid var(--border);
+  transition: var(--transition);
+}
+.feature-row:last-child { border-bottom: none; }
+.feature-row:hover { background: var(--bg-subtle); }
+.feature-rank {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--border); color: var(--text-muted);
+  font-weight: 800; font-size: .72rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.feature-rank.top { background: var(--gold-subtle); color: var(--amber); border: 1px solid rgba(212,166,58,.3); }
+.feature-info { flex: 1; min-width: 0; }
+.feature-name { font-size: .825rem; font-weight: 700; color: var(--text-dark); }
+.feature-desc { font-size: .72rem; color: var(--text-faint); }
+.feature-bar-wrap { width: 80px; display: flex; flex-direction: column; gap: .2rem; }
+.feature-bar-bg { height: 5px; background: var(--border); border-radius: 10px; overflow: hidden; }
+.feature-bar-fill { height: 100%; background: var(--maroon); border-radius: 10px; transition: width .6s ease; }
+.feature-pct { font-size: .7rem; font-weight: 700; color: var(--text-muted); text-align: center; }
+
+/* ── ANALYTICS TAB ── */
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+.monthly-stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.monthly-stat {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.2rem 1.3rem;
+  box-shadow: var(--shadow-xs); transition: var(--transition);
+  position: relative; overflow: hidden;
+}
+.monthly-stat::after {
+  content: ''; position: absolute; bottom: 0; right: 0; left: 0; height: 2px;
+}
+.monthly-stat.m1::after { background: var(--maroon); }
+.monthly-stat.m2::after { background: var(--green); }
+.monthly-stat.m3::after { background: var(--blue); }
+.monthly-stat.m4::after { background: var(--gold); }
+.monthly-stat:hover { box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+.monthly-stat-val { font-size: 1.6rem; font-weight: 800; color: var(--text-dark); margin-bottom: .2rem; letter-spacing: -.5px; }
+.monthly-stat-lbl { font-size: .75rem; color: var(--text-muted); font-weight: 600; }
+.monthly-stat-change { font-size: .72rem; margin-top: .4rem; font-weight: 700; color: var(--green); display: flex; align-items: center; gap: .2rem; }
+
+/* ── LINE CHART ── */
+.line-chart { position: relative; height: 160px; margin: .75rem 0 .25rem; }
+.line-chart svg { width: 100%; height: 100%; overflow: visible; }
+.chart-grid-line { stroke: var(--border); stroke-width: 1; }
+.chart-path { fill: none; stroke: var(--maroon); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.chart-path-gold { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.chart-x-label { font-size: .63rem; fill: var(--text-faint); text-anchor: middle; font-family: var(--font-ar); font-weight: 600; }
+
+/* ── DATA TABLE ── */
+.data-table-wrap { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; font-size: .845rem; }
+.data-table th {
+  padding: .7rem 1.25rem; font-weight: 700; font-size: .71rem;
+  color: var(--text-faint); text-transform: uppercase; letter-spacing: .6px;
+  border-bottom: 1px solid var(--border); text-align: right;
+  background: var(--bg-subtle); white-space: nowrap;
+}
+body.ltr .data-table th { text-align: left; }
+.data-table td {
+  padding: .85rem 1.25rem; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: middle;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg-subtle); }
+.user-cell { display: flex; align-items: center; gap: .7rem; }
+.user-avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .75rem; color: white;
+}
+.user-name  { font-weight: 700; color: var(--text-dark); font-size: .845rem; }
+.user-email { font-size: .72rem; color: var(--text-faint); }
+.status-badge {
+  display: inline-flex; align-items: center; gap: .28rem;
+  padding: .18rem .6rem; border-radius: 100px; font-size: .7rem; font-weight: 700;
+}
+.status-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+.status-active   { background: var(--green-light); color: var(--green); }
+.status-active::before { background: var(--green); }
+.status-inactive { background: var(--border); color: var(--text-faint); }
+.status-inactive::before { background: var(--text-faint); }
+.status-pending  { background: var(--amber-light); color: var(--amber); }
+.status-pending::before { background: var(--amber); }
+.action-btns { display: flex; gap: .35rem; align-items: center; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex; gap: .9rem; align-items: center; flex-wrap: wrap;
+  justify-content: space-between; margin-bottom: 1.25rem;
+}
+.search-box {
+  display: flex; align-items: center; gap: .45rem;
+  border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  background: white; padding: .5rem .9rem; transition: var(--transition);
+  min-width: 260px;
+}
+.search-box:focus-within { border-color: var(--maroon); box-shadow: 0 0 0 3px rgba(139,30,36,.07); }
+.search-box input { border: none; outline: none; font-size: .845rem; color: var(--text-dark); font-family: inherit; background: transparent; flex: 1; min-width: 0; }
+.search-box svg { color: var(--text-faint); flex-shrink: 0; }
+.filter-row { display: flex; gap: .45rem; align-items: center; flex-wrap: wrap; }
+.filter-select {
+  border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  padding: .48rem .85rem; font-size: .8rem; font-family: inherit;
+  color: var(--text-dark); background: white; cursor: pointer; outline: none;
+  transition: var(--transition); appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left .7rem center;
+  padding-left: 2rem;
+}
+body.ltr .filter-select { background-position: right .7rem center; padding-left: .85rem; padding-right: 2rem; }
+.filter-select:focus { border-color: var(--maroon); }
+
+/* ── PAGINATION ── */
+.pagination { display: flex; align-items: center; gap: .35rem; padding: 1rem 1.5rem; border-top: 1px solid var(--border); justify-content: center; }
+.page-btn {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; font-weight: 700; color: var(--text-muted);
+  border: 1px solid var(--border); cursor: pointer; transition: var(--transition); background: white;
+}
+.page-btn:hover { border-color: var(--maroon); color: var(--maroon); }
+.page-btn.active { background: var(--maroon); color: white; border-color: var(--maroon); }
+
+/* ── CV GRID ── */
+.cv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.1rem; }
+.cv-card {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem;
+  transition: var(--transition-slow);
+}
+.cv-card:hover { box-shadow: var(--shadow-md); border-color: rgba(212,166,58,.4); transform: translateY(-2px); }
+.cv-card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: .85rem; gap: .7rem; }
+.cv-card-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-md);
+  background: var(--maroon-soft); color: var(--maroon);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.cv-card-name  { font-weight: 800; font-size: .9rem; margin-bottom: .15rem; color: var(--text-dark); }
+.cv-card-owner { font-size: .75rem; color: var(--text-muted); }
+.cv-card-meta  { display: flex; flex-direction: column; gap: .3rem; margin-bottom: .9rem; }
+.cv-meta-row   { display: flex; align-items: center; gap: .45rem; font-size: .75rem; color: var(--text-muted); }
+.cv-meta-row svg { color: var(--maroon); flex-shrink: 0; }
+.cv-card-actions { display: flex; gap: .45rem; flex-wrap: wrap; }
+.template-tag {
+  display: inline-block; background: var(--gold-subtle); color: var(--amber);
+  border-radius: 100px; padding: .12rem .55rem; font-size: .68rem; font-weight: 700;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center; padding: 3rem 2rem;
+  display: flex; flex-direction: column; align-items: center; gap: .7rem;
+}
+.empty-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--maroon-soft); color: var(--maroon);
+  display: flex; align-items: center; justify-content: center;
+}
+.empty-title { font-weight: 800; font-size: .95rem; color: var(--text-dark); }
+.empty-desc { font-size: .825rem; color: var(--text-muted); max-width: 320px; line-height: 1.55; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.4); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center; padding: 1.5rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);
+  width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;
+  animation: modal-in .2s ease;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.6rem; border-bottom: 1px solid var(--border);
+}
+.modal-title { font-weight: 800; font-size: 1rem; color: var(--text-dark); }
+.modal-close {
+  color: var(--text-muted); width: 30px; height: 30px;
+  border-radius: var(--radius-sm); display: flex; align-items: center;
+  justify-content: center; transition: var(--transition);
+}
+.modal-close:hover { background: var(--maroon-soft); color: var(--maroon); }
+.modal-body { padding: 1.5rem; }
+.modal-footer {
+  padding: 1rem 1.5rem; border-top: 1px solid var(--border);
+  display: flex; gap: .65rem; justify-content: flex-end;
+  background: var(--bg-subtle); border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+.form-group { margin-bottom: 1rem; }
+.form-label { display: block; font-size: .8rem; font-weight: 700; color: var(--text-dark); margin-bottom: .35rem; }
+.form-control {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  padding: .6rem .95rem; font-size: .845rem; font-family: inherit;
+  color: var(--text-dark); transition: var(--transition); outline: none; background: white;
+}
+.form-control:focus { border-color: var(--maroon); box-shadow: 0 0 0 3px rgba(139,30,36,.07); }
+
+/* ── FOOTER ── */
+.footer { background: var(--maroon-deep); color: rgba(255,255,255,.4); padding: 1.35rem 0; margin-top: 2rem; }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: .75rem; flex-wrap: wrap; gap: .5rem;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px) {
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .monthly-stat-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media(max-width:1000px) {
+  .cv-grid { grid-template-columns: repeat(2,1fr); }
+  .analytics-grid { grid-template-columns: 1fr; }
+}
+@media(max-width:860px) {
+  .nav-links { display: none; }
+  .nav-divider { display: none; }
+  .btn-nav-logout span { display: none; }
+  .hamburger { display: flex; }
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .search-box { min-width: 0; }
+}
+@media(max-width:640px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .cv-grid { grid-template-columns: 1fr; }
+  .monthly-stat-grid { grid-template-columns: 1fr 1fr; }
+  .admin-tab { padding: .75rem .9rem; font-size: .8rem; }
+  .panel-body { padding: 1rem 1.2rem; }
+  .panel-head { padding: .9rem 1.2rem; }
+  .data-table th, .data-table td { padding: .65rem .9rem; }
+  .page-header { padding: 1.2rem 0; }
+}
+@media(max-width:420px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .monthly-stat-grid { grid-template-columns: 1fr; }
+}
+
+/* ── RTL / LTR ── */
+body.ltr .data-table th { text-align: left; }
+</style>
+</head>
+
+<body class="rtl" dir="rtl">
+
+<!-- ── TOPBAR — branding + lang only ── -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="topbar-brand">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span data-ar="لوحة الإدارة" data-en="Admin Panel">لوحة الإدارة</span>
+    </span>
+    <div class="lang-switch">
+      <button data-lang="ar" class="active">AR</button>
+      <button data-lang="en">EN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">
+        <img src="images/dah-logo.png" alt="Dar Al-Hekma University"
+             onerror="this.style.display='none';this.parentElement.style.background='var(--maroon)';this.parentElement.innerHTML='<span style=\'color:var(--gold-light);font-weight:800;font-size:.95rem;font-family:var(--font-en)\'>DAH</span>'">
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-ar" data-ar="منصة الدعم المهني" data-en="Career Support Platform">منصة الدعم المهني</span>
+        <span class="nav-logo-en" data-ar="جامعة دار الحكمة" data-en="DAR AL-HEKMA UNIVERSITY">جامعة دار الحكمة</span>
+      </div>
+    </a>
+
+    <div class="nav-actions">
+      <span class="nav-admin-pill">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span data-ar="مدير النظام" data-en="Admin">مدير النظام</span>
+      </span>
+      <button class="btn-nav-icon" title="Notifications" style="position:relative">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <a href="admin-login.html" class="btn-nav-logout">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span data-ar="تسجيل الخروج" data-en="Logout">تسجيل الخروج</span>
+      </a>
+      <button class="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MOBILE MENU ── -->
+<div class="mobile-menu">
+  <a href="index.html" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
+  <a href="cv-tips.html" data-ar="نصائح السيرة الذاتية" data-en="CV Tips">نصائح السيرة الذاتية</a>
+  <a href="cv-builder.html" data-ar="بناء السيرة الذاتية" data-en="CV Builder">بناء السيرة الذاتية</a>
+  <a href="interview-prep.html" data-ar="التحضير للمقابلات" data-en="Interview Prep">التحضير للمقابلات</a>
+  <a href="admin-dashboard.html" data-ar="لوحة الإدارة" data-en="Dashboard">لوحة الإدارة</a>
+</div>
+
+<!-- ── PAGE HEADER — without live indicator ── -->
+<div class="page-header">
+  <div class="container">
+    <div class="page-header-inner">
+      <div class="page-header-left">
+        <div class="breadcrumb">
+          <a href="index.html" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
+          <span>›</span>
+          <span data-ar="الإدارة" data-en="Administration">الإدارة</span>
+          <span>›</span>
+          <span data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</span>
+        </div>
+        <div class="page-header-eyebrow">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span data-ar="لوحة تحكم المدير" data-en="Admin Dashboard">لوحة تحكم المدير</span>
+        </div>
+        <h1 class="page-header-title" data-ar="مركز إدارة المنصة" data-en="Platform Administration Center">مركز إدارة المنصة</h1>
+        <p class="page-header-desc" data-ar="نظرة شاملة على نشاط المنصة وإدارة المستخدمين والسير الذاتية." data-en="Comprehensive view of platform activity and student user management.">نظرة شاملة على نشاط المنصة وإدارة المستخدمين والسير الذاتية.</p>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-white btn-sm" onclick="refreshData()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,4 23,10 17,10"/><path d="M20.49,15a9,9,0,1,1-2.12-9.36L23,10"/></svg>
+          <span data-ar="تحديث" data-en="Refresh">تحديث</span>
+        </button>
+        <button class="btn btn-gold btn-sm" onclick="openModal('export-modal')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-ar="تصدير البيانات" data-en="Export Data">تصدير البيانات</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADMIN TABS ── -->
+<div class="admin-tabs-bar">
+  <div class="admin-tabs-inner">
+    <button class="admin-tab active" data-tab="overview">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span data-ar="نظرة عامة" data-en="Overview">نظرة عامة</span>
+    </button>
+    <button class="admin-tab" data-tab="users">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span data-ar="المستخدمون" data-en="Users">المستخدمون</span>
+      <span class="tab-count" id="tabTotalUsers">0</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════ MAIN CONTENT ══════════════════ -->
+<main>
+<div class="admin-content">
+<div class="container">
+
+  <!-- ══ OVERVIEW TAB ══ -->
+  <div class="tab-panel active" id="panel-overview">
+    <div class="overview-layout">
+
+      <!-- KPI STAT CARDS -->
+      <div class="stats-grid">
+
+        <div class="stat-card maroon">
+          <div class="stat-card-top">
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span class="stat-trend neutral" id="stat-trend-users">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              —
+            </span>
+          </div>
+          <div>
+            <div class="stat-value" id="stat-total-users">—</div>
+            <div class="stat-label" data-ar="إجمالي المستخدمين" data-en="Total Users">إجمالي المستخدمين</div>
+            <div class="stat-sub" data-ar="جميع الحسابات المسجلة" data-en="All registered accounts">جميع الحسابات المسجلة</div>
+          </div>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-card-top">
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <span class="stat-trend neutral" id="stat-trend-active">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              —
+            </span>
+          </div>
+          <div>
+            <div class="stat-value" id="stat-active-users">—</div>
+            <div class="stat-label" data-ar="المستخدمون النشطون" data-en="Active Users">المستخدمون النشطون</div>
+            <div class="stat-sub" data-ar="في الـ 30 يوم الماضية" data-en="In the last 30 days">في الـ 30 يوم الماضية</div>
+          </div>
+        </div>
+
+        <div class="stat-card gold">
+          <div class="stat-card-top">
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+            </div>
+            <span class="stat-trend neutral" id="stat-trend-resumes">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              —
+            </span>
+          </div>
+          <div>
+            <div class="stat-value" id="stat-total-resumes">—</div>
+            <div class="stat-label" data-ar="إجمالي السير الذاتية" data-en="Total CVs Created">إجمالي السير الذاتية</div>
+            <div class="stat-sub" data-ar="منذ إطلاق المنصة" data-en="Since platform launch">منذ إطلاق المنصة</div>
+          </div>
+        </div>
+
+        <div class="stat-card blue">
+          <div class="stat-card-top">
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <span class="stat-trend neutral" id="stat-trend-visits">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              —
+            </span>
+          </div>
+          <div>
+            <div class="stat-value" id="stat-platform-visits">—</div>
+            <div class="stat-label" data-ar="زيارات المنصة" data-en="Platform Visits">زيارات المنصة</div>
+            <div class="stat-sub" data-ar="إجمالي مشاهدات الصفحة" data-en="Total page views">إجمالي مشاهدات الصفحة</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ACTIVITY CHART full width -->
+<div class="panel">
+  <div class="panel-head">
+    <div class="panel-title">
+      <span class="panel-title-dot"></span>
+      <span data-ar="نشاط المنصة" data-en="Platform Activity">
+        نشاط المنصة
+      </span>
+    </div>
+
+    <div class="chart-legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:var(--maroon)"></div>
+        <span data-ar="مستخدمون" data-en="Users">مستخدمون</span>
+      </div>
+
+      <div class="legend-item">
+        <div class="legend-dot" style="background:var(--gold)"></div>
+        <span data-ar="سير ذاتية" data-en="CVs">سير ذاتية</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="chart-bars" style="height:150px">
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:38%"></div>
+        <div class="chart-bar-label" data-ar="يناير" data-en="January">يناير</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:52%"></div>
+        <div class="chart-bar-label" data-ar="فبراير" data-en="February">فبراير</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:61%"></div>
+        <div class="chart-bar-label" data-ar="مارس" data-en="March">مارس</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:48%"></div>
+        <div class="chart-bar-label" data-ar="أبريل" data-en="April">أبريل</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:70%"></div>
+        <div class="chart-bar-label" data-ar="مايو" data-en="May">مايو</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:79%"></div>
+        <div class="chart-bar-label" data-ar="يونيو" data-en="June">يونيو</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:88%"></div>
+        <div class="chart-bar-label" data-ar="يوليو" data-en="July">يوليو</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:95%"></div>
+        <div class="chart-bar-label" data-ar="أغسطس" data-en="August">أغسطس</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:84%"></div>
+        <div class="chart-bar-label" data-ar="سبتمبر" data-en="September">سبتمبر</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:76%"></div>
+        <div class="chart-bar-label" data-ar="أكتوبر" data-en="October">أكتوبر</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:68%"></div>
+        <div class="chart-bar-label" data-ar="نوفمبر" data-en="November">نوفمبر</div>
+      </div>
+
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:58%"></div>
+        <div class="chart-bar-label" data-ar="ديسمبر" data-en="December">ديسمبر</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="panel-footer">
+    <span
+      class="panel-footer-text"
+      data-ar="الأعمدة تعكس النشاط النسبي، ستُحدَّث بعد ربط قاعدة البيانات."
+      data-en="Bars reflect relative activity and will update after database connection."
+    >
+      الأعمدة تعكس النشاط النسبي، ستُحدَّث بعد ربط قاعدة البيانات.
+    </span>
+  </div>
+</div>
+
+</div>
+</div>
+<!-- END OVERVIEW TAB -->
+
+  <!-- ══ USERS TAB ══ -->
+<div class="tab-panel" id="panel-users">
+  <div class="toolbar">
+    <div class="search-box">
+      <input
+      type="text"
+      id="user-search"
+      data-ar-ph="البحث عن اسم الطالبة..."
+      data-en-ph="Search by student name..."
+      placeholder="Search by student name..."
+      >
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th data-ar="اسم الطالبة" data-en="Student Name">
+              اسم الطالبة
+            </th>
+
+            <th data-ar="رقم الجوال" data-en="Phone Number">
+              رقم الجوال
+            </th>
+
+            <th data-ar="البريد الإلكتروني" data-en="Email">
+              البريد الإلكتروني
+            </th>
+
+            <th data-ar="عرض السيرة الذاتية" data-en="View Resume">
+              عرض السيرة الذاتية
+            </th>
+          </tr>
+        </thead>
+
+        <tbody id="users-tbody">
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                <div
+                  class="empty-title"
+                  data-ar="لا يوجد مستخدمون حالياً"
+                  data-en="No users found"
+                >
+                  لا يوجد مستخدمون حالياً
+                </div>
+
+                <div
+                  class="empty-desc"
+                  data-ar="سيتم عرض المستخدمين الحقيقيين هنا بعد ربط قاعدة البيانات."
+                  data-en="Real users will appear here after connecting the database."
+                >
+                  سيتم عرض المستخدمين الحقيقيين هنا بعد ربط قاعدة البيانات.
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="users-pagination"></div>
+  </div>
+</div>
+<!-- END USERS TAB -->
+
+  <!-- ══ CVS TAB ══ -->
+<div class="tab-panel" id="panel-cvs">
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+
+      <input
+        type="text"
+        id="cv-search"
+        placeholder="البحث في السير الذاتية..."
+      >
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="data-table-wrap">
+
+      <table class="data-table">
+
+        <thead>
+          <tr>
+            <th>اسم الطالبة</th>
+            <th>عنوان السيرة</th>
+            <th>آخر تحديث</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody id="cvs-tbody">
+
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                <div class="empty-title">
+                  لا توجد سير ذاتية حالياً
+                </div>
+
+                <div class="empty-desc">
+                  سيتم عرض السير الذاتية هنا بعد ربط قاعدة البيانات.
+                </div>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <div id="cvs-pagination"></div>
+
+  </div>
+
+</div>
+<!-- END CVS TAB -->
+
+
+
+</div>
+</div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span data-ar="© 2026 جامعة دار الحكمة — مركز التطوير المهني. جميع الحقوق محفوظة." data-en="© 2026 Dar Al-Hekma University — Career Development Center. All rights reserved.">© 2026 جامعة دار الحكمة — مركز التطوير المهني. جميع الحقوق محفوظة.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ MODALS ══ -->
+
+<!-- ADD USER -->
+<div class="modal-overlay" id="add-user-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" data-ar="إضافة مستخدم جديد" data-en="Add New User">إضافة مستخدم جديد</div>
+      <button class="modal-close" onclick="closeModal('add-user-modal')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" data-ar="الاسم الكامل" data-en="Full Name">الاسم الكامل</label>
+        <input class="form-control" type="text" data-ar-ph="مثال: نورة أحمد العتيبي" data-en-ph="e.g. Nora Ahmed Al-Otaibi" placeholder="مثال: نورة أحمد العتيبي">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-ar="البريد الإلكتروني الجامعي" data-en="University Email">البريد الإلكتروني الجامعي</label>
+        <input class="form-control" type="email" placeholder="s12345@dah.edu.sa">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-ar="رقم الطالبة" data-en="Student ID">رقم الطالبة</label>
+        <input class="form-control" type="text" placeholder="S12345">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-ar="الكلية" data-en="College">الكلية</label>
+        <select class="form-control">
+          <option data-ar="كلية إدارة الأعمال" data-en="College of Business">كلية إدارة الأعمال</option>
+          <option data-ar="كلية الحاسب الآلي وتقنية المعلومات" data-en="College of Computer Science">كلية الحاسب الآلي وتقنية المعلومات</option>
+          <option data-ar="كلية الفنون والتصميم" data-en="College of Arts & Design">كلية الفنون والتصميم</option>
+          <option data-ar="كلية الصيدلة" data-en="College of Pharmacy">كلية الصيدلة</option>
+          <option data-ar="أخرى" data-en="Other">أخرى</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('add-user-modal')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+      <button class="btn btn-primary btn-sm" data-ar="إضافة المستخدمة" data-en="Add User">إضافة المستخدمة</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT USER -->
+<div class="modal-overlay" id="edit-user-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" data-ar="تعديل بيانات المستخدمة" data-en="Edit User">تعديل بيانات المستخدمة</div>
+      <button class="modal-close" onclick="closeModal('edit-user-modal')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" data-ar="الاسم الكامل" data-en="Full Name">الاسم الكامل</label>
+        <input class="form-control" type="text" id="edit-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+        <input class="form-control" type="email" id="edit-email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-ar="الحالة" data-en="Status">الحالة</label>
+        <select class="form-control" id="edit-status">
+          <option value="active" data-ar="نشطة" data-en="Active">نشطة</option>
+          <option value="inactive" data-ar="غير نشطة" data-en="Inactive">غير نشطة</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('edit-user-modal')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+      <button class="btn btn-primary btn-sm" onclick="saveEdit()" data-ar="حفظ التعديلات" data-en="Save Changes">حفظ التعديلات</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT -->
+<div class="modal-overlay" id="export-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" data-ar="تصدير البيانات" data-en="Export Data">تصدير البيانات</div>
+      <button class="modal-close" onclick="closeModal('export-modal')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" data-ar="نوع التصدير" data-en="Export Type">نوع التصدير</label>
+        <select class="form-control">
+          <option data-ar="بيانات المستخدمين (CSV)" data-en="User Data (CSV)">بيانات المستخدمين (CSV)</option>
+          <option data-ar="إحصائيات السير الذاتية (CSV)" data-en="CV Statistics (CSV)">إحصائيات السير الذاتية (CSV)</option>
+          <option data-ar="تقرير النشاط الكامل (PDF)" data-en="Full Activity Report (PDF)">تقرير النشاط الكامل (PDF)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-ar="نطاق التاريخ" data-en="Date Range">نطاق التاريخ</label>
+        <select class="form-control">
+          <option data-ar="الشهر الحالي" data-en="Current Month">الشهر الحالي</option>
+          <option data-ar="آخر 3 أشهر" data-en="Last 3 Months">آخر 3 أشهر</option>
+          <option data-ar="آخر 6 أشهر" data-en="Last 6 Months">آخر 6 أشهر</option>
+          <option data-ar="كل البيانات" data-en="All Time">كل البيانات</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('export-modal')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+      <button class="btn btn-gold btn-sm"
+        onclick="exportData()"
+        data-ar="تصدير الآن"
+        data-en="Export Now">
+    تصدير الآن
+</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW CV -->
+<div class="modal-overlay" id="view-cv-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="view-cv-title" data-ar="تفاصيل السيرة الذاتية" data-en="CV Details">تفاصيل السيرة الذاتية</div>
+      <button class="modal-close" onclick="closeModal('view-cv-modal')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="view-cv-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('view-cv-modal')" data-ar="إغلاق" data-en="Close">إغلاق</button>
+      <button class="btn btn-outline btn-sm">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-ar="تحميل PDF" data-en="Download PDF">تحميل PDF</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ JAVASCRIPT — ALL BACKEND LOGIC PRESERVED EXACTLY ══════════════════ -->
+<script>
+/* ============================================================
+   ADMIN DASHBOARD — All original logic preserved exactly.
+   ============================================================ */
+
+/* ── STATE ── */
+let currentLang = localStorage.getItem("dah_lang") || "ar";
+
+let users = [];
+let cvData = [];
+
+let editingUserId = null;
+
+let userPage = 1;
+const usersPerPage = 8;
+
+let cvPage = 1;
+const cvsPerPage = 6;
+
+let userSearch = "";
+let userStatusFilter = "all";
+
+let cvSearch = "";
+let cvStatusFilter = "all";
+let cvTemplateFilter = "all";
+
+/* ── LOAD REAL STATS ── */
+async function loadStats() {
+  try {
+    const res = await fetch("/api/admin/stats");
+    const data = await res.json();
+
+    const totalUsers   = data.totalUsers   ?? 0;
+    const totalResumes = data.totalResumes ?? 0;
+    const freeUsers    = data.freeUsers    ?? 0;
+    const premiumUsers = data.premiumUsers ?? 0;
+
+    const statUsers   = document.getElementById("stat-total-users");
+    const statResumes = document.getElementById("stat-total-resumes");
+    const statActive  = document.getElementById("stat-active-users");
+    const statVisits  = document.getElementById("stat-platform-visits");
+
+    const tabUsers   = document.getElementById("tabTotalUsers");
+    const tabResumes = document.getElementById("tabTotalResumes");
+
+    if (statUsers)   statUsers.textContent   = totalUsers;
+    if (statResumes) statResumes.textContent = totalResumes;
+    if (statActive)  statActive.textContent  = "0";
+    if (statVisits)  statVisits.textContent  = "0";
+    if (tabUsers)    tabUsers.textContent    = totalUsers;
+    if (tabResumes)  tabResumes.textContent  = totalResumes;
+
+    console.log("Admin users loaded:", filteredUsers.length);
+  } catch (error) {
+    console.error("Failed to load admin stats:", error);
+  }
+}
+
+/* ── LANG ── */
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem("dah_lang", lang);
+
+  const isLTR = lang === "en";
+
+  document.body.dir = isLTR ? "ltr" : "rtl";
+  document.body.classList.toggle("ltr", isLTR);
+  document.body.classList.toggle("rtl", !isLTR);
+
+  document.querySelectorAll(".lang-switch button").forEach((button) => {
+    button.classList.toggle("active", button.dataset.lang === lang);
+  });
+
+  document.querySelectorAll("[data-ar][data-en]").forEach((el) => {
+    el.textContent = lang === "ar" ? el.dataset.ar : el.dataset.en;
+  });
+
+  document.querySelectorAll("[data-ar-ph][data-en-ph]").forEach((el) => {
+    el.setAttribute("placeholder", lang === "ar" ? el.dataset.arPh : el.dataset.enPh);
+  });
+
+  document.title =
+    lang === "ar"
+      ? "لوحة الإدارة | منصة الدعم المهني"
+      : "Admin Dashboard | Career Support Platform";
+}
+
+/* ── TABS ── */
+function initTabs() {
+  document.querySelectorAll(".admin-tab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tab = btn.dataset.tab;
+
+      document.querySelectorAll(".admin-tab").forEach((t) => t.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+
+      btn.classList.add("active");
+
+      const targetPanel = document.getElementById("panel-" + tab);
+      if (targetPanel) targetPanel.classList.add("active");
+    });
+  });
+}
+
+/* ── HAMBURGER ── */
+function initHamburger() {
+  const ham  = document.querySelector(".hamburger");
+  const menu = document.querySelector(".mobile-menu");
+  if (!ham || !menu) return;
+  ham.addEventListener("click", () => {
+    ham.classList.toggle("active");
+    menu.classList.toggle("open");
+  });
+}
+
+/* ── MODAL ── */
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.add("open");
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.remove("open");
+}
+
+document.querySelectorAll(".modal-overlay").forEach((modal) => {
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) modal.classList.remove("open");
+  });
+});
+
+/* ── USERS ── */
+function filteredUsers() {
+  return users.filter((user) => {
+    const name = currentLang === "ar" ? user.nameAr : user.nameEn;
+
+    const matchSearch =
+      name.toLowerCase().includes(userSearch.toLowerCase()) ||
+      user.email.includes(userSearch);
+
+    const matchStatus =
+      userStatusFilter === "all" || user.status === userStatusFilter;
+
+    return matchSearch && matchStatus;
+  });
+}
+
+function renderUsers() {
+  const tbody = document.getElementById("users-tbody");
+  if (!tbody) return;
+
+  const list = filteredUsers();
+
+  if (list.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+            <div class="empty-title">${currentLang === "ar" ? "لا يوجد مستخدمون حالياً" : "No Users Available"}</div>
+            <div class="empty-desc">${currentLang === "ar" ? "سيتم عرض المستخدمين الحقيقيين هنا بعد ربط قاعدة البيانات." : "Real users will appear here after connecting the database."}</div>
+          </div>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = "";
+}
+
+function editUser(id) { console.log("Edit user:", id); }
+function saveEdit() { closeModal("edit-user-modal"); }
+function toggleUser(id) { console.log("Toggle user:", id); }
+function deleteUser(id) { console.log("Delete user:", id); }
+
+/* ── CVS ── */
+function filteredCVs() {
+  return cvData.filter((cv) => {
+    const title = currentLang === "ar" ? cv.title : cv.titleEn;
+    const owner = currentLang === "ar" ? cv.owner : cv.ownerEn;
+
+    const matchSearch =
+      title.toLowerCase().includes(cvSearch.toLowerCase()) ||
+      owner.toLowerCase().includes(cvSearch.toLowerCase());
+
+    const matchStatus =
+      cvStatusFilter === "all" || cv.status === cvStatusFilter;
+
+    const matchTemplate =
+      cvTemplateFilter === "all" || cv.template === cvTemplateFilter;
+
+    return matchSearch && matchStatus && matchTemplate;
+  });
+}
+
+function renderCVs() {
+  const grid = document.getElementById("cv-grid");
+  if (!grid) return;
+
+  const list = filteredCVs();
+
+  if (list.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          </div>
+          <div class="empty-title">${currentLang === "ar" ? "لا توجد سير ذاتية حالياً" : "No CVs Available"}</div>
+          <div class="empty-desc">${currentLang === "ar" ? "سيتم عرض السير الذاتية الحقيقية هنا بعد ربط قاعدة البيانات." : "Real CVs will appear here after connecting the database."}</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = "";
+}
+
+
+/* ── PAGINATION ── */
+function renderPagination(containerId) {
+  const container = document.getElementById(containerId);
+  if (container) container.innerHTML = "";
+}
+
+/* ── SEARCH ── */
+function initSearch() {
+  const userSearchInput = document.getElementById("user-search");
+
+  if (userSearchInput) {
+    userSearchInput.addEventListener("input", (e) => {
+      userSearch = e.target.value;
+      loadAdminUsers();
+    });
+  }
+}
+  const userStatusSelect = document.getElementById("user-status-filter");
+  if (userStatusSelect) {
+    userStatusSelect.addEventListener("change", (e) => {
+      userStatusFilter = e.target.value;
+      userPage = 1;
+      renderUsers();
+    });
+  }
+
+  const cvSearchInput = document.getElementById("cv-search");
+  if (cvSearchInput) {
+    cvSearchInput.addEventListener("input", (e) => {
+      cvSearch = e.target.value;
+      cvPage = 1;
+      renderCVs();
+    });
+  }
+
+  const cvStatusSelect = document.getElementById("cv-status-filter");
+  if (cvStatusSelect) {
+    cvStatusSelect.addEventListener("change", (e) => {
+      cvStatusFilter = e.target.value;
+      cvPage = 1;
+      renderCVs();
+    });
+  }
+
+  const cvTemplateSelect = document.getElementById("cv-template-filter");
+  if (cvTemplateSelect) {
+    cvTemplateSelect.addEventListener("change", (e) => {
+      cvTemplateFilter = e.target.value;
+      cvPage = 1;
+      renderCVs();
+    });
+  }
+
+function refreshData() {
+  loadStats();
+  loadAdminUsers();
+}
+
+/* ── ADMIN STATS ── */
+async function loadAdminStats() {
+  try {
+    const response = await fetch("/api/admin/stats");
+
+    if (!response.ok) {
+      throw new Error("Stats API failed: " + response.status);
+    }
+
+    const data = await response.json();
+
+    const usersEl = document.getElementById("stat-total-users");
+    const resumesEl = document.getElementById("stat-total-resumes");
+    const visitsEl = document.getElementById("stat-platform-visits");
+    const activeUsersEl = document.getElementById("stat-active-users");
+
+    if (usersEl) usersEl.textContent = data.totalUsers || 0;
+    if (resumesEl) resumesEl.textContent = data.totalResumes || 0;
+    if (visitsEl) visitsEl.textContent = data.totalVisits || 0;
+    if (activeUsersEl) activeUsersEl.textContent = data.activeUsers || 0;
+
+    console.log("Admin stats loaded:", data);
+  } catch (error) {
+    console.error("Failed to load stats", error);
+  }
+}
+
+async function loadAdminUsers() {
+  try {
+    const response = await fetch("/api/admin/users");
+
+    if (!response.ok) {
+      throw new Error("Users API failed: " + response.status);
+    }
+
+    const data = await response.json();
+    const tbody = document.getElementById("users-tbody");
+
+    if (!tbody) return;
+
+    const users = data.users || [];
+    const search = (userSearch || "").toLowerCase().trim();
+
+const filteredUsers = users.filter((user) => {
+  return (
+    (user.name || "").toLowerCase().includes(search) ||
+    (user.email || "").toLowerCase().includes(search) ||
+    (user.phone || "").toLowerCase().includes(search)
+  );
+});
+    const usersBadge = document.querySelector('[data-tab="users"] .tab-count');
+
+if (usersBadge) {
+  usersBadge.textContent = users.length;
+}
+
+    if (filteredUsers.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4">
+            <div class="empty-state">
+              <div
+                class="empty-title"
+                data-ar="لا يوجد مستخدمون حالياً"
+                data-en="No users found"
+              >
+                لا يوجد مستخدمون حالياً
+              </div>
+
+              <div
+                class="empty-desc"
+                data-ar="سيتم عرض المستخدمين الحقيقيين هنا بعد ربط قاعدة البيانات."
+                data-en="Real users will appear here after connecting the database."
+              >
+                سيتم عرض المستخدمين الحقيقيين هنا بعد ربط قاعدة البيانات.
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
+
+      applyLang(localStorage.getItem("dah_lang") || "ar");
+      return;
+    }
+
+    tbody.innerHTML = filteredUsers
+      .map((user) => {
+        const resumeId = user.latestResumeId || user.resumeId;
+
+        const resumeCell = resumeId
+          ? `
+            <button
+            class="btn btn-primary btn-sm"
+            onclick="viewResume('${resumeId}')"
+            >
+              <span
+                data-ar="عرض السيرة الذاتية"
+                data-en="View Resume"
+              >
+                عرض السيرة الذاتية
+              </span>
+            </button>
+          `
+          : `
+            <span
+              data-ar="لا توجد سيرة ذاتية"
+              data-en="No Resume Available"
+            >
+              لا توجد سيرة ذاتية
+            </span>
+          `;
+
+        return `
+          <tr>
+            <td>${user.name || "-"}</td>
+            <td>${user.phone || "-"}</td>
+            <td>${user.email || "-"}</td>
+            <td>${resumeCell}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    applyLang(localStorage.getItem("dah_lang") || "ar");
+
+    console.log(users);
+  } catch (error) {
+    console.error("Failed to load users", error);
+  }
+}
+
+function viewResume(resumeId) {
+  console.log("Resume ID:", resumeId);
+
+  if (!resumeId) {
+    alert("لا توجد سيرة ذاتية لهذا المستخدم");
+    return;
+  }
+
+  window.open(`/preview/${resumeId}`, "_blank");
+}
+
+async function exportData() {
+  try {
+    const response = await fetch("/api/admin/users");
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch users");
+    }
+
+    const data = await response.json();
+    const users = data.users || [];
+
+    if (!users.length) {
+      alert("لا توجد بيانات للتصدير");
+      return;
+    }
+
+    const rows = [
+      ["الاسم", "رقم الجوال", "البريد الإلكتروني", "السيرة الذاتية"]
+    ];
+
+    users.forEach(user => {
+      rows.push([
+        user.name || "-",
+        user.phone || "-",
+        user.email || "-",
+        user.latestResumeId
+          ? `${location.origin}/preview/${user.latestResumeId}`
+          : "لا توجد سيرة"
+      ]);
+    });
+
+    const csv =
+      "\uFEFF" +
+      rows
+        .map(row =>
+          row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+        )
+        .join("\n");
+
+    const blob = new Blob([csv], {
+      type: "text/csv;charset=utf-8;"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Users.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+    closeModal("export-modal");
+
+  } catch (err) {
+    console.error(err);
+    alert("حدث خطأ أثناء التصدير");
+  }
+}
+
+
+function trackVisit() {
+  fetch("/api/track-visit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      path: window.location.pathname,
+    }),
+  }).catch(console.error);
+}
+
+/* ── INIT ── */
+document.addEventListener("DOMContentLoaded", function () {
+  const userBtn = document.getElementById("userBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const userName = localStorage.getItem("userName");
+
+  if (userBtn && userName && !window.location.pathname.includes("login.html")) {
+    userBtn.textContent = userName;
+    userBtn.href = "#";
+  }
+
+  if (logoutBtn && userName) {
+    logoutBtn.style.display = "inline-flex";
+
+    logoutBtn.addEventListener("click", function () {
+      localStorage.removeItem("userName");
+      localStorage.removeItem("cv-builder-resume");
+      localStorage.removeItem("cv-builder-ui");
+
+      window.location.href = "login.html";
+    });
+  }
+});
+
+</script>
+</body>
+</html>

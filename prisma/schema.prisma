@@ -1,0 +1,296 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String        @id @default(cuid())
+  clerkId           String        @unique
+  email             String        @unique
+  name              String?
+  phone             String?
+  imageUrl          String?
+  major             String?
+  role              Role          @default(USER)
+  plan              PlanType      @default(FREE)
+  planExpiresAt     DateTime?
+  consentAcceptedAt DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  payments          Payment[]
+  resumes           Resume[]
+  chatMessages      ChatMessage[]
+
+  @@map("users")
+}
+
+model Resume {
+  id                  String          @id @default(cuid())
+  userId              String
+  title               String          @default("My Resume")
+  template            String          @default("professional")
+  language            String          @default("en")
+  isPublic            Boolean         @default(false)
+  atsScore            Int?
+  coverLetterFileName String?
+  coverLetterMimeType String?
+  coverLetterData     String?         @db.Text
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  awards              Award[]
+  certifications      Certification[]
+  education           Education[]
+  experiences         Experience[]
+  personalInfo        PersonalInfo?
+  projects            Project[]
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills              Skill[]
+  softSkills          SoftSkill[]
+  languages           Language[]
+  summary             Summary?
+  volunteering        Volunteering[]
+
+  @@map("resumes")
+}
+
+model PersonalInfo {
+  id         String  @id @default(cuid())
+  resumeId   String  @unique
+  fullName   String  @default("")
+  title      String  @default("")
+  email      String  @default("")
+  phone      String  @default("")
+  location   String  @default("")
+  linkedin   String  @default("")
+  github     String  @default("")
+  website    String  @default("")
+  profilePic String?
+  resume     Resume  @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("personal_info")
+}
+
+model Summary {
+  id       String @id @default(cuid())
+  resumeId String @unique
+  content  String @default("")
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("summaries")
+}
+
+model Skill {
+  id       String     @id @default(cuid())
+  resumeId String
+  name     String
+  level    SkillLevel @default(INTERMEDIATE)
+  category String?
+  order    Int        @default(0)
+  resume   Resume     @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("skills")
+}
+
+model SoftSkill {
+  id       String @id @default(cuid())
+  resumeId String
+  name     String
+  order    Int    @default(0)
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("soft_skills")
+}
+
+model Language {
+  id       String @id @default(cuid())
+  resumeId String
+  name     String
+  level    String @default("")
+  order    Int    @default(0)
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("languages")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  resumeId    String
+  name        String
+  description String?
+  url         String?
+  github      String?
+  tech        String[]
+  startDate   String?
+  endDate     String?
+  current     Boolean  @default(false)
+  order       Int      @default(0)
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("projects")
+}
+
+model Experience {
+  id          String   @id @default(cuid())
+  resumeId    String
+  company     String
+  position    String
+  location    String?
+  startDate   String
+  endDate     String?
+  current     Boolean  @default(false)
+  description String[]
+  order       Int      @default(0)
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("experiences")
+}
+
+model Education {
+  id          String   @id @default(cuid())
+  resumeId    String
+  institution String
+  degree      String
+  field       String?
+  location    String?
+  startDate   String
+  endDate     String?
+  current     Boolean  @default(false)
+  gpa         String?
+  description String[]
+  order       Int      @default(0)
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("education")
+}
+
+model Certification {
+  id           String  @id @default(cuid())
+  resumeId     String
+  name         String
+  issuer       String
+  issueDate    String?
+  expiryDate   String?
+  credentialId String?
+  url          String?
+  order        Int     @default(0)
+  resume       Resume  @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("certifications")
+}
+
+model Award {
+  id          String  @id @default(cuid())
+  resumeId    String
+  title       String
+  issuer      String?
+  date        String?
+  description String?
+  order       Int     @default(0)
+  resume      Resume  @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("awards")
+}
+
+model Volunteering {
+  id           String   @id @default(cuid())
+  resumeId     String
+  organization String
+  role         String
+  location     String?
+  startDate    String
+  endDate      String?
+  current      Boolean  @default(false)
+  description  String[]
+  order        Int      @default(0)
+  resume       Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("volunteering")
+}
+
+model Plan {
+  id          String   @id @default(cuid())
+  name        String
+  type        PlanType @unique
+  price       Float
+  yearlyPrice Float?
+  features    String[]
+  maxResumes  Int      @default(1)
+  hasAI       Boolean  @default(false)
+  hasATS      Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("plans")
+}
+
+model Payment {
+  id        String        @id @default(cuid())
+  userId    String
+  amount    Float
+  currency  String        @default("USD")
+  status    PaymentStatus @default(PENDING)
+  provider  String
+  sessionId String?
+  createdAt DateTime      @default(now())
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model PlatformVisit {
+  id        String   @id @default(cuid())
+  path      String?
+  createdAt DateTime @default(now())
+
+  @@map("platform_visits")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PlanType {
+  FREE
+  PREMIUM
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// DAH Career Coach — persistent chat history so a student can leave and
+// come back to a mock-interview session or resume-feedback conversation
+// without losing context. One continuous thread per student (kept
+// simple on purpose: no multi-conversation switcher for v1).
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      ChatRole
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("chat_messages")
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+}

@@ -1,0 +1,289 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+@import "../styles/home.css";
+@import "../styles/navbar.css";
+@import "../styles/footer.css";
+@import "../styles/auth.css";
+@import "../styles/builder.css";
+@import "../styles/dashboard.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 13%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 13%;
+
+    --primary: 354 65% 33%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 42 70% 53%;
+    --secondary-foreground: 354 65% 33%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 42 70% 53%;
+    --accent-foreground: 354 65% 33%;
+
+    --destructive: 354 65% 33%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 354 65% 33%;
+
+    --radius: 0.75rem;
+
+    /* DAH website tokens */
+    --dah-maroon: #8B1E24;
+    --dah-maroon-dark: #7A1820;
+    --dah-maroon-deep: #6A1218;
+    --dah-gold: #D4A63A;
+    --dah-gold-light: #E6C36A;
+
+    --dah-bg: #F8F8F8;
+    --dah-white: #FFFFFF;
+    --dah-text-dark: #222222;
+    --dah-text-muted: #666666;
+    --dah-border: #E5E5E5;
+
+    --dah-shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+    --dah-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --dah-shadow-lg: 0 10px 32px rgba(0, 0, 0, 0.10);
+
+    --dah-radius-sm: 6px;
+    --dah-radius-md: 10px;
+    --dah-radius-lg: 16px;
+
+    --dah-transition: all 0.25s ease;
+
+    --dah-font-ar: "Cairo", sans-serif;
+    --dah-font-en: "Poppins", sans-serif;
+
+    --dah-nav-h: 74px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html[dir="rtl"] {
+    font-family: "Cairo", "Inter", sans-serif;
+  }
+
+  html[dir="ltr"] {
+    font-family: "Poppins", "Inter", sans-serif;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 30, 36, 0.35);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 30, 36, 0.55);
+}
+
+.resume-paper {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  background: white;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.gradient-text {
+  color: #8b1e24;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+}
+
+.shimmer {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* =====================================================
+   DAH Website Shared Classes
+   Used only for the migrated public website pages.
+   These classes do not override Tailwind/Shadcn system.
+   ===================================================== */
+
+.dah-page {
+  background: var(--dah-bg);
+  color: var(--dah-text-dark);
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+.dah-page.rtl {
+  direction: rtl;
+  font-family: var(--dah-font-ar);
+}
+
+.dah-page.ltr {
+  direction: ltr;
+  font-family: var(--dah-font-en);
+}
+
+.dah-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.dah-section {
+  padding: 5rem 0;
+}
+
+.dah-section-sm {
+  padding: 3rem 0;
+}
+
+.dah-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.78rem 1.9rem;
+  border-radius: var(--dah-radius-sm);
+  font-weight: 700;
+  font-size: 0.92rem;
+  transition: var(--dah-transition);
+  cursor: pointer;
+  border: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.dah-btn-primary {
+  background: var(--dah-maroon);
+  color: white;
+  border-color: var(--dah-maroon);
+}
+
+.dah-btn-primary:hover {
+  background: var(--dah-maroon-dark);
+  border-color: var(--dah-maroon-dark);
+}
+
+.dah-btn-outline {
+  background: transparent;
+  color: var(--dah-maroon);
+  border-color: var(--dah-maroon);
+}
+
+.dah-btn-outline:hover {
+  background: var(--dah-maroon);
+  color: white;
+}
+
+.dah-btn-gold {
+  background: var(--dah-gold);
+  color: var(--dah-maroon-deep);
+  border-color: var(--dah-gold);
+}
+
+.dah-btn-gold:hover {
+  background: var(--dah-gold-light);
+}
+
+.dah-btn-light {
+  background: white;
+  color: var(--dah-maroon);
+  border-color: white;
+}
+
+.dah-btn-light:hover {
+  background: transparent;
+  color: white;
+}
+
+.dah-btn-sm {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.82rem;
+}
+
+.dah-btn-lg {
+  padding: 0.95rem 2.5rem;
+  font-size: 1rem;
+}
+
+.dah-w-full {
+  width: 100%;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #resume-print,
+  #resume-print * {
+    visibility: visible;
+  }
+
+  #resume-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+.nextjs-toast-errors-parent,
+.nextjs-toast-errors,
+nextjs-portal {
+  display: none !important;
+}
+

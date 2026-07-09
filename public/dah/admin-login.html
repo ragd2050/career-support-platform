@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title data-ar="دخول المشرف | منصة الدعم المهني" data-en="Admin Login | Career Support Platform">دخول المشرف | منصة الدعم المهني</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ─────────────────────────────────────────
+   DAH Design System — Admin Login Page
+   ───────────────────────────────────────── */
+:root {
+  --maroon:      #8B1E24;
+  --maroon-dark: #7A1820;
+  --maroon-deep: #6A1218;
+  --maroon-soft: rgba(139,30,36,.07);
+  --gold:        #D4A63A;
+  --gold-light:  #E6C36A;
+  --gold-subtle: rgba(212,166,58,.12);
+  --bg:          #F4F5F7;
+  --white:       #FFFFFF;
+  --text-dark:   #111827;
+  --text-body:   #374151;
+  --text-muted:  #6B7280;
+  --text-faint:  #9CA3AF;
+  --border:      #E5E7EB;
+  --rose:        #E11D48;
+  --rose-light:  #FFE4E6;
+  --green:       #059669;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:   0 4px 12px rgba(0,0,0,.08);
+  --shadow-xl:   0 20px 48px rgba(0,0,0,.14);
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --transition:  all .2s ease;
+  --font-ar:     'Cairo', sans-serif;
+  --font-en:     'Poppins', sans-serif;
+  --nav-h:       68px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-ar);
+  background: var(--bg);
+  color: var(--text-body);
+  line-height: 1.7;
+  direction: rtl;
+  min-height: 100vh;
+}
+body.ltr { direction: ltr; font-family: var(--font-en); }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--maroon-deep);
+  height: 36px;
+  display: flex; align-items: center;
+}
+.topbar-inner {
+  max-width: 1380px; margin: 0 auto; padding: 0 1.5rem;
+  display: flex; align-items: center; justify-content: flex-end;
+  width: 100%;
+}
+.lang-switch { display: flex; align-items: center; gap: 2px; }
+.lang-switch button {
+  color: rgba(255,255,255,.55); font-weight: 600; font-size: .72rem;
+  padding: .1rem .5rem; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 3px; transition: var(--transition); background: none;
+}
+.lang-switch button.active {
+  color: var(--maroon-deep); background: var(--gold-light); border-color: var(--gold-light);
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  position: sticky; top: 0; z-index: 900;
+  background: var(--white);
+  border-bottom: 2px solid var(--maroon);
+  height: var(--nav-h);
+  display: flex; align-items: center;
+  padding: 0 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+.nav-inner {
+  max-width: 1380px; margin: 0 auto; width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+}
+.nav-logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+.nav-logo-mark {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.nav-logo-mark img { width: 100%; height: 100%; object-fit: contain; }
+.nav-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+.nav-logo-ar { font-size: .97rem; font-weight: 800; color: var(--maroon); }
+.nav-logo-en { font-size: .58rem; font-weight: 600; color: var(--text-muted); letter-spacing: 1.2px; text-transform: uppercase; margin-top: 1px; }
+
+.nav-links { display: flex; align-items: center; gap: .1rem; flex: 1; justify-content: center; }
+.nav-links a {
+  color: var(--text-muted); font-size: .875rem; font-weight: 600;
+  padding: .55rem 1rem; border-radius: var(--radius-sm);
+  transition: var(--transition); white-space: nowrap;
+}
+.nav-links a:hover { color: var(--maroon); background: var(--maroon-soft); }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; }
+.hamburger span { width: 22px; height: 2px; background: var(--maroon); border-radius: 2px; transition: var(--transition); display: block; }
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+.mobile-menu {
+  display: none; position: fixed; top: calc(var(--nav-h) + 36px); left: 0; right: 0;
+  background: white; border-top: 2px solid var(--maroon);
+  padding: .6rem; z-index: 899; flex-direction: column; gap: 2px;
+  box-shadow: var(--shadow-md);
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  color: var(--text-body); font-size: .9rem; font-weight: 600;
+  padding: .75rem 1rem; border-radius: var(--radius-sm); transition: var(--transition);
+}
+.mobile-menu a:hover { background: var(--maroon-soft); color: var(--maroon); }
+
+/* ── AUTH PAGE ── */
+.auth-page {
+  min-height: calc(100vh - var(--nav-h) - 36px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem 1.5rem;
+}
+.auth-card {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  width: 100%; max-width: 860px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  background: var(--white);
+}
+
+/* Visual side */
+.auth-visual {
+  background: linear-gradient(145deg, var(--maroon-deep) 0%, var(--maroon) 60%, #A0282E 100%);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2.5rem;
+  overflow: hidden;
+}
+.auth-visual-texture {
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.auth-brand { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+.auth-brand-logo {
+  width: 90px; height: 90px; object-fit: contain;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,.3));
+}
+.auth-brand-logo-fallback {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; font-weight: 800; color: var(--gold-light);
+  font-family: var(--font-en);
+}
+.auth-brand-divider {
+  width: 40px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+}
+.auth-brand-name { display: flex; flex-direction: column; gap: .25rem; }
+.auth-brand-name-ar {
+  font-size: 1.05rem; font-weight: 800; color: var(--white);
+  line-height: 1.3; letter-spacing: .2px;
+}
+.auth-brand-name-en {
+  font-size: .62rem; font-weight: 700; color: rgba(255,255,255,.55);
+  letter-spacing: 1.5px; text-transform: uppercase;
+}
+.auth-brand-tagline {
+  margin-top: .5rem;
+  background: rgba(212,166,58,.18);
+  border: 1px solid rgba(212,166,58,.3);
+  border-radius: 100px;
+  padding: .3rem .9rem;
+  font-size: .72rem; font-weight: 700; color: var(--gold-light);
+  letter-spacing: .8px; display: flex; align-items: center; gap: .4rem;
+}
+
+/* Form side */
+.auth-form-area {
+  display: flex; align-items: center; justify-content: center;
+  padding: 2.5rem 2.75rem;
+}
+.auth-form-box { width: 100%; max-width: 380px; }
+
+.auth-back-link {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .78rem; font-weight: 700; color: var(--text-muted);
+  margin-bottom: 1.6rem; transition: var(--transition);
+}
+.auth-back-link:hover { color: var(--maroon); }
+body.ltr .auth-back-link svg { transform: scaleX(-1); }
+
+.auth-title {
+  font-size: 1.55rem; font-weight: 800; color: var(--text-dark);
+  margin-bottom: .45rem; line-height: 1.2;
+}
+.auth-subtitle {
+  font-size: .83rem; color: var(--text-muted); line-height: 1.6;
+  margin-bottom: 1.6rem;
+}
+
+/* Error banner */
+.auth-error-banner {
+  display: flex; align-items: center; gap: .6rem;
+  background: var(--rose-light); border: 1px solid rgba(225,29,72,.2);
+  border-radius: var(--radius-md); padding: .75rem 1rem;
+  font-size: .82rem; font-weight: 600; color: var(--rose);
+  margin-bottom: 1.25rem;
+}
+.auth-error-banner.hidden { display: none; }
+
+/* Form */
+.auth-form { display: flex; flex-direction: column; gap: .9rem; }
+.form-group { display: flex; flex-direction: column; gap: .35rem; }
+.form-label { font-size: .8rem; font-weight: 700; color: var(--text-dark); }
+.input-icon-wrap { position: relative; }
+.input-icon {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  right: .9rem; color: var(--text-faint); pointer-events: none;
+}
+body.ltr .input-icon { right: auto; left: .9rem; }
+.form-input {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  padding: .65rem .95rem; font-size: .875rem; font-family: inherit;
+  color: var(--text-dark); background: white; transition: var(--transition); outline: none;
+}
+.form-input.has-icon { padding-right: 2.6rem; }
+body.ltr .form-input.has-icon { padding-right: .95rem; padding-left: 2.6rem; }
+.form-input:focus { border-color: var(--maroon); box-shadow: 0 0 0 3px rgba(139,30,36,.07); }
+.form-input::placeholder { color: var(--text-faint); }
+
+/* Button */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: .75rem 1.5rem; border-radius: var(--radius-sm);
+  font-weight: 700; font-size: .875rem; transition: var(--transition);
+  cursor: pointer; border: 1.5px solid transparent; font-family: inherit;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--maroon); color: white; border-color: var(--maroon); }
+.btn-primary:hover { background: var(--maroon-dark); box-shadow: 0 4px 12px rgba(139,30,36,.3); }
+.btn-lg { padding: .85rem 1.75rem; font-size: .925rem; }
+.w-full { width: 100%; }
+.admin-btn { margin-top: .4rem; letter-spacing: .3px; }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Footer note */
+.auth-footer-text {
+  font-size: .75rem; color: var(--text-faint); text-align: center;
+  margin-top: 1.25rem; display: flex; align-items: center; justify-content: center; gap: .3rem;
+  line-height: 1.55;
+}
+.admin-footer-note { color: var(--text-faint); }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 720px) {
+  .auth-card { grid-template-columns: 1fr; }
+  .auth-visual { display: none; }
+  .auth-form-area { padding: 2rem 1.5rem; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+}
+@media(max-width: 420px) {
+  .auth-page { padding: 1rem; }
+  .auth-form-area { padding: 1.75rem 1.25rem; }
+}
+</style>
+</head>
+
+<body class="rtl" dir="rtl">
+
+<!-- ── TOPBAR ── -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="lang-switch">
+      <button data-lang="ar" class="active">AR</button>
+      <button data-lang="en">EN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">
+        <img src="images/dah-logo.png" alt="Dar Al-Hekma University"
+             onerror="this.style.display='none';this.parentElement.style.background='var(--maroon)';this.parentElement.innerHTML='<span style=\'color:var(--gold-light);font-weight:800;font-size:.95rem;font-family:var(--font-en)\'>DAH</span>'">
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-ar" data-ar="منصة الدعم المهني" data-en="Career Support Platform">منصة الدعم المهني</span>
+        <span class="nav-logo-en" data-ar="جامعة دار الحكمة" data-en="DAR AL-HEKMA UNIVERSITY">جامعة دار الحكمة</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html" data-ar="الرئيسية" data-en="Home">الرئيسية</a></li>
+      <li><a href="cv-tips.html" data-ar="نصائح السيرة الذاتية" data-en="CV Tips">نصائح السيرة الذاتية</a></li>
+      <li><a href="cv-builder.html" data-ar="بناء السيرة الذاتية" data-en="CV Builder">بناء السيرة الذاتية</a></li>
+      <li><a href="interview-prep.html" data-ar="التحضير للمقابلات" data-en="Interview Prep">التحضير للمقابلات</a></li>
+    </ul>
+
+    <button class="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ── MOBILE MENU ── -->
+<div class="mobile-menu">
+  <a href="index.html" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
+  <a href="cv-tips.html" data-ar="نصائح السيرة الذاتية" data-en="CV Tips">نصائح السيرة الذاتية</a>
+  <a href="cv-builder.html" data-ar="إنشاء السيرة الذاتية" data-en="CV Builder">بناء السيرة الذاتية</a>
+  <a href="interview-prep.html" data-ar="التحضير للمقابلات" data-en="Interview Prep">التحضير للمقابلات</a>
+</div>
+
+<!-- ── AUTH PAGE ── -->
+<div class="auth-page">
+  <div class="auth-card">
+
+    <!-- Visual Side -->
+    <div class="auth-visual">
+      <div class="auth-visual-texture"></div>
+      <div class="auth-brand">
+        <img class="auth-brand-logo" src="images/dah-logo.png" alt="Dar Al-Hekma University"
+             onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\'auth-brand-logo-fallback\'>DAH</div>')"/>
+        <div class="auth-brand-divider"></div>
+        <div class="auth-brand-name">
+          <span class="auth-brand-name-ar" data-ar="جامعة دار الحكمة" data-en="Dar Al-Hekma University">جامعة دار الحكمة</span>
+          <span class="auth-brand-name-en" data-ar="DAR AL-HEKMA UNIVERSITY" data-en="CAREER SUPPORT PLATFORM">DAR AL-HEKMA UNIVERSITY</span>
+        </div>
+        <div class="auth-brand-tagline">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span data-ar="بوابة المشرف الآمنة" data-en="Secure Admin Portal">بوابة المشرف الآمنة</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Side -->
+    <div class="auth-form-area">
+      <div class="auth-form-box">
+
+        <a href="index.html" class="auth-back-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12,19 5,12 12,5"/>
+          </svg>
+          <span data-ar="الرجوع إلى الرئيسية" data-en="Back to Home">الرجوع إلى الرئيسية</span>
+        </a>
+
+        <h1 class="auth-title" data-ar="دخول المشرف" data-en="Admin Login">دخول المشرف</h1>
+        <p class="auth-subtitle" data-ar="هذه المنطقة مخصصة للمشرفين فقط. سيتم التحقق من الصلاحيات قبل منح الوصول." data-en="This area is restricted to administrators only. Access will be verified before entry.">
+          هذه المنطقة مخصصة للمشرفين فقط. سيتم التحقق من الصلاحيات قبل منح الوصول.
+        </p>
+
+        <!-- Error banner -->
+        <div id="adminErrorBanner" class="auth-error-banner hidden" role="alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="adminErrorText"></span>
+        </div>
+
+        <form class="auth-form" id="adminLoginForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="adminEmail" data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+            <div class="input-icon-wrap">
+              <svg class="input-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <input type="email" id="adminEmail" class="form-input has-icon"
+                     data-ar-ph="admin@dah.edu.sa" data-en-ph="admin@dah.edu.sa"
+                     placeholder="admin@dah.edu.sa" autocomplete="username" required/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="adminPassword" data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+            <div class="input-icon-wrap">
+              <svg class="input-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <input type="password" id="adminPassword" class="form-input has-icon"
+                     placeholder="••••••••" autocomplete="current-password" required/>
+            </div>
+          </div>
+
+          <button type="submit" id="adminLoginBtn"
+                  class="btn btn-primary btn-lg w-full admin-btn"
+                  data-ar="دخول لوحة التحكم" data-en="Access Admin Dashboard">
+            دخول لوحة التحكم
+          </button>
+        </form>
+
+        <p class="auth-footer-text admin-footer-note">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span data-ar="يُسجَّل كل محاولة دخول لأغراض الأمان." data-en="All login attempts are logged for security purposes.">يُسجَّل كل محاولة دخول لأغراض الأمان.</span>
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentLang = localStorage.getItem('dah_lang') || 'ar';
+
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('dah_lang', lang);
+  const isLTR = lang === 'en';
+  document.body.dir = isLTR ? 'ltr' : 'rtl';
+  document.body.classList.toggle('ltr', isLTR);
+  document.body.classList.toggle('rtl', !isLTR);
+  document.querySelectorAll('.lang-switch button').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+    el.textContent = lang === 'ar' ? el.dataset.ar : el.dataset.en;
+  });
+  document.querySelectorAll('[data-ar-ph][data-en-ph]').forEach(el => {
+    el.placeholder = lang === 'ar' ? el.dataset.arPh : el.dataset.enPh;
+  });
+  document.title = lang === 'ar'
+    ? 'دخول المشرف | منصة الدعم المهني'
+    : 'Admin Login | Career Support Platform';
+}
+
+/* Hamburger */
+const ham = document.querySelector('.hamburger');
+const mobileMenu = document.querySelector('.mobile-menu');
+if (ham && mobileMenu) {
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('active');
+    mobileMenu.classList.toggle('open');
+  });
+}
+
+/* Lang switcher */
+document.querySelectorAll('.lang-switch button').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  applyLang(currentLang);
+
+  const form = document.getElementById("adminLoginForm");
+  const btn = document.getElementById("adminLoginBtn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    btn.disabled = true;
+    btn.textContent =
+      currentLang === "ar" ? "جارٍ الدخول..." : "Signing in...";
+
+    const email = document.getElementById("adminEmail").value;
+    const password = document.getElementById("adminPassword").value;
+
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Login failed");
+        btn.disabled = false;
+        btn.textContent =
+          currentLang === "ar"
+            ? "دخول لوحة التحكم"
+            : "Access Admin Dashboard";
+        return;
+      }
+
+    window.location.href = "/dah/admin-dashboard.html";
+
+    } catch (err) {
+      alert("Server Error");
+      btn.disabled = false;
+      btn.textContent =
+        currentLang === "ar"
+          ? "دخول لوحة التحكم"
+          : "Access Admin Dashboard";
+    }
+  });
+});
+
+
+function trackVisit() {
+  fetch("/api/track-visit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      path: window.location.pathname,
+    }),
+  }).catch((error) => {
+    console.error("Failed to track visit", error);
+  });
+}
+
+</script>
+
+</body>
+</html>
