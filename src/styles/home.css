@@ -391,9 +391,15 @@ input,textarea,select{font-family:inherit;}
   letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1rem;
   border:1px solid rgba(212,166,58,.4);padding:.35rem 1rem;border-radius:100px;
 }
-.hero-title{
-  font-size:clamp(1.9rem,4.6vw,3rem);font-weight:800;color:white;
-  line-height:1.32;margin-bottom:1.2rem;
+.hero-title {
+  font-size: clamp(1.9rem, 4.6vw, 3rem);
+  font-weight: 800;
+  color: white;
+  line-height: 1.32;
+  margin-bottom: 1.2rem;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .hero-title .highlight{color:var(--gold-light);}
 .hero-desc{font-size:1.02rem;color:rgba(255,255,255,.82);line-height:1.95;margin-bottom:2rem;max-width:540px;}

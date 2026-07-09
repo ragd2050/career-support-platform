@@ -12,12 +12,10 @@ export function Hero() {
     <section className="hero">
       <div className="container hero-inner">
         <h1 className="hero-title">
-          {t("استعد لبناء سيرتك الذاتية وابدأ رحلة ", "Prepare your CV and start your ")}
-          <span className="highlight">
-            {t("التحضير المهني", "career readiness")}
-          </span>
-          {t(" بثقة", " journey with confidence")}
-        </h1>
+  استعد لإنشاء سيرتك الذاتية
+  <br />
+  وابدأ رحلة <span className="highlight">التحضير المهني</span> بثقة
+</h1>
 
         <p className="hero-desc">
           {t(
