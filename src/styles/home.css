@@ -292,20 +292,56 @@ input,textarea,select{font-family:inherit;}
 .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
 
 .mobile-menu{
-  display:none;position:fixed;top:var(--nav-h);left:0;right:0;
-  background:white;border-top:3px solid var(--maroon);
+  display:none;
+  position:fixed;
+  top:var(--nav-h);
+  left:0;
+  right:0;
+  background:var(--white);
+  border-top:3px solid var(--maroon);
   border-bottom:1px solid var(--border);
-  padding:.75rem;z-index:899;flex-direction:column;gap:2px;
-  box-shadow:var(--shadow-md);
+  padding:1rem;
+  z-index:9999;
+  flex-direction:column;
+  gap:.45rem;
+  box-shadow:var(--shadow-lg);
 }
-.mobile-menu.open{display:flex;}
-.mobile-menu a{
-  color:var(--text-dark);font-size:.95rem;font-weight:600;
-  padding:.8rem 1rem;border-radius:var(--radius-sm);transition:var(--transition);
-}
-.mobile-menu a:hover{background:#FBF1F2;color:var(--maroon);}
-.mobile-menu-actions{display:flex;gap:.7rem;padding:.8rem 1rem 0;border-top:1px solid var(--border);margin-top:.5rem;}
 
+.mobile-menu.open{
+  display:flex;
+}
+
+.mobile-menu a{
+  color:var(--text-dark) !important;
+  font-size:1rem;
+  font-weight:700;
+  padding:.9rem 1rem;
+  border-radius:var(--radius-sm);
+  transition:var(--transition);
+  opacity:1 !important;
+}
+
+.mobile-menu a:hover{
+  background:#FBF1F2;
+  color:var(--maroon) !important;
+}
+
+.mobile-menu-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.8rem;
+  padding:1rem 0 0;
+  border-top:1px solid var(--border);
+  margin-top:.6rem;
+}
+
+html.dark .mobile-menu{
+  background:var(--white);
+}
+
+html.dark .mobile-menu a{
+  color:var(--text-dark) !important;
+}
 /* =============================================
    BUTTONS
    ============================================= */
