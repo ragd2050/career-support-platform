@@ -65,6 +65,7 @@ html.dark ::-webkit-scrollbar-track{
   background:#201A17;
 }
 
+
 html.dark .mobile-menu,
 html.dark .tips-search,
 html.dark .tip-card,
@@ -73,7 +74,10 @@ html.dark .verb-chip,
 html.dark .check-item,
 html.dark .builder-form-panel,
 html.dark .builder-progress,
-html.dark .cv-preview-wrap,
+html.dark .cv-preview-wrap{
+  background:#FFFFFF;   /* ثابت أبيض دايمًا، مو var(--white) */
+  border-color:var(--border);
+}
 html.dark .cv-preview-toolbar,
 html.dark .form-input,
 html.dark .form-textarea,
@@ -82,7 +86,9 @@ html.dark .tag-input-wrap input,
 html.dark .ai-score-badge,
 html.dark .ai-report-score-card,
 html.dark .ai-report-section,
-html.dark .ai-report-summary{
+html.dark .ai-report-summary,
+html.dark .star-card,          /* جديد — كان ناقص */
+html.dark .qa-item{             /* جديد — كان ناقص */
   background:var(--white);
   color:var(--text-dark);
   border-color:var(--border);

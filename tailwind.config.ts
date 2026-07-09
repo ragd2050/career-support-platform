@@ -57,10 +57,12 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Cal Sans", "Inter", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
-      },
+  sans: ["Cairo", "Poppins", "Inter", "system-ui", "sans-serif"],
+  arabic: ["Cairo", "system-ui", "sans-serif"],
+  english: ["Poppins", "Inter", "system-ui", "sans-serif"],
+  display: ["Cairo", "Poppins", "Inter", "sans-serif"],
+  mono: ["JetBrains Mono", "monospace"],
+},
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
