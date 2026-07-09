@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
 
 @import "../styles/home.css";
 @import "../styles/navbar.css";
@@ -91,11 +90,11 @@
 }
 
 html[dir="rtl"] body {
-  font-family: "Cairo", "Inter", sans-serif;
+  font-family: var(--font-cairo);
 }
 
 html[dir="ltr"] body {
-  font-family: "Poppins", "Inter", sans-serif;
+  font-family: var(--font-poppins);
 }
 }
 

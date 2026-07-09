@@ -2,6 +2,22 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import { AppProviders } from "@/components/providers/AppProviders";
 import "./globals.css";
+import { Cairo, Poppins } from "next/font/google";
+
+
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-cairo",
+  display: "swap",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "منصة الدعم المهني | جامعة دار الحكمة",
@@ -31,7 +47,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body className={`${cairo.variable} ${poppins.variable}`}>
         <AppProviders>{children}</AppProviders>
         <Toaster position="top-right" richColors closeButton />
       </body>
