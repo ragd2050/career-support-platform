@@ -1545,3 +1545,43 @@ body.rtl .nav-actions {
 .auth-captcha {
   margin: 0.75rem 0;
 }
+
+
+
+
+/* Fix landing page colors in dark mode */
+html.dark .services,
+html.dark .section,
+html.dark .cta {
+  background: #f8f8f8;
+}
+
+html.dark .section-title,
+html.dark .service-title,
+html.dark .card-title,
+html.dark .why-text-title {
+  color: #222 !important;
+}
+
+html.dark .section-desc,
+html.dark .service-desc,
+html.dark .card-desc,
+html.dark .why-text-desc {
+  color: #666 !important;
+}
+
+html.dark .service-card,
+html.dark .feature-card,
+html.dark .card,
+html.dark .why-item {
+  background: #ffffff !important;
+  border-color: #e5e5e5 !important;
+}
+
+html.dark .mobile-menu {
+  background: #2b1b18 !important;
+}
+
+html.dark .mobile-menu a {
+  color: #ffffff !important;
+}
