@@ -916,6 +916,51 @@ body.ltr .tip-card-body li::before{
   max-width:380px;
 }
 
+@media (max-width: 640px) {
+  .auth-page {
+    min-height: auto;
+    padding: 1.25rem 1rem 4rem;
+    align-items: flex-start;
+    overflow-x: hidden;
+  }
+
+  .auth-card {
+    max-width: 100%;
+    grid-template-columns: 1fr;
+    border-radius: 22px;
+  }
+
+  .auth-visual {
+    display: none;
+  }
+
+  .auth-form-area {
+    padding: 1.5rem 1rem;
+  }
+
+  .auth-form-box {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .auth-title {
+    font-size: 2.1rem;
+    line-height: 1.15;
+  }
+
+  .auth-subtitle {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .cl-rootBox,
+  .cl-card,
+  .cl-cardBox {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 .auth-back-link{
   display:inline-flex;
   align-items:center;
