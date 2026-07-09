@@ -44,13 +44,14 @@
    (Navbar, Hero, Footer, CV Tips, Interview Prep, Career Coach, auth
    pages) picks this up automatically with no other changes needed. */
 
-   html.dark{
+   
+html.dark{
   --bg: #16110F;
-  --white: #201A17;
+  --white: #2E211D;              
   --text-dark: #F0EAE6;
   --text-muted: #A89E98;
-  --border: rgba(255,255,255,.10);
-
+  --border: rgba(255,255,255,.14); 
+ 
   --shadow-sm: 0 1px 4px rgba(0,0,0,.35);
   --shadow-md: 0 4px 16px rgba(0,0,0,.45);
   --shadow-lg: 0 10px 32px rgba(0,0,0,.55);

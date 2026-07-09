@@ -10,7 +10,7 @@ export function CTA() {
     <section className="section cta">
       <div className="container">
         <div className="cta-box">
-          <h2>{t("جاهز لبناء سيرتك الذاتية الآن؟", "Ready to build your CV now?")}</h2>
+          <h2>{t("جاهز لإنشاء سيرتك الذاتية الآن؟", "Ready to build your CV now?")}</h2>
 
           <p>
             {t(
@@ -21,7 +21,7 @@ export function CTA() {
 
           <div className="cta-actions">
             <Link href="/builder/new" className="btn btn-gold btn-lg">
-              {t("ابدأ بناء سيرتك الذاتية", "Start Building Your CV")}
+              {t("ابدأ إنشاء سيرتك الذاتية", "Start Building Your CV")}
             </Link>
 
             <Link href="/cv-tips" className="btn btn-light btn-lg">

@@ -28,7 +28,7 @@ export function Hero() {
 
         <div className="hero-actions">
           <Link href={builderHref} className="btn btn-gold btn-lg">
-            {t("ابدأ بناء سيرتك الذاتية", "Start Building Your CV")}
+            {t("ابدأ إنشاء سيرتك الذاتية", "Start Building Your CV")}
           </Link>
 
           <Link href="/interview-prep" className="btn btn-light btn-lg">
