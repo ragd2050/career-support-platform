@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { auth } from "@clerk/nextjs/server";
 import OpenAI from "openai";
-import { PDFParse } from "pdf-parse";
+import { extractText, getDocumentProxy } from "unpdf";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -77,19 +77,27 @@ export async function POST(req: NextRequest) {
 
   if (isPdf) {
     let extractedText = "";
-    try {
-      const parser = new PDFParse({ data: buffer });
-      const result = await parser.getText();
-      await parser.destroy();
-      extractedText = result.text.trim();
-    } catch (err) {
-      console.error("[POST /api/ai/parse-resume] PDF parse error:", err);
-      return NextResponse.json(
-        { error: "Couldn't read that PDF — it may be corrupted or scanned as images." },
-        { status: 400 }
-      );
-    }
 
+try {
+  const pdfData = new Uint8Array(buffer);
+
+  const pdf = await getDocumentProxy(pdfData);
+  const result = await extractText(pdf, {
+    mergePages: true,
+  });
+
+  extractedText = result.text.trim();
+} catch (err) {
+  console.error("[POST /api/ai/parse-resume] PDF parse error:", err);
+
+  return NextResponse.json(
+    {
+      error:
+        "Couldn't read that PDF — it may be corrupted or scanned as images.",
+    },
+    { status: 400 }
+  );
+}
     if (!extractedText) {
       return NextResponse.json(
         { error: "No readable text found in that PDF. Try uploading it as an image instead." },
