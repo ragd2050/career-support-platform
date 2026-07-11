@@ -5,17 +5,31 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useCvBuilderHref } from "@/hooks/useCvBuilderHref";
 
 export function Hero() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const builderHref = useCvBuilderHref();
 
   return (
     <section className="hero">
       <div className="container hero-inner">
         <h1 className="hero-title">
-  استعد لإنشاء سيرتك الذاتية
-  <br />
-  وابدأ رحلة <span className="highlight">التحضير المهني</span> بثقة
-</h1>
+          {lang === "ar" ? (
+            <>
+              استعد لإنشاء سيرتك الذاتية
+              <br />
+              وابدأ رحلة{" "}
+              <span className="highlight">التحضير المهني</span>{" "}
+              بثقة
+            </>
+          ) : (
+            <>
+              Get Ready to Build Your CV
+              <br />
+              and Begin Your{" "}
+              <span className="highlight">Career Preparation</span>{" "}
+              Journey with Confidence
+            </>
+          )}
+        </h1>
 
         <p className="hero-desc">
           {t(
