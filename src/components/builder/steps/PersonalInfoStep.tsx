@@ -80,30 +80,55 @@ export function PersonalInfoStep() {
 
   return (
     <StepWrapper title="Personal Information" description="Enter your basic contact and professional details.">
-      <div className="mb-5 rounded-lg border border-dashed border-[#8B1E24]/30 bg-[#8B1E24]/[0.03] p-4">
-        <input ref={fileInputRef} type="file" accept={ACCEPTED_TYPES.join(",")} onChange={handleImportFile} className="hidden" />
-        <div className="flex flex-col items-center gap-3 text-center">
-  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#8B1E24]/10 text-[#8B1E24]">
-    {importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
-  </span>
-  <div>
-    <p className="text-sm font-bold text-gray-900 dark:text-[#F0EAE6]">Have an existing CV?</p>
-    <p className="text-xs text-gray-500 dark:text-[#8A8078]">
-      Upload a PDF or a photo of it and we&apos;ll auto-fill every step below — just review and adjust.
-    </p>
-  </div>
-  <button
-    type="button"
-    onClick={() => fileInputRef.current?.click()}
-    disabled={importing}
-    className="flex w-full shrink-0 items-center justify-center gap-1.5 rounded-lg bg-[#8B1E24] px-3.5 py-2 text-xs font-bold text-white transition-colors hover:bg-[#6E1620] disabled:opacity-60"
-  >
-    {importing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
-    {importing ? "Importing..." : "Upload PDF or Image"}
-  </button>
-</div>
+      <div className="mb-5 rounded-xl border border-dashed border-[#8B1E24]/30 bg-[#8B1E24]/[0.03] p-4 sm:p-5">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={ACCEPTED_TYPES.join(",")}
+          onChange={handleImportFile}
+          className="hidden"
+        />
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3 min-w-0">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#8B1E24]/10 text-[#8B1E24]">
+              {importing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <FileText className="h-4 w-4" />
+              )}
+            </span>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-gray-900 dark:text-[#F0EAE6]">
+                Have an existing CV?
+              </p>
+              <p className="mt-1 max-w-xl text-xs leading-5 text-gray-500 dark:text-[#8A8078]">
+                Upload a PDF or image and we&apos;ll auto-fill your resume information.
+                You can review and edit everything before saving.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importing}
+            className="flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-[#8B1E24] px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-[#6E1620] disabled:opacity-60 sm:w-auto"
+          >
+            {importing ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4" />
+            )}
+            {importing ? "Importing..." : "Upload PDF or Image"}
+          </button>
+        </div>
+
         {importedFileName && !importing && (
-          <p className="mt-2.5 text-xs font-medium text-emerald-700">✓ Imported from {importedFileName}</p>
+          <p className="mt-3 text-xs font-medium text-emerald-700">
+            ✓ Imported from {importedFileName}
+          </p>
         )}
       </div>
 

@@ -217,16 +217,9 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-[#2A2320]">
-      {/* ── Left panel — form ──
-          Always full width on phones/tablets (<lg) regardless of
-          showPreview — the live preview never squeezes it on small
-          screens; instead the preview becomes its own full-screen
-          modal below (see the two preview blocks further down). */}
-      <div
-        className={`flex w-full min-w-0 flex-col ${
-          showPreview ? "lg:w-[52%] lg:shrink-0" : "lg:w-full"
-        } border-r border-gray-200 dark:border-white/10 bg-white dark:bg-[#201A17] transition-all duration-300`}
-      >
+      {/* ── Left panel — form (always full width; the preview is a
+          separate full-screen modal below, on every screen size) ── */}
+      <div className="flex w-full min-w-0 flex-col border-r border-gray-200 dark:border-white/10 bg-white dark:bg-[#201A17]">
         {/* Header */}
         <div className="flex flex-shrink-0 flex-wrap items-center justify-between gap-y-2 border-b border-gray-100 dark:border-white/10 bg-white dark:bg-[#201A17] px-3 py-2.5 sm:px-6 sm:py-3">
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
@@ -271,23 +264,16 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
               <span className="max-sm:hidden sm:inline">Save Draft</span>
             </button>
 
-          <button
-  type="button"
-  onClick={() => {
-    console.log("TOP PREVIEW BUTTON CLICKED");
-    setShowPreview((v) => {
-      const next = !v;
-      console.log("PREVIEW STATE CHANGE:", { before: v, after: next });
-      return next;
-    });
-  }}
-  className="flex items-center gap-1.5 rounded-lg border border-[#D4A63A] px-2.5 py-2 text-xs font-semibold text-[#8B1E24] transition-colors hover:bg-[#FEDFA4]/40 sm:px-4 sm:text-sm"
->
-  {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-  <span className="max-sm:hidden sm:inline">
-    {showPreview ? "Hide Preview" : "Show Preview"}
-  </span>
-</button>
+            <button
+              type="button"
+              onClick={() => setShowPreview((v) => !v)}
+              className="flex items-center gap-1.5 rounded-lg border border-[#D4A63A] px-2.5 py-2 text-xs font-semibold text-[#8B1E24] transition-colors hover:bg-[#FEDFA4]/40 sm:px-4 sm:text-sm"
+            >
+              {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              <span className="max-sm:hidden sm:inline">
+                {showPreview ? "Hide Preview" : "Show Preview"}
+              </span>
+            </button>
           </div>
         </div>
 
@@ -350,34 +336,41 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
         </div>
       </div>
 
+      {/* ── Live preview — ONE full-screen modal, used on every screen
+          size. Two nested wrappers switch the zoom level responsively
+          (mobile needs a much smaller scale than a laptop). */}
       {showPreview && (
-  <div className="fixed inset-0 z-[99999] bg-gray-100 dark:bg-[#2A2320]">
-    <div className="flex items-center justify-between border-b bg-white px-4 py-3">
-      <div>
-        <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#8B1E24]">
-          Live Preview
-        </span>
-        <p className="text-xs text-gray-500">Professional A4 preview</p>
-      </div>
+        <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 dark:bg-[#2A2320]">
+          <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 dark:border-white/10 bg-white dark:bg-[#201A17] px-4 py-3">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#8B1E24]">Live Preview</span>
+              <p className="text-xs text-gray-500 dark:text-[#8A8078]">Professional A4 preview</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPreview(false)}
+              className="flex items-center gap-1.5 rounded-lg border border-gray-200 dark:border-white/10 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-[#A89E98]"
+            >
+              <EyeOff className="h-3.5 w-3.5" />
+              Close
+            </button>
+          </div>
 
-      <button
-        type="button"
-        onClick={() => setShowPreview(false)}
-        className="rounded-lg border px-3 py-2 text-sm font-semibold text-[#8B1E24]"
-      >
-        Close
-      </button>
-    </div>
-
-    <div className="h-[calc(100vh-64px)] overflow-auto p-6">
-      <div className="flex justify-center">
-        <div style={{ transform: "scale(0.8)", transformOrigin: "top center" }}>
-          <ResumePreview data={resume} />
+          <div className="flex-1 overflow-auto p-4 sm:p-6">
+            <div className="flex justify-center">
+              {/* Phones/tablets */}
+              <div className="sm:hidden" style={{ zoom: 0.38 }}>
+                <ResumePreview data={resume} />
+              </div>
+              {/* Laptops/desktops */}
+              <div className="hidden sm:block" style={{ zoom: 0.8 }}>
+                <ResumePreview data={resume} />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
+
       {/* Hidden print target */}
       <div style={{ position: "fixed", left: "-9999px", top: 0, width: "210mm", background: "white" }}>
         <ResumePreview data={resume} id="resume-print" />

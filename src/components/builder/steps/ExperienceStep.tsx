@@ -40,7 +40,10 @@ export function ExperienceStep() {
         const { bullets } = await res.json();
         updateExperience(id, { description: bullets });
         toast.success("AI bullets generated!");
-      } else toast.error("Failed to generate");
+      } else {
+        const data = await res.json().catch(() => null);
+        toast.error(data?.error || "Failed to generate");
+      }
     } catch { toast.error("AI error"); }
     finally { setGenerating(null); }
   };
