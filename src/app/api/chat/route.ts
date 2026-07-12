@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import OpenAI from "openai";
-import { PDFParse } from "pdf-parse";
 import { prisma } from "@/lib/prisma";
 import { getMajorLabel } from "@/lib/majors";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -185,10 +187,16 @@ export async function POST(req: NextRequest) {
       let extractedText = "";
       try {
         const buffer = Buffer.from(file.dataBase64, "base64");
-        const parser = new PDFParse({ data: buffer });
-        const result = await parser.getText();
-        await parser.destroy();
-        extractedText = result.text.trim();
+const pdfData = new Uint8Array(buffer);
+
+const { extractText, getDocumentProxy } = await import("unpdf");
+
+const pdf = await getDocumentProxy(pdfData);
+const result = await extractText(pdf, {
+  mergePages: true,
+});
+
+extractedText = result.text.trim();
       } catch (err) {
         console.error("[POST /api/chat] PDF parse error:", err);
         return NextResponse.json(
