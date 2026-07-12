@@ -4,162 +4,362 @@ import OpenAI from "openai";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const apiKey = process.env.OPENAI_API_KEY?.trim();
+
+const openai = new OpenAI({
+  apiKey,
+});
+
+type PersonalInfo = {
+  fullName?: string;
+  title?: string;
+};
+
 type Experience = {
   position?: string;
   company?: string;
-  description?: string[] | string;
+  description?: string[];
 };
 
 type Skill = {
   name?: string;
+  category?: string;
+};
+
+type Education = {
+  institution?: string;
+  degree?: string;
+  field?: string;
+};
+
+type Project = {
+  name?: string;
+  description?: string;
+  tech?: string[];
+};
+
+type Certification = {
+  name?: string;
+  issuer?: string;
+};
+
+type Award = {
+  title?: string;
+  issuer?: string;
+  description?: string;
+};
+
+type Volunteering = {
+  organization?: string;
+  role?: string;
+  description?: string[];
+};
+
+type Language = {
+  name?: string;
+  level?: string;
 };
 
 type SummaryRequestBody = {
-  personalInfo?: {
-    fullName?: string;
-    title?: string;
-  };
-  experiences?: Experience[];
-  skills?: Array<Skill | string>;
-
-  // Support the test payload and other builder formats
-  targetRole?: string;
   currentSummary?: string;
+  personalInfo?: PersonalInfo;
+  experiences?: Experience[];
+  skills?: Skill[];
+  education?: Education[];
+  projects?: Project[];
+  certifications?: Certification[];
+  awards?: Award[];
+  volunteering?: Volunteering[];
+  languages?: Language[];
 };
+
+function cleanText(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function hasArabic(text: string): boolean {
+  return /[\u0600-\u06FF]/.test(text);
+}
+
+function formatList(items: string[]): string {
+  const filtered = items.filter(Boolean);
+  return filtered.length > 0 ? filtered.join("\n") : "Not provided";
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const apiKey = process.env.OPENAI_API_KEY;
-
     if (!apiKey) {
-      console.error("OPENAI_API_KEY is missing in Vercel.");
-
       return NextResponse.json(
-        {
-          error: "OpenAI API key is not configured.",
-          code: "missing_api_key",
-        },
+        { error: "Missing OPENAI_API_KEY" },
         { status: 500 }
       );
     }
 
     const body = (await req.json()) as SummaryRequestBody;
 
-    const {
-      personalInfo,
-      experiences = [],
-      skills = [],
-      targetRole,
-      currentSummary,
-    } = body;
+    const currentSummary = cleanText(body.currentSummary);
+    const personalInfo = body.personalInfo || {};
 
-    const professionalTitle =
-      personalInfo?.title?.trim() ||
-      targetRole?.trim() ||
-      "University Student";
+    const title = cleanText(personalInfo.title);
+    const fullName = cleanText(personalInfo.fullName);
 
-    const experienceSummary = experiences
-      .slice(0, 3)
+    const experiences = (body.experiences || [])
       .map((experience) => {
-        const position = experience.position?.trim() || "Role";
-        const company = experience.company?.trim() || "Company";
-
+        const position = cleanText(experience.position);
+        const company = cleanText(experience.company);
         const descriptions = Array.isArray(experience.description)
-          ? experience.description
-          : experience.description
-            ? [experience.description]
-            : [];
+          ? experience.description.map(cleanText).filter(Boolean)
+          : [];
 
-        const details = descriptions
+        if (!position && !company && descriptions.length === 0) {
+          return "";
+        }
+
+        return [
+          position ? `Position: ${position}` : "",
+          company ? `Organization: ${company}` : "",
+          descriptions.length > 0
+            ? `Details: ${descriptions.join("; ")}`
+            : "",
+        ]
           .filter(Boolean)
-          .slice(0, 2)
-          .join("; ");
-
-        return details
-          ? `${position} at ${company}: ${details}`
-          : `${position} at ${company}`;
+          .join(" | ");
       })
-      .join("\n");
+      .filter(Boolean);
 
-    const skillsList = skills
-      .map((skill) =>
-        typeof skill === "string" ? skill.trim() : skill.name?.trim() || ""
-      )
-      .filter(Boolean)
-      .slice(0, 10)
-      .join(", ");
+    const skills = (body.skills || [])
+      .map((skill) => {
+        const name = cleanText(skill.name);
+        const category = cleanText(skill.category);
+
+        if (!name) return "";
+
+        return category ? `${name} (${category})` : name;
+      })
+      .filter(Boolean);
+
+    const education = (body.education || [])
+      .map((item) => {
+        const degree = cleanText(item.degree);
+        const field = cleanText(item.field);
+        const institution = cleanText(item.institution);
+
+        if (!degree && !field && !institution) return "";
+
+        return [degree, field, institution].filter(Boolean).join(" — ");
+      })
+      .filter(Boolean);
+
+    const projects = (body.projects || [])
+      .map((project) => {
+        const name = cleanText(project.name);
+        const description = cleanText(project.description);
+        const technologies = Array.isArray(project.tech)
+          ? project.tech.map(cleanText).filter(Boolean)
+          : [];
+
+        if (!name && !description && technologies.length === 0) {
+          return "";
+        }
+
+        return [
+          name ? `Project: ${name}` : "",
+          description ? `Description: ${description}` : "",
+          technologies.length > 0
+            ? `Tools: ${technologies.join(", ")}`
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" | ");
+      })
+      .filter(Boolean);
+
+    const certifications = (body.certifications || [])
+      .map((certificate) => {
+        const name = cleanText(certificate.name);
+        const issuer = cleanText(certificate.issuer);
+
+        if (!name) return "";
+
+        return issuer ? `${name} — ${issuer}` : name;
+      })
+      .filter(Boolean);
+
+    const awards = (body.awards || [])
+      .map((award) => {
+        const title = cleanText(award.title);
+        const issuer = cleanText(award.issuer);
+        const description = cleanText(award.description);
+
+        if (!title) return "";
+
+        return [title, issuer, description].filter(Boolean).join(" | ");
+      })
+      .filter(Boolean);
+
+    const volunteering = (body.volunteering || [])
+      .map((item) => {
+        const role = cleanText(item.role);
+        const organization = cleanText(item.organization);
+        const descriptions = Array.isArray(item.description)
+          ? item.description.map(cleanText).filter(Boolean)
+          : [];
+
+        if (!role && !organization && descriptions.length === 0) {
+          return "";
+        }
+
+        return [
+          role,
+          organization ? `at ${organization}` : "",
+          descriptions.length > 0 ? descriptions.join("; ") : "",
+        ]
+          .filter(Boolean)
+          .join(" | ");
+      })
+      .filter(Boolean);
+
+    const languages = (body.languages || [])
+      .map((language) => {
+        const name = cleanText(language.name);
+        const level = cleanText(language.level);
+
+        if (!name) return "";
+
+        return level ? `${name} — ${level}` : name;
+      })
+      .filter(Boolean);
+
+    /*
+      إذا كانت الطالبة كتبت نصًا:
+      نحافظ على لغة النص نفسه، وليس لغة الموقع.
+    */
+    const outputLanguage = currentSummary
+      ? hasArabic(currentSummary)
+        ? "Arabic"
+        : "English"
+      : title && hasArabic(title)
+        ? "Arabic"
+        : "English";
+
+    const modeInstructions = currentSummary
+      ? `
+The candidate already wrote a draft.
+
+Your job is to improve the EXISTING draft, not replace it with a completely different summary.
+
+Rules:
+- Preserve the original meaning and intention.
+- Preserve the original language.
+- Keep recognizable details from the student's draft.
+- Correct grammar, clarity, flow, and professional tone.
+- Make the wording suitable for an ATS-friendly resume.
+- You may use the verified resume information below only to strengthen or clarify the draft.
+- Do not introduce unsupported skills, achievements, experience, software, certifications, or responsibilities.
+- Do not turn a simple student profile into an experienced professional.
+`
+      : `
+The candidate has not written a draft.
+
+Create a professional resume summary using only the verified resume information below.
+
+Rules:
+- Do not invent any information.
+- If the available information is limited, keep the summary simple and honest.
+- Do not add generic skills that were not provided.
+`;
 
     const prompt = `
-Write a professional ATS-friendly resume summary in exactly 2 to 4 sentences.
+You are an expert university career advisor and ATS resume writer.
 
-Candidate name:
-${personalInfo?.fullName?.trim() || "Candidate"}
+${modeInstructions}
 
-Target role:
-${professionalTitle}
-
-Key skills:
-${skillsList || "problem solving, teamwork, communication"}
-
-Experience:
-${experienceSummary || "No professional experience provided"}
+Output requirements:
+- Write in ${outputLanguage}.
+- Return only the improved or generated summary.
+- Write 2 to 4 concise sentences.
+- Do not include headings, explanations, quotation marks, notes, or bullet points.
+- Avoid clichés such as:
+  "motivated student",
+  "dedicated university student",
+  "eager to learn",
+  "strong problem-solving skills",
+  "dynamic environment",
+  "personal and professional growth",
+  "passionate about",
+  unless that wording is essential to preserve the meaning of the student's own draft.
+- Do not use first-person pronouns.
+- Keep the tone professional, natural, specific, and suitable for a student or early-career candidate.
 
 Existing summary:
-${currentSummary?.trim() || "None"}
+${currentSummary || "Not provided"}
 
-Requirements:
-- Suitable for a student or early-career candidate
-- Do not invent years of experience, employers, achievements, or qualifications
-- Highlight relevant skills and career goals
-- Use clear and professional language
-- Return only the resume summary
+Candidate name:
+${fullName || "Not provided"}
+
+Professional title or field:
+${title || "Not provided"}
+
+Education:
+${formatList(education)}
+
+Skills:
+${formatList(skills)}
+
+Projects:
+${formatList(projects)}
+
+Experience:
+${formatList(experiences)}
+
+Certifications:
+${formatList(certifications)}
+
+Awards:
+${formatList(awards)}
+
+Volunteering and leadership:
+${formatList(volunteering)}
+
+Languages:
+${formatList(languages)}
+
+Return only the final summary.
 `.trim();
 
-    const openai = new OpenAI({ apiKey });
-
-    const response = await openai.responses.create({
+    const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      input: prompt,
-      max_output_tokens: 220,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You improve resume summaries while preserving the candidate's language, meaning, and factual accuracy. Never invent information.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      max_tokens: 220,
+      temperature: currentSummary ? 0.25 : 0.4,
     });
 
-    const summary = response.output_text?.trim();
+    const summary =
+      completion.choices[0]?.message?.content?.trim() || "";
 
     if (!summary) {
-      console.error("OpenAI returned an empty summary.", response);
-
       return NextResponse.json(
-        {
-          error: "OpenAI returned an empty response.",
-          code: "empty_response",
-        },
-        { status: 502 }
+        { error: "No summary was generated" },
+        { status: 500 }
       );
     }
 
     return NextResponse.json({ summary });
-  } catch (error: unknown) {
-    console.error("OpenAI summary route failed:", error);
-
-    if (error instanceof OpenAI.APIError) {
-      return NextResponse.json(
-        {
-          error: error.message,
-          code: error.code || "openai_api_error",
-          status: error.status,
-        },
-        { status: error.status || 500 }
-      );
-    }
-
-    const message =
-      error instanceof Error ? error.message : "Unknown server error";
+  } catch (error) {
+    console.error("OpenAI summary error:", error);
 
     return NextResponse.json(
-      {
-        error: message,
-        code: "summary_generation_failed",
-      },
+      { error: "AI generation failed" },
       { status: 500 }
     );
   }
