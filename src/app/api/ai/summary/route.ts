@@ -243,30 +243,41 @@ export async function POST(req: NextRequest) {
         : "English";
 
     const modeInstructions = currentSummary
-      ? `
-The candidate already wrote a draft.
+  ? `
+The candidate has already written a draft.
 
-Your job is to improve the EXISTING draft, not replace it with a completely different summary.
+Your task is to EDIT the draft, not generate a new summary.
 
-Rules:
-- Preserve the original meaning and intention.
-- Preserve the original language.
-- Keep recognizable details from the student's draft.
-- Correct grammar, clarity, flow, and professional tone.
-- Make the wording suitable for an ATS-friendly resume.
-- You may use the verified resume information below only to strengthen or clarify the draft.
-- Do not introduce unsupported skills, achievements, experience, software, certifications, or responsibilities.
-- Do not turn a simple student profile into an experienced professional.
+STRICT RULES:
+- Preserve the same meaning, scope, and factual content.
+- Preserve the same language as the draft.
+- Keep the result close to the original wording.
+- Improve only grammar, clarity, sentence flow, and professionalism.
+- Do not add any new skill, software, tool, project, experience, achievement, responsibility, or field.
+- Do not infer information from the job title.
+- Do not expand a short draft into a detailed profile.
+- Do not add phrases such as:
+  "experienced in",
+  "proficient in",
+  "skilled in",
+  "committed to",
+  "high-quality",
+  "continuous learning",
+  unless those exact ideas already exist in the draft.
+- Do not add generic soft skills such as teamwork, communication, problem-solving, leadership, creativity, or adaptability unless explicitly written in the draft.
+- Keep approximately the same length as the original draft.
+- Maximum increase: 20 words.
+- If the draft is already clear, make only small edits.
 `
-      : `
+  : `
 The candidate has not written a draft.
 
-Create a professional resume summary using only the verified resume information below.
+Create a concise professional summary using only verified resume information.
 
 Rules:
-- Do not invent any information.
-- If the available information is limited, keep the summary simple and honest.
-- Do not add generic skills that were not provided.
+- Do not invent information.
+- Do not infer skills from the field of study.
+- Keep it to 2 or 3 sentences.
 `;
 
     const prompt = `
@@ -275,22 +286,16 @@ You are an expert university career advisor and ATS resume writer.
 ${modeInstructions}
 
 Output requirements:
-- Write in ${outputLanguage}.
-- Return only the improved or generated summary.
-- Write 2 to 4 concise sentences.
-- Do not include headings, explanations, quotation marks, notes, or bullet points.
-- Avoid clichés such as:
-  "motivated student",
-  "dedicated university student",
-  "eager to learn",
-  "strong problem-solving skills",
-  "dynamic environment",
-  "personal and professional growth",
-  "passionate about",
-  unless that wording is essential to preserve the meaning of the student's own draft.
-- Do not use first-person pronouns.
-- Keep the tone professional, natural, specific, and suitable for a student or early-career candidate.
-
+Output requirements:
+- Return only the final edited summary.
+- Do not explain your changes.
+- Do not use bullet points or headings.
+- Do not place the answer inside quotation marks.
+- Preserve the original language.
+- Preserve the candidate's original meaning.
+- Keep the same level of experience stated in the draft.
+- Do not make the candidate sound more experienced than they are.
+- Do not introduce any information that does not already appear in the draft.
 Existing summary:
 ${currentSummary || "Not provided"}
 
