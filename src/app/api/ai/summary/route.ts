@@ -54,9 +54,7 @@ function cleanText(value: unknown): string {
 function cleanList(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
 
-  return value
-    .map((item) => cleanText(item))
-    .filter(Boolean);
+  return value.map(cleanText).filter(Boolean);
 }
 
 function hasArabic(text: string): boolean {
@@ -82,85 +80,6 @@ export async function POST(req: NextRequest) {
     const personalInfo = body.personalInfo || {};
     const title = cleanText(personalInfo.title);
 
-    /*
-      MODE 1:
-      If the student already wrote a summary, edit only that text.
-      Do not send other resume sections to the model.
-    */
-    if (currentSummary) {
-      const outputLanguage = hasArabic(currentSummary)
-        ? "Arabic"
-        : "English";
-
-      const editPrompt = `
-You are a careful ATS resume editor.
-
-Edit the student's existing professional summary.
-
-STRICT RULES:
-- Write in ${outputLanguage}.
-- Preserve the original meaning and factual content.
-- Keep the result close to the original wording.
-- Improve only grammar, clarity, sentence flow, conciseness, and professional tone.
-- Do not create a different profile.
-- Do not add any skill, software, tool, design area, project, experience, achievement, qualification, or responsibility.
-- Do not infer information from the candidate's field.
-- Do not make the candidate sound more experienced than the original text suggests.
-- Keep approximately the same length as the original.
-- The result may be at most 15 words longer than the original.
-- If the original is already good, make only small edits.
-- Return only the edited summary.
-- Do not use headings, bullet points, notes, explanations, or quotation marks.
-
-Avoid adding expressions such as:
-- experienced in
-- proficient in
-- skilled in
-- committed to
-- continuous learning
-- high-quality
-- strong problem-solving
-- teamwork and communication
-unless those ideas are explicitly present in the original draft.
-
-Original draft:
-${currentSummary}
-`.trim();
-
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a conservative resume editor. Make minimal, factual edits and never introduce new information.",
-          },
-          {
-            role: "user",
-            content: editPrompt,
-          },
-        ],
-        max_tokens: 180,
-        temperature: 0.05,
-      });
-
-      const summary =
-        completion.choices[0]?.message?.content?.trim() || "";
-
-      if (!summary) {
-        return NextResponse.json(
-          { error: "No summary was generated" },
-          { status: 500 }
-        );
-      }
-
-      return NextResponse.json({ summary });
-    }
-
-    /*
-      MODE 2:
-      If the summary field is empty, generate one from verified data.
-    */
     const education = (body.education || [])
       .map((item) => {
         const degree = cleanText(item.degree);
@@ -193,8 +112,8 @@ ${currentSummary}
         return [
           name ? `Project: ${name}` : "",
           description ? `Description: ${description}` : "",
-          technologies.length
-            ? `Tools: ${technologies.join(", ")}`
+          technologies.length > 0
+            ? `Technologies: ${technologies.join(", ")}`
             : "",
         ]
           .filter(Boolean)
@@ -211,7 +130,7 @@ ${currentSummary}
         return [
           position ? `Position: ${position}` : "",
           company ? `Organization: ${company}` : "",
-          descriptions.length
+          descriptions.length > 0
             ? `Details: ${descriptions.join("; ")}`
             : "",
         ]
@@ -220,25 +139,64 @@ ${currentSummary}
       })
       .filter(Boolean);
 
-    const outputLanguage =
-      title && hasArabic(title) ? "Arabic" : "English";
+    const outputLanguage = currentSummary
+      ? hasArabic(currentSummary)
+        ? "Arabic"
+        : "English"
+      : title && hasArabic(title)
+        ? "Arabic"
+        : "English";
 
-    const generatePrompt = `
-You are an ATS resume writer for university students and early-career candidates.
+    /*
+      يوجد نص مكتوب:
+      حسّنيه بشكل واضح، لكن دون اختراع معلومات.
+    */
+    if (currentSummary) {
+      const response = await openai.responses.create({
+        model: "gpt-5.6",
 
-Create a concise professional summary using only the verified information below.
+        reasoning: {
+          effort: "medium",
+        },
 
-RULES:
-- Write in ${outputLanguage}.
-- Write 2 or 3 concise sentences.
-- Never invent information.
-- Do not infer skills merely from the candidate's field.
-- Do not add software, tools, experience, achievements, or qualifications that are not listed.
-- Keep the candidate's real experience level.
-- Avoid generic phrases such as "motivated student", "eager to learn", "dynamic environment", and "personal and professional growth".
-- If very little information is available, write a simple and honest summary.
-- Return only the final summary.
+        max_output_tokens: 350,
 
+        input: [
+          {
+            role: "developer",
+            content: `
+You are a senior university career advisor and an expert ATS resume editor.
+
+Your task is to produce a clearly improved professional summary, not merely correct grammar or replace one synonym.
+
+The improved version must:
+
+- Preserve every factual claim from the original draft.
+- Preserve the original language.
+- Preserve the candidate's real level of experience.
+- Improve structure, precision, readability, sentence flow, and professional impact.
+- Remove repetition, weak phrasing, and unnecessary filler.
+- Combine related ideas when that improves conciseness.
+- Use strong but honest professional language.
+- Remain suitable for a university student or early-career applicant.
+- Never invent skills, software, experience, projects, achievements, numbers, qualifications, or responsibilities.
+- Never describe academic or volunteer work as paid professional experience unless the original explicitly says so.
+- Do not merely change one or two words when the sentences can be substantially improved.
+- Return only one final summary.
+            `.trim(),
+          },
+          {
+            role: "user",
+            content: `
+Improve the following resume summary.
+
+Required language:
+${outputLanguage}
+
+Original summary:
+${currentSummary}
+
+Verified resume context:
 Professional title or field:
 ${title || "Not provided"}
 
@@ -253,27 +211,116 @@ ${formatItems(projects)}
 
 Experience:
 ${formatItems(experiences)}
-`.trim();
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
+Instructions:
+
+- Write 2 to 4 concise sentences.
+- Aim for approximately 45 to 85 words.
+- Keep all claims factual.
+- Use the verified context only to confirm or clarify information already represented in the original draft.
+- Do not add a new fact merely because it appears in the context.
+- Do not use first-person pronouns.
+- Do not use headings, bullets, quotation marks, or explanations.
+- Avoid empty phrases such as:
+  "eager to learn",
+  "committed to continuous learning",
+  "dynamic environment",
+  "personal and professional growth",
+  "high-quality projects".
+
+A weak result only corrects grammar or swaps a few words.
+
+A strong result reorganizes the same verified facts into a more concise, specific, natural, and professionally compelling summary.
+
+Return only the improved summary.
+            `.trim(),
+          },
+        ],
+      });
+
+      const summary = response.output_text.trim();
+
+      if (!summary) {
+        return NextResponse.json(
+          { error: "No summary was generated" },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({ summary });
+    }
+
+    /*
+      الخانة فارغة:
+      أنشئي ملخصًا من بيانات السيرة.
+    */
+    const response = await openai.responses.create({
+      model: "gpt-5.6",
+
+      reasoning: {
+        effort: "medium",
+      },
+
+      max_output_tokens: 350,
+
+      input: [
         {
-          role: "system",
-          content:
-            "You write concise, factual ATS resume summaries and never invent candidate information.",
+          role: "developer",
+          content: `
+You are a senior university career advisor and expert ATS resume writer.
+
+Create concise and factual professional summaries for university students and early-career candidates.
+
+Never invent information.
+Never infer tools, experience, achievements, or qualifications that were not supplied.
+Use specific evidence instead of generic personality claims.
+Return only the final summary.
+          `.trim(),
         },
         {
           role: "user",
-          content: generatePrompt,
+          content: `
+Create a professional resume summary using only the verified information below.
+
+Required language:
+${outputLanguage}
+
+Professional title or field:
+${title || "Not provided"}
+
+Education:
+${formatItems(education)}
+
+Technical skills:
+${formatItems(skills)}
+
+Projects:
+${formatItems(projects)}
+
+Experience:
+${formatItems(experiences)}
+
+Requirements:
+
+- Write 2 to 4 concise sentences.
+- Aim for approximately 45 to 85 words.
+- Clearly reflect the candidate's real field and strongest verified qualifications.
+- Prioritize concrete technologies, projects, education, and experience.
+- Do not invent any fact.
+- Do not make the candidate sound more experienced than the supplied information supports.
+- Do not use first-person pronouns.
+- Avoid generic openings such as:
+  "Motivated university student",
+  "Dedicated student",
+  "Eager to learn",
+  "Passionate individual".
+- Return only the final summary.
+          `.trim(),
         },
       ],
-      max_tokens: 180,
-      temperature: 0.25,
     });
 
-    const summary =
-      completion.choices[0]?.message?.content?.trim() || "";
+    const summary = response.output_text.trim();
 
     if (!summary) {
       return NextResponse.json(
@@ -286,8 +333,13 @@ ${formatItems(experiences)}
   } catch (error) {
     console.error("OpenAI summary error:", error);
 
+    const message =
+      error instanceof Error
+        ? error.message
+        : "AI generation failed";
+
     return NextResponse.json(
-      { error: "AI generation failed" },
+      { error: message },
       { status: 500 }
     );
   }
