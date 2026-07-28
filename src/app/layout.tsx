@@ -38,8 +38,11 @@ export default function RootLayout({
               (function () {
                 try {
                   var stored = localStorage.getItem("dah-theme");
-                  var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-                  var isDark = stored === "dark" || (stored !== "light" && systemDark);
+                  // الوضع الفاتح افتراضي دايمًا لأي زائر جديد (بدون
+                  // تفضيل محفوظ سابقاً) — بغض النظر عن إعداد نظام
+                  // تشغيله. الوضع الداكن يظهر بس لو الزائر اختاره
+                  // بنفسه صراحة عبر زر التبديل (يُحفظ بـlocalStorage).
+                  var isDark = stored === "dark";
                   document.documentElement.classList.toggle("dark", isDark);
                 } catch (e) {}
               })();
