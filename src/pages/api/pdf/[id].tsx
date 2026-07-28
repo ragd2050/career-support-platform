@@ -74,8 +74,9 @@ export default async function handler(
     });
   }
 
-  const isAdmin =
-    currentUser.role === "ADMIN";
+  const canAccessStudentResumes =
+  currentUser.role === "ADMIN" ||
+  currentUser.role === "CAREER_ADVISOR";
 
   /* =====================================================
      RESUME ACCESS
@@ -83,16 +84,14 @@ export default async function handler(
 
   const resume =
     await prisma.resume.findFirst({
-      where: isAdmin
-        ? {
-            // Admin can download any resume.
-            id,
-          }
-        : {
-            // Regular users can download only their own resume.
-            id,
-            userId: currentUser.id,
-          },
+      where: canAccessStudentResumes
+  ? {
+      id,
+    }
+  : {
+      id,
+      userId: currentUser.id,
+    },
 
       include: {
         personalInfo: true,
@@ -167,9 +166,9 @@ export default async function handler(
   // إذا الأدمن حمّل CV لطالبة ثانية نسجل العملية.
   // فشل الـlog لا يمنع تحميل الملف.
   if (
-    isAdmin &&
-    resume.userId !== currentUser.id
-  ) {
+  currentUser.role === "ADMIN" &&
+  resume.userId !== currentUser.id
+) {
     try {
       await prisma.adminAccessLog.create({
         data: {
