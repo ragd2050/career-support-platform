@@ -27,10 +27,7 @@ export const clerkAppearance = {
     headerSubtitle: "hidden",
 
     footerAction: "text-center",
-
-    footerActionText:
-      "text-[13px] text-[#666]",
-
+    footerActionText: "text-[13px] text-[#666]",
     footerActionLink:
       "text-[#8B1E24] font-bold hover:text-[#7A1820]",
 
@@ -40,23 +37,14 @@ export const clerkAppearance = {
     formFieldInput:
       "rounded-[10px] border border-[#E5E5E5] text-[15px] focus:border-[#8B1E24] focus:ring-1 focus:ring-[#8B1E24] py-3 px-4",
 
-    formFieldLabel:
-      "text-[13px] font-bold text-[#222]",
-
-    identityPreviewEditButton:
-      "text-[#8B1E24]",
-
-    formResendCodeLink:
-      "text-[#8B1E24] font-bold",
-
+    formFieldLabel: "text-[13px] font-bold text-[#222]",
+    identityPreviewEditButton: "text-[#8B1E24]",
+    formResendCodeLink: "text-[#8B1E24] font-bold",
     otpCodeFieldInput:
       "border-[#E5E5E5] focus:border-[#8B1E24] py-3",
 
-    dividerLine:
-      "bg-[#E5E5E5]",
-
-    dividerText:
-      "text-[#999] text-[12px]",
+    dividerLine: "bg-[#E5E5E5]",
+    dividerText: "text-[#999] text-[12px]",
 
     socialButtonsBlockButton:
       "border border-[#E5E5E5] rounded-[10px] hover:bg-[#F8F8F8] transition-colors py-3 px-4",
@@ -67,7 +55,6 @@ export const clerkAppearance = {
     formFieldAction:
       "text-[#8B1E24] text-[12.5px] font-bold",
 
-    alertText:
-      "text-[13px]",
+    alertText: "text-[13px]",
   },
 } satisfies Appearance;
