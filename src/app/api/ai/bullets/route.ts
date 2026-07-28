@@ -10,6 +10,13 @@ export async function POST(req: NextRequest) {
 
   const { position, company } = await req.json();
 
+  if (!position?.trim()) {
+    return NextResponse.json(
+      { error: "Add the job title first so the suggestions are actually relevant." },
+      { status: 400 }
+    );
+  }
+
   const prompt = `You are a professional resume writer. Generate 4 strong, ATS-optimized bullet points for a ${position} role at ${company}.
 
 Each bullet point should:

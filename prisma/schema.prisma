@@ -25,35 +25,48 @@ model User {
   resumes           Resume[]
   chatMessages      ChatMessage[]
 
+  adminAccessLogsGiven    AdminAccessLog[] @relation("AdminAccessLogAsAdmin")
+  adminAccessLogsReceived AdminAccessLog[] @relation("AdminAccessLogAsTarget")
+
   @@map("users")
 }
 
 model Resume {
-  id                  String          @id @default(cuid())
-  userId              String
-  title               String          @default("My Resume")
-  template            String          @default("professional")
-  language            String          @default("en")
-  isPublic            Boolean         @default(false)
-  atsScore            Int?
-  coverLetterFileName String?
-  coverLetterMimeType String?
-  coverLetterData     String?         @db.Text
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
-  awards              Award[]
-  certifications      Certification[]
-  education           Education[]
-  experiences         Experience[]
-  personalInfo        PersonalInfo?
-  projects            Project[]
-  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  skills              Skill[]
-  softSkills          SoftSkill[]
-  languages           Language[]
-  summary             Summary?
-  volunteering        Volunteering[]
+  id                     String          @id @default(cuid())
+  userId                 String
+  title                  String          @default("My Resume")
+  template               String          @default("professional")
+  language               String          @default("en")
+  isPublic               Boolean         @default(false)
+  portfolioEnabled       Boolean         @default(false)
+  portfolioSlug          String?         @unique
+  portfolioTheme         String          @default("midnight")
+  portfolioSectionOrder  Json?
+  portfolioTemplate      String          @default("classic")
+  portfolioCustomization Json?
+  portfolioViewCount     Int             @default(0)
+  experienceOrder        String          @default("auto")
+  skillsSection          Json?
+  atsScore               Int?
+  coverLetterFileName    String?
+  coverLetterMimeType    String?
+  coverLetterData        String?         @db.Text
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  awards                 Award[]
+  certifications         Certification[]
+  education              Education[]
+  experiences            Experience[]
+  personalInfo           PersonalInfo?
+  projects               Project[]
+  user                   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills                 Skill[]
+  softSkills             SoftSkill[]
+  languages              Language[]
+  summary                Summary?
+  volunteering           Volunteering[]
 
+  @@index([userId])
   @@map("resumes")
 }
 
@@ -250,8 +263,23 @@ model PlatformVisit {
   @@map("platform_visits")
 }
 
+model AdminAccessLog {
+  id           String   @id @default(cuid())
+  adminUserId  String
+  admin        User     @relation("AdminAccessLogAsAdmin", fields: [adminUserId], references: [id], onDelete: Cascade)
+  targetUserId String
+  targetUser   User     @relation("AdminAccessLogAsTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+  resumeId     String
+  createdAt    DateTime @default(now())
+
+  @@index([targetUserId, createdAt])
+  @@index([adminUserId, createdAt])
+  @@map("admin_access_logs")
+}
+
 enum Role {
   USER
+  CAREER_ADVISOR
   ADMIN
 }
 
@@ -274,10 +302,6 @@ enum PaymentStatus {
   REFUNDED
 }
 
-// DAH Career Coach — persistent chat history so a student can leave and
-// come back to a mock-interview session or resume-feedback conversation
-// without losing context. One continuous thread per student (kept
-// simple on purpose: no multi-conversation switcher for v1).
 model ChatMessage {
   id        String   @id @default(cuid())
   userId    String

@@ -20,7 +20,8 @@ import { AwardsStep } from "./steps/AwardsStep";
 import { VolunteeringStep } from "./steps/VolunteeringStep";
 import { LanguagesStep } from "./steps/LanguagesStep";
 import { PreviewStep } from "./steps/PreviewStep";
-import { BuilderStep, Language } from "@/types/resume";
+import { PortfolioStep } from "./steps/PortfolioStep";
+import { BuilderStep, Language, ResumeData } from "@/types/resume";
 import { isStepComplete } from "@/lib/stepCompletion";
 import { Save, Eye, EyeOff, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 
@@ -35,6 +36,7 @@ const STEPS: { key: BuilderStep; label: string }[] = [
   { key: "awards",         label: "Awards"     },
   { key: "volunteering",   label: "Volunteer"  },
   { key: "languages",      label: "Languages"  },
+  { key: "portfolio",      label: "Portfolio"  },
   { key: "preview",        label: "Preview"    },
 ];
 
@@ -49,6 +51,7 @@ const STEP_COMPONENTS: Record<BuilderStep, React.ComponentType> = {
   awards:         AwardsStep,
   volunteering:   VolunteeringStep,
   languages:      LanguagesStep,
+  portfolio:      PortfolioStep,
   preview:        PreviewStep,
 };
 
@@ -112,6 +115,14 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
     title: (data.title as string) || "My Resume",
     template: (data.template as string) || "professional",
     language: (data.language as string) || "en",
+    isPublic: (data.isPublic as boolean) ?? false,
+    portfolioEnabled: (data.portfolioEnabled as boolean) ?? false,
+    portfolioSlug: (data.portfolioSlug as string | null) ?? null,
+    portfolioTheme: (data.portfolioTheme as string) ?? "midnight",
+    portfolioSectionOrder: (data.portfolioSectionOrder as { key: string; visible: boolean }[]) ?? undefined,
+    portfolioTemplate: (data.portfolioTemplate as string) ?? "classic",
+    portfolioViewCount: (data.portfolioViewCount as number) ?? 0,
+    portfolioCustomization: (data.portfolioCustomization as ResumeData["portfolioCustomization"]) ?? undefined,
 
     personalInfo: {
       fullName: "",
@@ -136,6 +147,11 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
     awards: ((data.awards as unknown[]) as never[]) || [],
     volunteering: ((data.volunteering as unknown[]) as never[]) || [],
     languages: ((data as Record<string, unknown>).languages as Language[]) || [],
+    // قسم المهارات القابل للتخصيص — لو السيرة قديمة (قبل هالميزة)
+    // بيرجع undefined هنا، والمتجر (resumeStore) يتكفّل يعبّيه بقيمة
+    // افتراضية فاضية؛ التطبيع الفعلي (تحويل skills/softSkills القديمة
+    // لمجموعات) يصير وقت العرض بالمعاينة والـPDF، مو هنا.
+    skillsSection: (data.skillsSection as ResumeData["skillsSection"]) || undefined,
   });
 
   setReady(true);

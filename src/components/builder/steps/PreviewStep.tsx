@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useResumeStore } from "@/store/resumeStore";
 import { StepWrapper } from "../StepWrapper";
-import { Download, Loader2, CheckCircle, FileText, Upload, X } from "lucide-react";
+import { Download, Loader2, CheckCircle, FileText, Upload, X, Globe, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
 const MAX_COVER_LETTER_BYTES = 8 * 1024 * 1024;
@@ -23,7 +23,7 @@ function readFileAsBase64(file: File): Promise<string> {
 }
 
 export function PreviewStep() {
-  const { resume } = useResumeStore();
+  const { resume, setIsPublic, setExperienceOrder, setCurrentStep } = useResumeStore();
   const [downloading, setDownloading] = useState(false);
 
   const [coverLetterName, setCoverLetterName] = useState<string | null>(null);
@@ -143,30 +143,127 @@ export function PreviewStep() {
   return (
     <StepWrapper title="Preview & Export" description="Review your resume and download it as a professional PDF.">
       <div className="space-y-4">
-        {/* Download PDF */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
+        {/* Download PDF — لون الزر مأخوذ فعلياً من شعار الجامعة (#86C2EA) */}
+        <div
+          className="rounded-2xl p-5 border"
+          style={{ background: "linear-gradient(to bottom right, #EAF5FC, #F3EFFB)", borderColor: "#BFE0F5" }}
+        >
           <div className="flex items-center justify-between mb-3">
             <div>
               <h3 className="font-bold text-gray-900 dark:text-[#F0EAE6]">Download PDF</h3>
-              <p className="text-xs text-gray-500 dark:text-[#8A8078] mt-0.5">A4 format · ATS-friendly · Print-ready</p>
             </div>
             <button
               onClick={handleDownloadPDF}
               disabled={downloading || !resume.id}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-bold px-5 py-2.5 rounded-xl transition-colors shadow-md shadow-blue-100"
+              className="flex items-center gap-2 disabled:opacity-60 text-white font-bold px-5 py-2.5 rounded-xl transition-colors"
+              style={{ background: "#4A9BC7", boxShadow: "0 4px 14px -4px rgba(74,155,199,0.4)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#3D89B5")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#4A9BC7")}
             >
               {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
               {downloading ? "Generating..." : "Download PDF"}
             </button>
           </div>
-          <div className="flex gap-3 text-xs text-gray-500 dark:text-[#8A8078]">
-            {["High-quality PDF", "No watermarks", "Instant download"].map((f) => (
-              <span key={f} className="flex items-center gap-1">
-                <CheckCircle className="w-3 h-3 text-green-500" /> {f}
-              </span>
+        </div>
+
+        {/* Visible to Career Development Office */}
+        <div className="bg-white dark:bg-[#201A17] rounded-2xl border border-gray-200 dark:border-white/10 p-5">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h3 className="font-bold text-gray-900 dark:text-[#F0EAE6]">
+                Visible to Career Development Office
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-[#8A8078] mt-0.5">
+                Choose which resume the Career Development Office sees when
+                they review your profile. Only one resume can be visible at
+                a time.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!resume.isPublic}
+              onClick={() => setIsPublic(!resume.isPublic)}
+              className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+                resume.isPublic ? "bg-[#8B1E24]" : "bg-gray-200 dark:bg-[#2A2320]"
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  resume.isPublic ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
+
+          {resume.isPublic && (
+            <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-green-600">
+              <CheckCircle className="w-3.5 h-3.5" />
+              This is the resume the Career Development Office will see.
+            </p>
+          )}
+        </div>
+
+        {/* Experience vs Projects order — student decides, or leave it
+            automatic (experience first if you have any, otherwise
+            projects first — useful while still a student). */}
+        <div className="bg-white dark:bg-[#201A17] rounded-2xl border border-gray-200 dark:border-white/10 p-5">
+          <h3 className="font-bold text-gray-900 dark:text-[#F0EAE6]">Section Order</h3>
+          <p className="text-xs text-gray-500 dark:text-[#8A8078] mt-0.5 mb-3">
+            Choose whether Experience or Projects appears first in your resume.
+          </p>
+
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {(
+              [
+                { value: "auto" as const, label: "Auto (recommended)", hint: "Decides for you" },
+                { value: "experience_first" as const, label: "Experience first", hint: "I'm employed / have work experience" },
+                { value: "projects_first" as const, label: "Projects first", hint: "I'm a student / early in my career" },
+              ]
+            ).map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setExperienceOrder(opt.value)}
+                className={`rounded-lg border p-3 text-start transition-colors ${
+                  (resume.experienceOrder ?? "auto") === opt.value
+                    ? "border-[#8B1E24] bg-[#FEDFA4]/30"
+                    : "border-gray-200 dark:border-white/10 hover:border-[#8B1E24]/50"
+                }`}
+              >
+                <p className="text-sm font-bold text-gray-900 dark:text-[#F0EAE6]">{opt.label}</p>
+                <p className="mt-0.5 text-xs text-gray-500 dark:text-[#8A8078]">{opt.hint}</p>
+              </button>
             ))}
           </div>
         </div>
+
+        {/* Portfolio website — compact summary card; full builder now
+            lives in its own dedicated step (PortfolioStep.tsx) to avoid
+            cramming everything into this Preview & Export step. */}
+        <div className="bg-white dark:bg-[#201A17] rounded-2xl border border-gray-200 dark:border-white/10 p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Globe className="h-4 w-4 text-[#8B1E24]" />
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-[#F0EAE6]">Portfolio Website</h3>
+                <p className="text-xs text-gray-500 dark:text-[#8A8078]">
+                  {resume.portfolioEnabled ? "Live — customize it anytime." : "Turn your resume into a shareable public page."}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setCurrentStep("portfolio")}
+              className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[#8B1E24] px-3 py-2 text-xs font-semibold text-[#8B1E24] hover:bg-[#8B1E24]/5"
+            >
+              {resume.portfolioEnabled ? "Manage" : "Set up"}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+
 
         {/* Cover letter — upload the university-issued document, not AI-generated */}
         <div className="bg-white dark:bg-[#201A17] rounded-2xl border border-gray-200 dark:border-white/10 p-5">

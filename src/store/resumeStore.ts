@@ -2,13 +2,25 @@ import { create } from "zustand";
 import {
   ResumeData, PersonalInfo, Summary, Skill, SoftSkill,
   Project, Experience, Education, Certification, Award,
-  Volunteering, BuilderStep,
+  Volunteering, BuilderStep, SkillsSectionData, SkillGroup, SkillsLayout,
 } from "@/types/resume";
+import { sanitizeLabel, MAX_GROUP_NAME_LEN, MAX_SKILL_NAME_LEN, MAX_SECTION_TITLE_LEN } from "@/lib/skills-section";
+
+const defaultSkillsSection: SkillsSectionData = {
+  title: "Technical Skills",
+  layout: "simple",
+  groups: [],
+};
 
 const defaultResume: ResumeData = {
   title: "My Resume",
   template: "professional",
   language: "en",
+  isPublic: false,
+  portfolioEnabled: false,
+  portfolioSlug: null,
+  portfolioTheme: "midnight",
+  experienceOrder: "auto",
   personalInfo: {
     fullName: "", title: "", email: "", phone: "",
     location: "", linkedin: "", github: "", website: "", profilePic: "",
@@ -16,6 +28,7 @@ const defaultResume: ResumeData = {
   summary: { content: "" },
   skills: [], softSkills: [], projects: [], experiences: [],
   education: [], certifications: [], awards: [], volunteering: [], languages: [],
+  skillsSection: defaultSkillsSection,
 };
 
 interface ResumeStore {
@@ -23,13 +36,34 @@ interface ResumeStore {
   currentStep: BuilderStep;
   isDirty: boolean;
   isSaving: boolean;
-  // ✅ يحفظ clerkId صاحب الحالة الحالية — لكشف أي state قديم
   _ownerClerkId: string | null;
 
   setResume: (resume: ResumeData) => void;
   setCurrentStep: (step: BuilderStep) => void;
   setPersonalInfo: (info: Partial<PersonalInfo>) => void;
   setSummary: (summary: Summary) => void;
+  setIsPublic: (isPublic: boolean) => void;
+  setPortfolioStatus: (
+    enabled: boolean,
+    slug: string | null,
+    theme?: string,
+    sectionOrder?: { key: string; visible: boolean }[],
+    template?: string
+  ) => void;
+  setPortfolioCustomization: (customization: ResumeData["portfolioCustomization"]) => void;
+  setExperienceOrder: (order: "auto" | "experience_first" | "projects_first") => void;
+
+  // ── قسم المهارات الجديد ──────────────────────────────────────
+  setSkillsSectionTitle: (title: string) => void;
+  setSkillsLayout: (layout: SkillsLayout) => void;
+  addSkillGroup: (name: string) => void;
+  renameSkillGroup: (groupId: string, name: string) => void;
+  removeSkillGroup: (groupId: string) => void;
+  moveSkillGroup: (groupId: string, direction: "up" | "down") => void;
+  addSkillToGroup: (groupId: string, skillName: string) => void;
+  removeSkillFromGroup: (groupId: string, skillName: string) => void;
+  moveSkillInGroup: (groupId: string, skillIndex: number, direction: "up" | "down") => void;
+  replaceSkillsSection: (section: SkillsSectionData) => void;
 
   setSkills: (skills: Skill[]) => void;
   addSkill: (skill: Skill) => void;
@@ -73,8 +107,13 @@ interface ResumeStore {
 
   setIsDirty: (isDirty: boolean) => void;
   setIsSaving: (isSaving: boolean) => void;
-  // ✅ يستقبل ownerId دائماً عشان _ownerClerkId يُحفظ صح
   resetResume: (ownerId?: string) => void;
+}
+
+function swap<T>(arr: T[], i: number, j: number): T[] {
+  const copy = [...arr];
+  [copy[i], copy[j]] = [copy[j], copy[i]];
+  return copy;
 }
 
 export const useResumeStore = create<ResumeStore>((set) => ({
@@ -88,6 +127,14 @@ export const useResumeStore = create<ResumeStore>((set) => ({
     set({
       resume: {
         ...defaultResume, ...resume,
+        isPublic: resume.isPublic ?? false,
+        portfolioEnabled: resume.portfolioEnabled ?? false,
+        portfolioSlug: resume.portfolioSlug ?? null,
+        portfolioTheme: resume.portfolioTheme ?? "midnight",
+        portfolioSectionOrder: resume.portfolioSectionOrder ?? undefined,
+        portfolioTemplate: resume.portfolioTemplate ?? "classic",
+        portfolioCustomization: resume.portfolioCustomization ?? undefined,
+        experienceOrder: resume.experienceOrder ?? "auto",
         personalInfo: { ...defaultResume.personalInfo, ...resume.personalInfo },
         summary: resume.summary || defaultResume.summary,
         skills: resume.skills || [],
@@ -99,6 +146,7 @@ export const useResumeStore = create<ResumeStore>((set) => ({
         awards: resume.awards || [],
         volunteering: resume.volunteering || [],
         languages: resume.languages || [],
+        skillsSection: resume.skillsSection || defaultSkillsSection,
       },
       isDirty: false,
     }),
@@ -113,6 +161,161 @@ export const useResumeStore = create<ResumeStore>((set) => ({
 
   setSummary: (summary) =>
     set((state) => ({ resume: { ...state.resume, summary }, isDirty: true })),
+
+  setIsPublic: (isPublic) =>
+    set((state) => ({ resume: { ...state.resume, isPublic }, isDirty: true })),
+
+  setPortfolioStatus: (portfolioEnabled, portfolioSlug, theme, sectionOrder, template) =>
+    set((state) => ({
+      resume: {
+        ...state.resume,
+        portfolioEnabled,
+        portfolioSlug,
+        ...(theme ? { portfolioTheme: theme } : {}),
+        ...(sectionOrder ? { portfolioSectionOrder: sectionOrder } : {}),
+        ...(template ? { portfolioTemplate: template } : {}),
+      },
+    })),
+
+  setPortfolioCustomization: (portfolioCustomization) =>
+    set((state) => ({ resume: { ...state.resume, portfolioCustomization } })),
+
+  setExperienceOrder: (experienceOrder) =>
+    set((state) => ({ resume: { ...state.resume, experienceOrder }, isDirty: true })),
+
+  setSkillsSectionTitle: (title) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      return {
+        resume: { ...state.resume, skillsSection: { ...current, title: sanitizeLabel(title, MAX_SECTION_TITLE_LEN) } },
+        isDirty: true,
+      };
+    }),
+
+  setSkillsLayout: (layout) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      return {
+        resume: { ...state.resume, skillsSection: { ...current, layout } },
+        isDirty: true,
+      };
+    }),
+
+  addSkillGroup: (name) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      const clean = sanitizeLabel(name, MAX_GROUP_NAME_LEN);
+      if (!clean) return {};
+      const newGroup: SkillGroup = { id: `group-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name: clean, skills: [] };
+      return {
+        resume: { ...state.resume, skillsSection: { ...current, groups: [...current.groups, newGroup] } },
+        isDirty: true,
+      };
+    }),
+
+  renameSkillGroup: (groupId, name) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      const clean = sanitizeLabel(name, MAX_GROUP_NAME_LEN);
+      if (!clean) return {};
+      return {
+        resume: {
+          ...state.resume,
+          skillsSection: {
+            ...current,
+            groups: current.groups.map((g) => (g.id === groupId ? { ...g, name: clean } : g)),
+          },
+        },
+        isDirty: true,
+      };
+    }),
+
+  removeSkillGroup: (groupId) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      return {
+        resume: { ...state.resume, skillsSection: { ...current, groups: current.groups.filter((g) => g.id !== groupId) } },
+        isDirty: true,
+      };
+    }),
+
+  moveSkillGroup: (groupId, direction) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      const idx = current.groups.findIndex((g) => g.id === groupId);
+      const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+      if (idx === -1 || targetIdx < 0 || targetIdx >= current.groups.length) return {};
+      return {
+        resume: { ...state.resume, skillsSection: { ...current, groups: swap(current.groups, idx, targetIdx) } },
+        isDirty: true,
+      };
+    }),
+
+  addSkillToGroup: (groupId, skillName) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      const clean = sanitizeLabel(skillName, MAX_SKILL_NAME_LEN);
+      if (!clean) return {};
+      return {
+        resume: {
+          ...state.resume,
+          skillsSection: {
+            ...current,
+            groups: current.groups.map((g) =>
+              g.id === groupId
+                ? {
+                    ...g,
+                    skills: g.skills.some((s) => s.toLowerCase() === clean.toLowerCase())
+                      ? g.skills
+                      : [...g.skills, clean],
+                  }
+                : g
+            ),
+          },
+        },
+        isDirty: true,
+      };
+    }),
+
+  removeSkillFromGroup: (groupId, skillName) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      return {
+        resume: {
+          ...state.resume,
+          skillsSection: {
+            ...current,
+            groups: current.groups.map((g) =>
+              g.id === groupId ? { ...g, skills: g.skills.filter((s) => s !== skillName) } : g
+            ),
+          },
+        },
+        isDirty: true,
+      };
+    }),
+
+  moveSkillInGroup: (groupId, skillIndex, direction) =>
+    set((state) => {
+      const current = state.resume.skillsSection ?? defaultSkillsSection;
+      const group = current.groups.find((g) => g.id === groupId);
+      if (!group) return {};
+      const targetIdx = direction === "up" ? skillIndex - 1 : skillIndex + 1;
+      if (targetIdx < 0 || targetIdx >= group.skills.length) return {};
+      const newSkills = swap(group.skills, skillIndex, targetIdx);
+      return {
+        resume: {
+          ...state.resume,
+          skillsSection: {
+            ...current,
+            groups: current.groups.map((g) => (g.id === groupId ? { ...g, skills: newSkills } : g)),
+          },
+        },
+        isDirty: true,
+      };
+    }),
+
+  replaceSkillsSection: (section) =>
+    set((state) => ({ resume: { ...state.resume, skillsSection: section }, isDirty: true })),
 
   setSkills: (skills) =>
     set((state) => ({ resume: { ...state.resume, skills }, isDirty: true })),
@@ -189,7 +392,6 @@ export const useResumeStore = create<ResumeStore>((set) => ({
   setIsDirty: (isDirty) => set({ isDirty }),
   setIsSaving: (isSaving) => set({ isSaving }),
 
-  // ✅ FIX: ownerId يُمرر دائماً من BuilderClient → _ownerClerkId لا يكون null أبداً
   resetResume: (ownerId) =>
     set({
       resume: defaultResume,

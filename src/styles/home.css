@@ -111,10 +111,22 @@ ul{list-style:none;}
 button{cursor:pointer;border:none;background:none;font-family:inherit;}
 input,textarea,select{font-family:inherit;}
 
-::-webkit-scrollbar{width:6px;}
-::-webkit-scrollbar-track{background:#eee;}
-::-webkit-scrollbar-thumb{background:var(--maroon);border-radius:3px;}
 
+/* Chrome / Edge / Safari (WebKit) */
+::-webkit-scrollbar{
+  display:none;
+}
+ 
+/* Firefox */
+html{
+  scrollbar-width:none;
+}
+ 
+/* Old Edge / IE (احتياط، ما يضر لو ما تدعمينه أصلاً) */
+body{
+  -ms-overflow-style:none;
+}
+ 
 /* =============================================
    TOP BAR
    ============================================= */

@@ -1,132 +1,66 @@
 import { prisma } from "@/lib/prisma";
-import { Crown, Users, Mail, Calendar, FileText, Phone, GraduationCap, ExternalLink } from "lucide-react";
+import type { Prisma } from "@prisma/client";
+import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
 
-async function getUsers() {
+async function getUsers(query: string) {
+  const where: Prisma.UserWhereInput = query
+    ? {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { major: { contains: query, mode: "insensitive" } },
+          { email: { contains: query, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
   return prisma.user.findMany({
+    where,
     include: {
-      _count: { select: { resumes: true } },
       resumes: {
         orderBy: { updatedAt: "desc" },
-        take: 1,
-        select: { id: true },
+        select: { id: true, title: true, updatedAt: true, isPublic: true },
       },
     },
     orderBy: { createdAt: "desc" },
   });
 }
 
-export default async function AdminUsersPage() {
-  const users = await getUsers();
+export default async function AdminUsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
+  const query = (q || "").trim();
+  const users = await getUsers(query);
 
-  return (
-    <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="flex items-center gap-2 text-xl font-extrabold text-[#111827] dark:text-[#F0EAE6]">
-          <Users className="h-5 w-5 text-[#8B1E24]" /> المستخدمون
-        </h1>
-        <p className="mt-1 text-[13px] text-[#6B7280] dark:text-[#A89E98]">{users.length} مستخدم مسجّل</p>
-      </div>
+  // الأدمن تشوف بس السيرة اللي حددتها الطالبة كـ"مرئية لمركز التطوير
+  // الوظيفي" (isPublic: true). لو ما حددت وحدة بعد، نرجع تلقائياً
+  // لأحدث سيرة (fallback) — أفضل من ما تشوف الأدمن ولا شي.
+  const serializedUsers = users.map((user) => {
+    const primaryResume =
+      user.resumes.find((r) => r.isPublic) ?? user.resumes[0] ?? null;
 
-      <div className="overflow-hidden rounded-[16px] border border-[#E5E7EB] dark:border-white/10 bg-white dark:bg-[#201A17] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-        <div className="overflow-x-auto">
-          <table className="w-full text-start">
-            <thead>
-              <tr className="border-b border-[#E5E7EB] dark:border-white/10 bg-[#FBFBFC]">
-                {["المستخدم", "التخصص", "رقم الجوال", "الخطة", "السير الذاتية", "تاريخ الانضمام", "الدور", "عرض السيرة الذاتية"].map((h) => (
-                  <th
-                    key={h}
-                    className="px-5 py-3 text-start text-[10.5px] font-bold uppercase tracking-wide text-[#9CA3AF] dark:text-[#8A8078]"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#F3F4F6]">
-              {users.map((user: Awaited<ReturnType<typeof getUsers>>[number]) => {
-                const latestResumeId = user.resumes[0]?.id;
-                return (
-                  <tr key={user.id} className="transition-colors duration-150 hover:bg-[#FBFBFC]">
-                    <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#8B1E24] text-[13px] font-bold text-white">
-                          {(user.name || user.email).charAt(0).toUpperCase()}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="truncate text-[13px] font-bold text-[#111827] dark:text-[#F0EAE6]">
-                            {user.name || "—"}
-                          </p>
-                          <p className="flex items-center gap-1 truncate text-[11.5px] text-[#9CA3AF] dark:text-[#8A8078]">
-                            <Mail className="h-3 w-3 shrink-0" /> {user.email}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className="flex items-center gap-1.5 text-[12.5px] text-[#374151] dark:text-[#D8CFC9]">
-                        <GraduationCap className="h-3.5 w-3.5 shrink-0 text-[#9CA3AF] dark:text-[#8A8078]" />
-                        {user.major || "—"}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className="flex items-center gap-1.5 text-[12.5px] text-[#374151] dark:text-[#D8CFC9]" dir="ltr">
-                        <Phone className="h-3.5 w-3.5 shrink-0 text-[#9CA3AF] dark:text-[#8A8078]" />
-                        {user.phone || "—"}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ${
-                          user.plan === "PREMIUM"
-                            ? "bg-[#D4A63A]/[0.14] text-[#B8862E]"
-                            : "bg-[#F3F4F6] dark:bg-[#2A2320] text-[#6B7280] dark:text-[#A89E98]"
-                        }`}
-                      >
-                        {user.plan === "PREMIUM" && <Crown className="h-3 w-3" />}
-                        {user.plan === "PREMIUM" ? "مميزة" : "مجانية"}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className="flex items-center gap-1.5 text-[12.5px] text-[#374151] dark:text-[#D8CFC9]">
-                        <FileText className="h-3.5 w-3.5 text-[#9CA3AF] dark:text-[#8A8078]" />
-                        {user._count.resumes}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className="flex items-center gap-1.5 text-[11.5px] text-[#9CA3AF] dark:text-[#8A8078]">
-                        <Calendar className="h-3.5 w-3.5" />
-                        {new Date(user.createdAt).toLocaleDateString("ar-SA", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-[10.5px] font-bold ${
-                          user.role === "ADMIN"
-                            ? "bg-[#8B1E24]/[0.08] text-[#8B1E24]"
-                            : "bg-[#F3F4F6] dark:bg-[#2A2320] text-[#9CA3AF] dark:text-[#8A8078]"
-                        }`}
-                      >
-                        {user.role === "ADMIN" ? "مدير" : "طالب"}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      major: user.major,
+      phone: user.phone,
+      plan: user.plan,
+      role: user.role,
+      createdAt: user.createdAt.toISOString(),
+      resumes: primaryResume
+        ? [
+            {
+              id: primaryResume.id,
+              title: primaryResume.title,
+              updatedAt: primaryResume.updatedAt.toISOString(),
+            },
+          ]
+        : [],
+    };
+  });
 
-        {users.length === 0 && (
-          <div className="flex flex-col items-center gap-2 py-16 text-center">
-            <Users className="h-9 w-9 text-[#D1D5DB]" />
-            <p className="text-[13px] text-[#9CA3AF] dark:text-[#8A8078]">لا يوجد مستخدمون بعد</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return <AdminUsersTable users={serializedUsers} query={query} />;
 }

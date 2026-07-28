@@ -39,6 +39,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-pdf/renderer": "^4.5.1",
     "@supabase/supabase-js": "^2.39.7",
+    "@vercel/blob": "^2.6.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "framer-motion": "^11.0.20",

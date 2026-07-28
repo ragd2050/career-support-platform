@@ -1,5 +1,11 @@
-
 export const clerkAppearance = {
+  options: {
+    // ينقل أزرار تسجيل الدخول الاجتماعي (Microsoft) تحت حقول
+    // الإيميل/الباسورد بدل فوقها. بإصدار @clerk/nextjs الحالي
+    // (7.x)، الخاصية اسمها "options" — مو "layout" (اللي كان
+    // اسمها بالإصدارات الأقدم "Core 2").
+    socialButtonsPlacement: "bottom",
+  },
   variables: {
     colorPrimary: "#8B1E24",
     colorText: "#222222",

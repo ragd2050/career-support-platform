@@ -1,5 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { isAllowedUniversityEmail } from "@/lib/auth/universityEmail";
 
 export async function requireDahEmail() {
   const user = await currentUser();
@@ -8,9 +9,9 @@ export async function requireDahEmail() {
     redirect("/auth/sign-in");
   }
 
-  const email = user.primaryEmailAddress?.emailAddress?.toLowerCase();
+  const email = user.primaryEmailAddress?.emailAddress;
 
-  if (!email || !email.endsWith("@dah.edu.sa")) {
+  if (!isAllowedUniversityEmail(email)) {
     redirect("/access-denied");
   }
 

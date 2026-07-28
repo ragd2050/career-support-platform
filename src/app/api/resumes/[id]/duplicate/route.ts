@@ -15,8 +15,9 @@ export async function POST(_req: NextRequest, { params }: Params) {
   const original = await prisma.resume.findFirst({
     where: { id, userId: user.id },
     include: {
-      personalInfo: true, summary: true, skills: true, projects: true,
-      experiences: true, education: true, certifications: true, awards: true, volunteering: true,
+      personalInfo: true, summary: true, skills: true, softSkills: true, languages: true,
+      projects: true, experiences: true, education: true, certifications: true, awards: true,
+      volunteering: true,
     },
   });
 
@@ -28,16 +29,25 @@ export async function POST(_req: NextRequest, { params }: Params) {
       title: `${original.title} (Copy)`,
       template: original.template,
       language: original.language,
+      // تخصيصات كانت تُفقد بصمت بالنسخ القديم — ترتيب/تسمية قسم
+      // المهارات، وترتيب أقسام الخبرة/المشاريع. البورتفوليو (تفعيل،
+      // رابط، ثيمة...) عمداً ما يُنسخ — كل سيرة تحتاج رابط بورتفوليو
+      // مستقل (يتولّد أول ما الطالبة تفعّله بنفسها بالنسخة الجديدة).
+      experienceOrder: original.experienceOrder,
+      skillsSection: original.skillsSection ?? undefined,
       personalInfo: original.personalInfo ? {
         create: {
           fullName: original.personalInfo.fullName, title: original.personalInfo.title,
           email: original.personalInfo.email, phone: original.personalInfo.phone,
           location: original.personalInfo.location, linkedin: original.personalInfo.linkedin,
           github: original.personalInfo.github, website: original.personalInfo.website,
+          profilePic: original.personalInfo.profilePic,
         },
       } : undefined,
       summary: original.summary ? { create: { content: original.summary.content } } : undefined,
       skills: { create: original.skills.map(({ id: _, resumeId: __, ...s }) => s) },
+      softSkills: { create: original.softSkills.map(({ id: _, resumeId: __, ...s }) => s) },
+      languages: { create: original.languages.map(({ id: _, resumeId: __, ...l }) => l) },
       projects: { create: original.projects.map(({ id: _, resumeId: __, ...p }) => p) },
       experiences: { create: original.experiences.map(({ id: _, resumeId: __, ...e }) => e) },
       education: { create: original.education.map(({ id: _, resumeId: __, ...e }) => e) },

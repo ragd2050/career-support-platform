@@ -1,7 +1,9 @@
-import { Eye, FileText, Activity, Users } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import {
+  AdminOverviewHero,
   AdminOverviewHeaderActions,
+  AdminOverviewStats,
+  AdminActivityHeading,
   AdminSignupsChart,
 } from "@/components/admin/AdminOverviewClient";
 
@@ -27,16 +29,13 @@ async function getOverviewData() {
       }),
     ]);
 
-  const days: { date: string; label: string; count: number }[] = [];
+  // لاحظي: ما عاد نحسب label هنا (كان يثبّت اللغة على ar-SA دايمًا) —
+  // نمرر بس date/count، والعميل يحسب التسمية المترجمة حسب اللغة الحالية.
+  const days: { date: string; count: number }[] = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
-    days.push({
-      date: key,
-      label: d.toLocaleDateString("ar-SA", { month: "short", day: "numeric" }),
-      count: 0,
-    });
+    days.push({ date: d.toISOString().slice(0, 10), count: 0 });
   }
   for (const user of recentUsers) {
     const key = user.createdAt.toISOString().slice(0, 10);
@@ -53,45 +52,6 @@ async function getOverviewData() {
 export default async function AdminOverviewPage() {
   const { stats, dailySignups } = await getOverviewData();
 
-  const cards = [
-    {
-      label: "زيارات المنصة",
-      sublabel: "إجمالي مشاهدات الصفحة",
-      value: stats.totalVisits,
-      icon: Eye,
-      bar: "#2563EB",
-      iconBg: "bg-[#2563EB]/[0.08]",
-      iconColor: "text-[#2563EB]",
-    },
-    {
-      label: "إجمالي السير الذاتية",
-      sublabel: "منذ إطلاق المنصة",
-      value: stats.totalResumes,
-      icon: FileText,
-      bar: "#D4A63A",
-      iconBg: "bg-[#D4A63A]/[0.14]",
-      iconColor: "text-[#B8862E]",
-    },
-    {
-      label: "المستخدمون النشطون",
-      sublabel: "في آخر 30 يوم",
-      value: stats.activeUsers,
-      icon: Activity,
-      bar: "#059669",
-      iconBg: "bg-[#059669]/[0.1]",
-      iconColor: "text-[#059669]",
-    },
-    {
-      label: "إجمالي المستخدمين",
-      sublabel: "جميع الحسابات المسجلة",
-      value: stats.totalUsers,
-      icon: Users,
-      bar: "#8B1E24",
-      iconBg: "bg-[#8B1E24]/[0.08]",
-      iconColor: "text-[#8B1E24]",
-    },
-  ];
-
   return (
     <div className="flex flex-col gap-5">
       {/* Hero */}
@@ -102,54 +62,17 @@ export default async function AdminOverviewPage() {
         }}
       >
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#E6C36A]">
-              لوحة تحكم المدير
-            </span>
-            <h1 className="mt-2 text-xl font-extrabold leading-snug sm:text-2xl">
-              مركز إدارة المنصة
-            </h1>
-            <p className="mt-2 max-w-[460px] text-[13px] leading-relaxed text-white/60">
-              نظرة شاملة على نشاط المنصة وإدارة المستخدمين والسير الذاتية.
-            </p>
-          </div>
-
+          <AdminOverviewHero />
           <AdminOverviewHeaderActions stats={stats} dailySignups={dailySignups} />
         </div>
       </section>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map((card) => (
-          <div
-            key={card.label}
-            className="overflow-hidden rounded-[16px] border border-[#E5E7EB] dark:border-white/10 bg-white dark:bg-[#201A17] shadow-[0_1px_3px_rgba(0,0,0,0.05)]"
-          >
-            <div className="h-[3px] w-full" style={{ backgroundColor: card.bar }} />
-            <div className="p-5">
-              <div
-                className={`mb-8 flex h-10 w-10 items-center justify-center rounded-[10px] ${card.iconBg} ${card.iconColor}`}
-              >
-                <card.icon className="h-5 w-5" />
-              </div>
-              <p className="text-[26px] font-extrabold tabular-nums text-[#111827] dark:text-[#F0EAE6]">
-                {card.value.toLocaleString("en-US")}
-              </p>
-              <p className="mt-1 text-[13px] font-bold text-[#374151] dark:text-[#D8CFC9]">{card.label}</p>
-              <p className="text-[11.5px] text-[#9CA3AF] dark:text-[#8A8078]">{card.sublabel}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <AdminOverviewStats stats={stats} />
 
       {/* Activity */}
       <section className="rounded-[16px] border border-[#E5E7EB] dark:border-white/10 bg-white dark:bg-[#201A17] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] sm:p-6">
-        <div className="mb-4 flex items-center gap-2.5">
-          <span className="h-4 w-[3px] shrink-0 rounded-sm bg-[#8B1E24]" />
-          <h2 className="text-[15px] font-extrabold text-[#111827] dark:text-[#F0EAE6]">
-            نشاط المنصة — تسجيلات آخر 7 أيام
-          </h2>
-        </div>
+        <AdminActivityHeading />
         <AdminSignupsChart dailySignups={dailySignups} />
       </section>
     </div>

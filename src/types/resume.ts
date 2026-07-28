@@ -16,6 +16,9 @@ export interface Summary {
   content: string;
 }
 
+// ⚠️ Legacy — تبقى موجودة بدون حذف (توافق عكسي مع سير قديمة)، لكن
+// خطوة البناء الجديدة (SkillsStep) ما تكتب فيها بعد الحين، تستخدم
+// skillsSection بدالها. راجعي src/lib/skills-section.ts.
 export interface Skill {
   id: string;
   name: string;
@@ -108,15 +111,55 @@ export interface Volunteering {
   order: number;
 }
 
+// ── قسم المهارات الجديد القابل للتخصيص ─────────────────────────
+export type SkillsLayout = "simple" | "grouped" | "tags";
+
+export interface SkillGroup {
+  id: string;
+  name: string;
+  skills: string[];
+}
+
+export interface SkillsSectionData {
+  title: string;
+  layout: SkillsLayout;
+  groups: SkillGroup[];
+}
+
 export interface ResumeData {
   id?: string;
   title: string;
   template: string;
   language: string;
+  isPublic?: boolean;
+  portfolioEnabled?: boolean;
+  portfolioSlug?: string | null;
+  portfolioTheme?: string;
+  portfolioSectionOrder?: { key: string; visible: boolean }[];
+  portfolioTemplate?: string;
+  portfolioViewCount?: number;
+  portfolioCustomization?: {
+    hero?: {
+      professionalTitle?: string;
+      introduction?: string;
+      useResumeSummary?: boolean;
+      profileImageUrl?: string;
+    };
+    sectionTitles?: Record<string, string>;
+    projectOverrides?: Record<string, { description?: string; featured?: boolean; coverImageUrl?: string }>;
+    colors?: { accent?: string };
+    privacy?: Record<string, boolean>;
+  };
+  // "auto" = تلقائي (خبرة أولاً لو موجودة، وإلا مشاريع أولاً)
+  experienceOrder?: "auto" | "experience_first" | "projects_first";
   personalInfo: PersonalInfo;
   summary: Summary;
+  // Legacy — تبقى بالنوع لأجل التوافق العكسي، غير مستخدمة بالواجهة
+  // الجديدة (راجعي skillsSection بدالها).
   skills: Skill[];
   softSkills: SoftSkill[];
+  // جديد — مصدر الحقيقة الوحيد لقسم المهارات بالواجهة الجديدة.
+  skillsSection?: SkillsSectionData;
   projects: Project[];
   experiences: Experience[];
   education: Education[];
@@ -137,6 +180,7 @@ export type BuilderStep =
   | "awards"
   | "volunteering"
   | "languages"
+  | "portfolio"
   | "preview";
 
 export interface ATSResult {

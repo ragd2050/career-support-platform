@@ -8,6 +8,7 @@ import {
   languageLine,
   RESUME_SECTION_LABELS,
 } from "@/lib/resume-format";
+import { normalizeSkillsSection, type SkillsSectionData } from "@/lib/skills-section";
 
 interface PersonalInfo {
   fullName: string;
@@ -100,10 +101,12 @@ interface VolunteeringItem {
 export interface ResumePdfData {
   title: string;
   language: string;
+  experienceOrder?: "auto" | "experience_first" | "projects_first";
   personalInfo: PersonalInfo | null;
   summary: Summary | null;
   skills: Skill[];
   softSkills: SoftSkillItem[];
+  skillsSection?: SkillsSectionData | null;
   languages: LanguageItem[];
   projects: ProjectItem[];
   experiences: ExperienceItem[];
@@ -118,8 +121,6 @@ function getLabels(lang: string) {
   return {
     summary: ar ? "نبذة مهنية" : RESUME_SECTION_LABELS.summary,
     education: ar ? "التعليم" : RESUME_SECTION_LABELS.education,
-    technicalSkills: ar ? "المهارات التقنية" : RESUME_SECTION_LABELS.technicalSkills,
-    softSkills: ar ? "المهارات الشخصية" : RESUME_SECTION_LABELS.softSkills,
     projects: ar ? "المشاريع" : RESUME_SECTION_LABELS.projects,
     experience: ar ? "الخبرة العملية" : RESUME_SECTION_LABELS.experience,
     volunteer: ar ? "التطوع" : RESUME_SECTION_LABELS.volunteer,
@@ -219,6 +220,17 @@ const styles = StyleSheet.create({
   inlineLabel: {
     fontWeight: "bold",
   },
+  // ── Tags: ATS-friendly — نص عادي بفواصل مرئية بس، بدون أشكال أو
+  // مربعات ملوّنة تعقّد استخراج النص لأنظمة ATS ──
+  tagsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  tagChip: {
+    fontSize: 9.5,
+    marginRight: 4,
+    marginBottom: 2,
+  },
 });
 
 function safeText(value: unknown): string {
@@ -246,12 +258,6 @@ export function ResumePdfDocument({ data }: { data: ResumePdfData }) {
   const bodyFont = lang === "ar" ? "Cairo" : "Times-Roman";
 
   const info = data.personalInfo;
-  const technicalSkillNames = (Array.isArray(data.skills) ? data.skills : [])
-    .map((s) => safeText(s?.name))
-    .filter(Boolean);
-  const softSkillNames = (Array.isArray(data.softSkills) ? data.softSkills : [])
-    .map((s) => safeText(s?.name))
-    .filter(Boolean);
   const languages = Array.isArray(data.languages) ? data.languages : [];
   const experiences = Array.isArray(data.experiences) ? data.experiences : [];
   const education = Array.isArray(data.education) ? data.education : [];
@@ -260,20 +266,19 @@ export function ResumePdfDocument({ data }: { data: ResumePdfData }) {
   const awards = Array.isArray(data.awards) ? data.awards : [];
   const volunteering = Array.isArray(data.volunteering) ? data.volunteering : [];
 
+  // نفس دالة التطبيع المستخدمة بالمعاينة الحية بالضبط — بدون تكرار منطق.
+  const skillsSection = normalizeSkillsSection(data.skillsSection, data.skills, data.softSkills);
+
   const textStyle = { textAlign: align, direction: dir } as const;
   const rowDir = { flexDirection: align === "right" ? "row-reverse" : "row" } as const;
 
   const nameText = safeText(info?.fullName) || safeText(data.title) || "Resume";
 
-  const contactItems = dedupe(
-    [
-      safeText(info?.location),
-      safeText(info?.phone),
-      safeText(info?.email),
-      cleanUrl(info?.linkedin),
-      cleanUrl(info?.github),
-      cleanUrl(info?.website),
-    ].filter(Boolean)
+  const primaryContactItems = dedupe(
+    [safeText(info?.location), safeText(info?.phone), safeText(info?.email)].filter(Boolean)
+  );
+  const linkContactItems = dedupe(
+    [cleanUrl(info?.linkedin), cleanUrl(info?.github), cleanUrl(info?.website)].filter(Boolean)
   );
 
   const summaryText = safeText(data.summary?.content);
@@ -283,8 +288,11 @@ export function ResumePdfDocument({ data }: { data: ResumePdfData }) {
       <Page size="A4" style={[styles.page, { fontFamily: bodyFont }]}>
         <View style={styles.header}>
           <Text style={styles.name}>{nameText}</Text>
-          {contactItems.length > 0 && (
-            <Text style={styles.contactLine}>{contactItems.join("  —  ")}</Text>
+          {primaryContactItems.length > 0 && (
+            <Text style={styles.contactLine}>{primaryContactItems.join("  —  ")}</Text>
+          )}
+          {linkContactItems.length > 0 && (
+            <Text style={styles.contactLine}>{linkContactItems.join("  —  ")}</Text>
           )}
         </View>
 
@@ -323,85 +331,114 @@ export function ResumePdfDocument({ data }: { data: ResumePdfData }) {
           </View>
         )}
 
-        {technicalSkillNames.length > 0 && (
+        {/* قسم المهارات — يدعم Simple / Grouped / Tags، بنفس منطق
+            التطبيع المستخدم بالمعاينة الحية (src/lib/skills-section.ts) */}
+        {skillsSection.groups.length > 0 && (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, textStyle]}>{labels.technicalSkills}</Text>
-            <Text style={[styles.bodyText, textStyle]}>
-              <Text style={styles.inlineLabel}>{labels.technicalSkills}: </Text>
-              {technicalSkillNames.join(", ")}
-            </Text>
-          </View>
-        )}
+            <Text style={[styles.sectionTitle, textStyle]}>{lang === "ar" ? "المهارات" : "Skills"}</Text>
 
-        {softSkillNames.length > 0 && (
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, textStyle]}>{labels.softSkills}</Text>
-            <Text style={[styles.bodyText, textStyle]}>
-              <Text style={styles.inlineLabel}>{labels.softSkills}: </Text>
-              {softSkillNames.join(", ")}
-            </Text>
-          </View>
-        )}
+            {skillsSection.layout === "simple" && (
+              <Text style={[styles.bodyText, textStyle]}>
+                {skillsSection.groups.flatMap((g) => g.skills).join(", ")}
+              </Text>
+            )}
 
-        {projects.length > 0 && (
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, textStyle]}>{labels.projects}</Text>
-            {projects.map((proj, i) => {
-              const name = safeText(proj?.name);
-              const tech = safeList(proj?.tech);
-              const line = singleLine(proj?.description);
-              const dates = formatDateRange(proj?.startDate, proj?.endDate, !!proj?.current, labels.present);
-              return (
-                <View key={i} style={styles.entry} wrap={false}>
-                  <View style={[styles.entryHeadRow, rowDir]}>
-                    <Text style={[styles.entryTitle, textStyle]}>{name}</Text>
-                    {!!dates && <Text style={styles.entryDates}>{dates}</Text>}
-                  </View>
-                  {tech.length > 0 && (
-                    <Text style={[styles.entryTech, textStyle]}>{tech.join(", ")}</Text>
-                  )}
-                  {!!line && (
-                    <View style={[styles.bullet, rowDir]}>
-                      <Text style={styles.bulletDot}>•</Text>
-                      <Text style={[styles.bulletText, textStyle]}>{line}</Text>
-                    </View>
-                  )}
+            {skillsSection.layout === "grouped" &&
+              skillsSection.groups.map((group) => (
+                <View key={group.id} style={[styles.bullet, rowDir]}>
+                  <Text style={styles.bulletDot}>•</Text>
+                  <Text style={[styles.bulletText, textStyle]}>
+                    <Text style={styles.inlineLabel}>{group.name}: </Text>
+                    {group.skills.join(", ")}
+                  </Text>
                 </View>
-              );
-            })}
+              ))}
+
+            {skillsSection.layout === "tags" && (
+              <View style={[styles.tagsRow, rowDir]}>
+                {skillsSection.groups.flatMap((g) => g.skills).map((skill, i, arr) => (
+                  <Text key={`${skill}-${i}`} style={[styles.tagChip, textStyle]}>
+                    {skill}
+                    {i < arr.length - 1 ? "  •  " : ""}
+                  </Text>
+                ))}
+              </View>
+            )}
           </View>
         )}
 
-        {experiences.length > 0 && (
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, textStyle]}>{labels.experience}</Text>
-            {experiences.map((exp, i) => {
-              const position = safeText(exp?.position);
-              const company = safeText(exp?.company);
-              const location = safeText(exp?.location);
-              const descLines = safeList(exp?.description);
-              const dates = formatDateRange(exp?.startDate, exp?.endDate, !!exp?.current, labels.present);
-              return (
-                <View key={i} style={styles.entry} wrap={false}>
-                  <View style={[styles.entryHeadRow, rowDir]}>
-                    <Text style={[styles.entryTitle, textStyle]}>
-                      {position}
-                      {company ? ` – ${company}` : ""}
-                    </Text>
-                    {!!dates && <Text style={styles.entryDates}>{dates}</Text>}
-                  </View>
-                  {!!location && <Text style={[styles.entryLocation, textStyle]}>{location}</Text>}
-                  {descLines.map((line, j) => (
-                    <View key={j} style={[styles.bullet, rowDir]}>
-                      <Text style={styles.bulletDot}>•</Text>
-                      <Text style={[styles.bulletText, textStyle]}>{line}</Text>
+        {(() => {
+          const projectsSection = projects.length > 0 && (
+            <View key="projects" style={styles.section}>
+              <Text style={[styles.sectionTitle, textStyle]}>{labels.projects}</Text>
+              {projects.map((proj, i) => {
+                const name = safeText(proj?.name);
+                const tech = safeList(proj?.tech);
+                const line = singleLine(proj?.description);
+                const dates = formatDateRange(proj?.startDate, proj?.endDate, !!proj?.current, labels.present);
+                return (
+                  <View key={i} style={styles.entry} wrap={false}>
+                    <View style={[styles.entryHeadRow, rowDir]}>
+                      <Text style={[styles.entryTitle, textStyle]}>{name}</Text>
+                      {!!dates && <Text style={styles.entryDates}>{dates}</Text>}
                     </View>
-                  ))}
-                </View>
-              );
-            })}
-          </View>
-        )}
+                    {tech.length > 0 && (
+                      <Text style={[styles.entryTech, textStyle]}>{tech.join(", ")}</Text>
+                    )}
+                    {!!line && (
+                      <View style={[styles.bullet, rowDir]}>
+                        <Text style={styles.bulletDot}>•</Text>
+                        <Text style={[styles.bulletText, textStyle]}>{line}</Text>
+                      </View>
+                    )}
+                  </View>
+                );
+              })}
+            </View>
+          );
+
+          const experienceSection = experiences.length > 0 && (
+            <View key="experience" style={styles.section}>
+              <Text style={[styles.sectionTitle, textStyle]}>{labels.experience}</Text>
+              {experiences.map((exp, i) => {
+                const position = safeText(exp?.position);
+                const company = safeText(exp?.company);
+                const location = safeText(exp?.location);
+                const descLines = safeList(exp?.description);
+                const dates = formatDateRange(exp?.startDate, exp?.endDate, !!exp?.current, labels.present);
+                return (
+                  <View key={i} style={styles.entry} wrap={false}>
+                    <View style={[styles.entryHeadRow, rowDir]}>
+                      <Text style={[styles.entryTitle, textStyle]}>
+                        {position}
+                        {company ? ` – ${company}` : ""}
+                      </Text>
+                      {!!dates && <Text style={styles.entryDates}>{dates}</Text>}
+                    </View>
+                    {!!location && <Text style={[styles.entryLocation, textStyle]}>{location}</Text>}
+                    {descLines.map((line, j) => (
+                      <View key={j} style={[styles.bullet, rowDir]}>
+                        <Text style={styles.bulletDot}>•</Text>
+                        <Text style={[styles.bulletText, textStyle]}>{line}</Text>
+                      </View>
+                    ))}
+                  </View>
+                );
+              })}
+            </View>
+          );
+
+          // "auto" = خبرة أولاً لو فيها عناصر فعلية، وإلا مشاريع أولاً.
+          const order = data.experienceOrder ?? "auto";
+          const experienceFirst =
+            order === "experience_first" || (order === "auto" && experiences.length > 0);
+
+          return experienceFirst ? (
+            <>{experienceSection}{projectsSection}</>
+          ) : (
+            <>{projectsSection}{experienceSection}</>
+          );
+        })()}
 
         {volunteering.length > 0 && (
           <View style={styles.section}>

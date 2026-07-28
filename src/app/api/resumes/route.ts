@@ -56,6 +56,63 @@ function toSkillLevel(raw: unknown): SkillLevel {
   return "INTERMEDIATE";
 }
 
+const MAX_SECTION_TITLE_LEN = 50;
+const MAX_GROUP_NAME_LEN = 50;
+const MAX_SKILL_NAME_LEN = 60;
+const VALID_LAYOUTS = new Set(["simple", "grouped", "tags"]);
+
+function sanitizeSkillsSection(raw: unknown): {
+  title: string;
+  layout: "simple" | "grouped" | "tags";
+  groups: { id: string; name: string; skills: string[] }[];
+} | null {
+  if (!raw || typeof raw !== "object") return null;
+  const obj = raw as Record<string, unknown>;
+
+  const title =
+    typeof obj.title === "string" && obj.title.trim()
+      ? obj.title.trim().slice(0, MAX_SECTION_TITLE_LEN)
+      : "Technical Skills";
+
+  const layout = VALID_LAYOUTS.has(obj.layout as string)
+    ? (obj.layout as "simple" | "grouped" | "tags")
+    : "simple";
+
+  const rawGroups = Array.isArray(obj.groups) ? obj.groups : [];
+
+  const groups = rawGroups
+    .map((g, i) => {
+      if (!g || typeof g !== "object") return null;
+      const group = g as Record<string, unknown>;
+      const name =
+        typeof group.name === "string" && group.name.trim()
+          ? group.name.trim().slice(0, MAX_GROUP_NAME_LEN)
+          : null;
+      if (!name) return null;
+
+      const skills = Array.isArray(group.skills)
+        ? Array.from(
+            new Set(
+              group.skills
+                .filter((s): s is string => typeof s === "string" && s.trim().length > 0)
+                .map((s) => s.trim().slice(0, MAX_SKILL_NAME_LEN))
+            )
+          )
+        : [];
+
+      if (skills.length === 0) return null;
+
+      return {
+        id: typeof group.id === "string" && group.id ? group.id : `group-${i}`,
+        name,
+        skills,
+      };
+    })
+    .filter((g): g is { id: string; name: string; skills: string[] } => g !== null);
+
+  return { title, layout, groups };
+}
+
 const includeResumeRelations = {
   personalInfo: true,
   summary: true,
@@ -174,27 +231,34 @@ if (!user) {
       return "";
     })();
 
-    const skillsPayload = (Array.isArray(data.skills) ? data.skills : [])
-      .map((skill: any, index: number) => ({
-        name: (typeof skill === "string" ? skill : skill?.name ?? "").trim(),
-        level: toSkillLevel(skill?.level),
-        category: skill?.category ?? "Technical",
-        order: index,
-      }))
-      .filter((s: any) => s.name.length > 0);
+    // ── قسم المهارات الجديد (skillsSection) ─────────────────────
+    // لو الطالبة عندها skillsSection (بنّاء جديد)، هذا يصير مصدر
+    // الحقيقة الوحيد، وما نلمس جداول Skill/SoftSkill القديمة إطلاقاً
+    // (نتركها زي ما هي — بدون حذف، بدون تحديث). هذا يمنع فقدان بيانات
+    // لو رجعت الطالبة لأداة قديمة، وبنفس الوقت يمنع الكتابة المزدوجة
+    // لمصدرين مختلفين لنفس المعلومة.
+    const sanitizedSkillsSection = sanitizeSkillsSection(data.skillsSection);
+    const hasNewSkillsSection = sanitizedSkillsSection !== null;
 
-    // Soft skills and languages each have their own dedicated tables
-    // (SoftSkill, Language) — they must NOT be folded into skillsPayload
-    // above. They previously weren't persisted at all (softSkills) or
-    // were miscategorized as fake Skill rows with category: "Language"
-    // (languages), which is why they never showed up as their own
-    // sections in the preview/PDF.
-    const softSkillsPayload = (Array.isArray(data.softSkills) ? data.softSkills : [])
-      .map((skill: any, index: number) => ({
-        name: (typeof skill === "string" ? skill : skill?.name ?? "").trim(),
-        order: index,
-      }))
-      .filter((s: any) => s.name.length > 0);
+    const skillsPayload = hasNewSkillsSection
+      ? []
+      : (Array.isArray(data.skills) ? data.skills : [])
+          .map((skill: any, index: number) => ({
+            name: (typeof skill === "string" ? skill : skill?.name ?? "").trim(),
+            level: toSkillLevel(skill?.level),
+            category: skill?.category ?? "Technical",
+            order: index,
+          }))
+          .filter((s: any) => s.name.length > 0);
+
+    const softSkillsPayload = hasNewSkillsSection
+      ? []
+      : (Array.isArray(data.softSkills) ? data.softSkills : [])
+          .map((skill: any, index: number) => ({
+            name: (typeof skill === "string" ? skill : skill?.name ?? "").trim(),
+            order: index,
+          }))
+          .filter((s: any) => s.name.length > 0);
 
     const languagesPayload = (Array.isArray(data.languages) ? data.languages : [])
       .map((lang: any, index: number) => ({
@@ -302,6 +366,14 @@ if (!user) {
       title: data.title || "My Resume",
       template: data.template || "professional",
       language: data.language || "en",
+      isPublic: Boolean(data.isPublic),
+      experienceOrder: ["auto", "experience_first", "projects_first"].includes(data.experienceOrder)
+        ? data.experienceOrder
+        : "auto",
+      // undefined لو ما أرسلت الطالبة skillsSection بهالطلب — Prisma
+      // يتجاهل مفاتيح undefined تلقائياً، فما يمسح قيمة محفوظة سابقاً
+      // بالغلط لو صار حفظ من مكان قديم ما يعرف عن الحقل هذا.
+      skillsSection: sanitizedSkillsSection ?? undefined,
     };
 
     if (resumeId) {
@@ -320,6 +392,13 @@ if (!user) {
       },
       { status: 403 }
     );
+  }
+
+  if (Boolean(data.isPublic)) {
+    await prisma.resume.updateMany({
+      where: { userId: user.id, id: { not: existingResume.id } },
+      data: { isPublic: false },
+    });
   }
 
   const updatedResume = await prisma.resume.update({
@@ -341,15 +420,16 @@ if (!user) {
         },
       },
 
-      skills: {
-        deleteMany: {},
-        ...(skillsPayload.length > 0 && { create: skillsPayload }),
-      },
-
-      softSkills: {
-        deleteMany: {},
-        ...(softSkillsPayload.length > 0 && { create: softSkillsPayload }),
-      },
+      ...(!hasNewSkillsSection && {
+        skills: {
+          deleteMany: {},
+          ...(skillsPayload.length > 0 && { create: skillsPayload }),
+        },
+        softSkills: {
+          deleteMany: {},
+          ...(softSkillsPayload.length > 0 && { create: softSkillsPayload }),
+        },
+      }),
 
       languages: {
         deleteMany: {},
@@ -401,6 +481,13 @@ if (!user) {
   });
 }
 
+    if (Boolean(data.isPublic)) {
+      await prisma.resume.updateMany({
+        where: { userId: user.id },
+        data: { isPublic: false },
+      });
+    }
+
     const resume = await prisma.resume.create({
       data: {
         userId: user.id,
@@ -416,11 +503,11 @@ if (!user) {
           },
         },
 
-        ...(skillsPayload.length > 0 && {
+        ...(!hasNewSkillsSection && skillsPayload.length > 0 && {
           skills: { create: skillsPayload },
         }),
 
-        ...(softSkillsPayload.length > 0 && {
+        ...(!hasNewSkillsSection && softSkillsPayload.length > 0 && {
           softSkills: { create: softSkillsPayload },
         }),
 

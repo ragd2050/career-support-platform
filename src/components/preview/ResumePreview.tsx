@@ -9,6 +9,7 @@ import {
   buildContactItems,
   RESUME_SECTION_LABELS as LABELS,
 } from "@/lib/resume-format";
+import { normalizeSkillsSection } from "@/lib/skills-section";
 
 interface ResumePreviewProps {
   data: ResumeData;
@@ -73,12 +74,59 @@ function BulletList({ items }: { items?: string[] }) {
   );
 }
 
+/** يعرض قسم المهارات حسب التخطيط المختار — نفس المنطق يُعاد استخدامه
+    بملف الـPDF (ResumePdfDocument.tsx) عبر normalizeSkillsSection. */
+function SkillsSectionView({ data }: { data: ResumeData }) {
+  const section = normalizeSkillsSection(data.skillsSection, data.skills, data.softSkills);
+  if (section.groups.length === 0) return null;
+
+  return (
+    <div style={{ marginBottom: "5px" }}>
+      <SectionTitle title="Skills" />
+
+      {section.layout === "simple" && (
+        <p style={{ fontSize: "11.5px", lineHeight: 1.25, margin: "2px 0", color: "#111" }}>
+          {section.groups.flatMap((g) => g.skills).join(", ")}
+        </p>
+      )}
+
+      {section.layout === "grouped" && (
+        <ul style={{ margin: "2px 0 0 0", paddingLeft: "16px", fontSize: "11.5px", lineHeight: 1.25 }}>
+          {section.groups.map((group) => (
+            <li key={group.id} style={{ marginBottom: "1px", color: "#111" }}>
+              <strong>{group.name}:</strong> {group.skills.join(", ")}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {section.layout === "tags" && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "4px" }}>
+          {section.groups.flatMap((g) => g.skills).map((skill, i) => (
+            <span
+              key={`${skill}-${i}`}
+              style={{
+                fontSize: "11px",
+                padding: "2px 9px",
+                borderRadius: "999px",
+                border: "1px solid #999",
+                color: "#111",
+                lineHeight: 1.4,
+              }}
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ResumePreview({ data, id }: ResumePreviewProps) {
   const {
     personalInfo,
     summary,
-    skills,
-    softSkills = [],
     projects,
     experiences,
     education,
@@ -215,99 +263,95 @@ export function ResumePreview({ data, id }: ResumePreviewProps) {
         </div>
       )}
 
-      {skills.length > 0 && (
-        <div style={style.sectionBlock}>
-          <SectionTitle title={LABELS.technicalSkills} />
-          <p style={style.body}>
-            <strong>{LABELS.technicalSkills}:</strong>{" "}
-            {skills.map((skill) => skill.name).join(", ")}
-          </p>
-        </div>
-      )}
+      {/* قسم المهارات — عنوان قابل للتخصيص + 3 تخطيطات، مع توافق
+          عكسي تلقائي للسير القديمة عبر normalizeSkillsSection */}
+      <SkillsSectionView data={data} />
 
-      {softSkills.length > 0 && (
-        <div style={style.sectionBlock}>
-          <SectionTitle title={LABELS.softSkills} />
-          <p style={style.body}>
-            <strong>{LABELS.softSkills}:</strong>{" "}
-            {softSkills.map((skill) => skill.name).join(", ")}
-          </p>
-        </div>
-      )}
-
-      {projects.length > 0 && (
-        <div style={style.sectionBlock}>
-          <SectionTitle title={LABELS.projects} />
-          {projects.map((proj) => (
-            <div key={proj.id} style={style.itemBlock}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  gap: "12px",
-                }}
-              >
-                <div style={style.itemTitle}>{proj.name}</div>
-
-                <div style={style.date}>
-                  {formatDateRange(proj.startDate, proj.endDate, !!proj.current)}
-                </div>
-              </div>
-
-              {proj.tech.length > 0 && (
-                <div style={style.italic}>{proj.tech.join(", ")}</div>
-              )}
-
-              {proj.description && (
-                <ul
+      {(() => {
+        const projectsSection = projects.length > 0 && (
+          <div key="projects" style={style.sectionBlock}>
+            <SectionTitle title={LABELS.projects} />
+            {projects.map((proj) => (
+              <div key={proj.id} style={style.itemBlock}>
+                <div
                   style={{
-                    margin: "2px 0 0 0",
-                    paddingLeft: "16px",
-                    fontSize: "11.5px",
-                    lineHeight: 1.25,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    gap: "12px",
                   }}
                 >
-                  <li>{proj.description}</li>
-                </ul>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+                  <div style={style.itemTitle}>{proj.name}</div>
 
-      {experiences.length > 0 && (
-        <div style={style.sectionBlock}>
-          <SectionTitle title={LABELS.experience} />
-          {experiences.map((exp) => (
-            <div key={exp.id} style={style.itemBlock}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  gap: "12px",
-                }}
-              >
-                <div>
-                  <span style={style.itemTitle}>{exp.position}</span>
-                  {exp.company && (
-                    <span style={style.itemTitle}> – {exp.company}</span>
-                  )}
+                  <div style={style.date}>
+                    {formatDateRange(proj.startDate, proj.endDate, !!proj.current)}
+                  </div>
                 </div>
 
-                <div style={style.date}>
-                  {formatDateRange(exp.startDate, exp.endDate, !!exp.current)}
-                </div>
+                {proj.tech.length > 0 && (
+                  <div style={style.italic}>{proj.tech.join(", ")}</div>
+                )}
+
+                {proj.description && (
+                  <ul
+                    style={{
+                      margin: "2px 0 0 0",
+                      paddingLeft: "16px",
+                      fontSize: "11.5px",
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    <li>{proj.description}</li>
+                  </ul>
+                )}
               </div>
+            ))}
+          </div>
+        );
 
-              {exp.location && <div style={style.italic}>{exp.location}</div>}
+        const experienceSection = experiences.length > 0 && (
+          <div key="experience" style={style.sectionBlock}>
+            <SectionTitle title={LABELS.experience} />
+            {experiences.map((exp) => (
+              <div key={exp.id} style={style.itemBlock}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    gap: "12px",
+                  }}
+                >
+                  <div>
+                    <span style={style.itemTitle}>{exp.position}</span>
+                    {exp.company && (
+                      <span style={style.itemTitle}> – {exp.company}</span>
+                    )}
+                  </div>
 
-              <BulletList items={exp.description} />
-            </div>
-          ))}
-        </div>
-      )}
+                  <div style={style.date}>
+                    {formatDateRange(exp.startDate, exp.endDate, !!exp.current)}
+                  </div>
+                </div>
+
+                {exp.location && <div style={style.italic}>{exp.location}</div>}
+
+                <BulletList items={exp.description} />
+              </div>
+            ))}
+          </div>
+        );
+
+        // "auto" = خبرة أولاً لو فيها عناصر فعلية، وإلا مشاريع أولاً
+        // (مناسب أكثر لطالبة لسه بالجامعة بدون خبرة عملية).
+        const order = data.experienceOrder ?? "auto";
+        const experienceFirst =
+          order === "experience_first" || (order === "auto" && experiences.length > 0);
+
+        return experienceFirst
+          ? <>{experienceSection}{projectsSection}</>
+          : <>{projectsSection}{experienceSection}</>;
+      })()}
 
       {volunteering.length > 0 && (
         <div style={style.sectionBlock}>

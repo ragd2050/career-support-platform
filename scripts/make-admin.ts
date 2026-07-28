@@ -1,19 +1,34 @@
 /**
- * ONE-OFF SCRIPT — makes one account an admin, by email.
- * Run with: npx tsx scripts/make-admin.ts your-email@dah.edu.sa
+ * ONE-OFF SCRIPT — sets a user's role by email.
+ * Run with: npx tsx scripts/make-admin.ts <email> [role]
  *
- * Example:
+ * <role> is optional and defaults to ADMIN for backward compatibility.
+ * Valid values: USER | CAREER_ADVISOR | ADMIN
+ *
+ * Examples:
  *   npx tsx scripts/make-admin.ts rmbanat@dah.edu.sa
+ *   npx tsx scripts/make-admin.ts advisor-test@dah.edu.sa CAREER_ADVISOR
+ *   npx tsx scripts/make-admin.ts student-test@dah.edu.sa USER
  */
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type Role } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const VALID_ROLES: Role[] = ["USER", "CAREER_ADVISOR", "ADMIN"];
+type RoleArg = Role;
+
 async function main() {
   const email = process.argv[2];
+  const roleArg = (process.argv[3]?.toUpperCase() || "ADMIN") as RoleArg;
 
   if (!email) {
-    console.error("❌ Usage: npx tsx scripts/make-admin.ts your-email@dah.edu.sa");
+    console.error("❌ Usage: npx tsx scripts/make-admin.ts <email> [role]");
+    console.error("   role defaults to ADMIN. Valid roles: USER | CAREER_ADVISOR | ADMIN");
+    process.exit(1);
+  }
+
+  if (!VALID_ROLES.includes(roleArg)) {
+    console.error(`❌ Invalid role "${roleArg}". Valid roles: ${VALID_ROLES.join(" | ")}`);
     process.exit(1);
   }
 
@@ -29,7 +44,7 @@ async function main() {
 
   const updated = await prisma.user.update({
     where: { email },
-    data: { role: "ADMIN" },
+    data: { role: roleArg },
   });
 
   console.log(`✅ Done. ${updated.email} is now role: ${updated.role}`);

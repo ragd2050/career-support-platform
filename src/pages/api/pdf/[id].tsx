@@ -69,13 +69,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   registerPdfFonts();
 
+  // ⬇ الإصلاح: skillsSection وexperienceOrder كانوا مفقودين هنا —
+  // يعني تخصيص عنوان/مجموعات المهارات وترتيب Experience/Projects ما
+  // كان له أي أثر فعلي على ملف الـPDF المُنزّل فعلياً، رغم إنه يشتغل
+  // صح بالمعاينة الحية (ResumePreview.tsx يقرأ من الـstore مباشرة).
   const data: ResumePdfData = {
     title: resume.title,
     language: resume.language,
+    experienceOrder:
+      (resume as unknown as { experienceOrder?: ResumePdfData["experienceOrder"] }).experienceOrder ?? "auto",
     personalInfo: resume.personalInfo,
     summary: resume.summary,
     skills: resume.skills,
     softSkills: resume.softSkills,
+    skillsSection:
+      (resume as unknown as { skillsSection?: ResumePdfData["skillsSection"] }).skillsSection ?? null,
     languages: resume.languages,
     projects: resume.projects,
     experiences: resume.experiences,

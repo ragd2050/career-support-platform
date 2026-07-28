@@ -27,6 +27,8 @@ export default async function PreviewPage({ params }: Props) {
       personalInfo: true,
       summary: true,
       skills: { orderBy: { order: "asc" } },
+      softSkills: { orderBy: { order: "asc" } },
+      languages: { orderBy: { order: "asc" } },
       projects: { orderBy: { order: "asc" } },
       experiences: { orderBy: { order: "asc" } },
       education: { orderBy: { order: "asc" } },
@@ -38,6 +40,25 @@ export default async function PreviewPage({ params }: Props) {
 
   if (!resume) {
     redirect("/dashboard");
+  }
+
+  // Audit log — only when an admin is looking at someone ELSE's resume
+  // (not when a student is viewing their own, and not when an admin
+  // happens to view their own resume through this same route). Logging
+  // failures must never block a legitimate view, so this is fire-and-
+  // forget with its own error handling.
+  if (admin && resume.userId !== admin.id) {
+    prisma.adminAccessLog
+      .create({
+        data: {
+          adminUserId: admin.id,
+          targetUserId: resume.userId,
+          resumeId: resume.id,
+        },
+      })
+      .catch((err: unknown) => {
+        console.error("[PreviewPage] Failed to write admin access log:", err);
+      });
   }
 
   return <PreviewClient resume={resume} />;
