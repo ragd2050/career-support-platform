@@ -3,110 +3,299 @@ import { getAuth } from "@clerk/nextjs/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { prisma } from "@/lib/prisma";
 import { registerPdfFonts } from "@/lib/pdf/fonts";
-import { ResumePdfDocument, type ResumePdfData } from "@/lib/pdf/ResumePdfDocument";
+import {
+  ResumePdfDocument,
+  type ResumePdfData,
+} from "@/lib/pdf/ResumePdfDocument";
 
 /**
  * GET /api/pdf/[id]
  *
- * This lives in the Pages Router (pages/api/...) rather than the App
- * Router (src/app/api/...) on purpose. Next.js 15's App Router uses an
- * internally vendored React 19 canary build for all server code —
- * regardless of the React version pinned in package.json — and
- * @react-pdf/renderer's reconciler does not handle that specific canary
- * build correctly, causing every PDF render to fail with a "Minified
- * React error #31" (confirmed reproducible with the most minimal
- * possible <Document><Page><Text>...</Text></Page></Document>, i.e. not
- * caused by resume data). The Pages Router does not use that internal
- * React 19 canary, which sidesteps the incompatibility entirely. This
- * is a known, currently-unresolved upstream issue — see
- * https://github.com/diegomura/react-pdf/issues/2994 — not something
- * fixable from application code in the App Router.
+ * Pages Router is intentionally used for @react-pdf/renderer.
  *
- * If a future @react-pdf/renderer release fixes this, this route can
- * move back under src/app/api/pdf/[id]/route.ts.
+ * Access rules:
+ * - Regular users can download only their own resumes.
+ * - ADMIN users can download any student's resume.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  /* =====================================================
+     METHOD
+  ===================================================== */
+
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
-    return res.status(405).json({ error: "Method not allowed" });
+
+    return res.status(405).json({
+      error: "Method not allowed",
+    });
   }
 
-  const { userId } = getAuth(req);
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
+  /* =====================================================
+     AUTH
+  ===================================================== */
+
+  const { userId: clerkUserId } = getAuth(req);
+
+  if (!clerkUserId) {
+    return res.status(401).json({
+      error: "Unauthorized",
+    });
   }
 
   const id = req.query.id;
+
   if (typeof id !== "string") {
-    return res.status(400).json({ error: "Invalid resume id" });
+    return res.status(400).json({
+      error: "Invalid resume id",
+    });
   }
 
-  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-  if (!user) {
-    return res.status(404).json({ error: "Not found" });
+  /* =====================================================
+     CURRENT USER
+  ===================================================== */
+
+  const currentUser =
+    await prisma.user.findUnique({
+      where: {
+        clerkId: clerkUserId,
+      },
+      select: {
+        id: true,
+        role: true,
+      },
+    });
+
+  if (!currentUser) {
+    return res.status(404).json({
+      error: "User not found",
+    });
   }
 
-  const resume = await prisma.resume.findFirst({
-    where: { id, userId: user.id },
-    include: {
-      personalInfo: true,
-      summary: true,
-      skills: { orderBy: { order: "asc" } },
-      softSkills: { orderBy: { order: "asc" } },
-      languages: { orderBy: { order: "asc" } },
-      projects: { orderBy: { order: "asc" } },
-      experiences: { orderBy: { order: "asc" } },
-      education: { orderBy: { order: "asc" } },
-      certifications: { orderBy: { order: "asc" } },
-      awards: { orderBy: { order: "asc" } },
-      volunteering: { orderBy: { order: "asc" } },
-    },
-  });
+  const isAdmin =
+    currentUser.role === "ADMIN";
+
+  /* =====================================================
+     RESUME ACCESS
+  ===================================================== */
+
+  const resume =
+    await prisma.resume.findFirst({
+      where: isAdmin
+        ? {
+            // Admin can download any resume.
+            id,
+          }
+        : {
+            // Regular users can download only their own resume.
+            id,
+            userId: currentUser.id,
+          },
+
+      include: {
+        personalInfo: true,
+        summary: true,
+
+        skills: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+
+        softSkills: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+
+        languages: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+
+        projects: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+
+        experiences: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+
+        education: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+
+        certifications: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+
+        awards: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+
+        volunteering: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+      },
+    });
 
   if (!resume) {
-    return res.status(404).json({ error: "Resume not found" });
+    return res.status(404).json({
+      error: "Resume not found",
+    });
   }
+
+  /* =====================================================
+     ADMIN AUDIT LOG
+  ===================================================== */
+
+  // إذا الأدمن حمّل CV لطالبة ثانية نسجل العملية.
+  // فشل الـlog لا يمنع تحميل الملف.
+  if (
+    isAdmin &&
+    resume.userId !== currentUser.id
+  ) {
+    try {
+      await prisma.adminAccessLog.create({
+        data: {
+          adminUserId: currentUser.id,
+          targetUserId: resume.userId,
+          resumeId: resume.id,
+        },
+      });
+    } catch (error) {
+      console.error(
+        "[GET /api/pdf/[id]] Failed to write admin access log:",
+        error
+      );
+    }
+  }
+
+  /* =====================================================
+     PDF DATA
+  ===================================================== */
 
   registerPdfFonts();
 
-  // ⬇ الإصلاح: skillsSection وexperienceOrder كانوا مفقودين هنا —
-  // يعني تخصيص عنوان/مجموعات المهارات وترتيب Experience/Projects ما
-  // كان له أي أثر فعلي على ملف الـPDF المُنزّل فعلياً، رغم إنه يشتغل
-  // صح بالمعاينة الحية (ResumePreview.tsx يقرأ من الـstore مباشرة).
   const data: ResumePdfData = {
     title: resume.title,
+
     language: resume.language,
+
     experienceOrder:
-      (resume as unknown as { experienceOrder?: ResumePdfData["experienceOrder"] }).experienceOrder ?? "auto",
-    personalInfo: resume.personalInfo,
-    summary: resume.summary,
-    skills: resume.skills,
-    softSkills: resume.softSkills,
+      (
+        resume as unknown as {
+          experienceOrder?: ResumePdfData["experienceOrder"];
+        }
+      ).experienceOrder ?? "auto",
+
+    personalInfo:
+      resume.personalInfo,
+
+    summary:
+      resume.summary,
+
+    skills:
+      resume.skills,
+
+    softSkills:
+      resume.softSkills,
+
     skillsSection:
-      (resume as unknown as { skillsSection?: ResumePdfData["skillsSection"] }).skillsSection ?? null,
-    languages: resume.languages,
-    projects: resume.projects,
-    experiences: resume.experiences,
-    education: resume.education,
-    certifications: resume.certifications,
-    awards: resume.awards,
-    volunteering: resume.volunteering,
+      (
+        resume as unknown as {
+          skillsSection?: ResumePdfData["skillsSection"];
+        }
+      ).skillsSection ?? null,
+
+    languages:
+      resume.languages,
+
+    projects:
+      resume.projects,
+
+    experiences:
+      resume.experiences,
+
+    education:
+      resume.education,
+
+    certifications:
+      resume.certifications,
+
+    awards:
+      resume.awards,
+
+    volunteering:
+      resume.volunteering,
   };
 
-  try {
-    const buffer = await renderToBuffer(ResumePdfDocument({ data }));
+  /* =====================================================
+     GENERATE PDF
+  ===================================================== */
 
-    const fileName = `${(resume.personalInfo?.fullName || resume.title || "resume")
-      .replace(/[^\p{L}\p{N}\s-]/gu, "")
+  try {
+    const buffer =
+      await renderToBuffer(
+        ResumePdfDocument({
+          data,
+        })
+      );
+
+    const fileName = `${(
+      resume.personalInfo?.fullName ||
+      resume.title ||
+      "resume"
+    )
+      .replace(
+        /[^\p{L}\p{N}\s-]/gu,
+        ""
+      )
       .trim()
       .replace(/\s+/g, "-")}.pdf`;
 
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
-    res.setHeader("Cache-Control", "no-store");
-    return res.status(200).send(buffer);
+    res.setHeader(
+      "Content-Type",
+      "application/pdf"
+    );
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${fileName}"`
+    );
+
+    res.setHeader(
+      "Cache-Control",
+      "no-store"
+    );
+
+    return res
+      .status(200)
+      .send(buffer);
   } catch (error) {
-    console.error("[GET /api/pdf/[id]] PDF generation failed:", error);
-    return res.status(500).json({ error: "Failed to generate PDF" });
+    console.error(
+      "[GET /api/pdf/[id]] PDF generation failed:",
+      error
+    );
+
+    return res.status(500).json({
+      error:
+        "Failed to generate PDF",
+    });
   }
 }
