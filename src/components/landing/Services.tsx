@@ -23,7 +23,7 @@ export function Services() {
 
           <p className="section-desc">
             {t(
-              "أدوات تساعدك على بناء سيرتك الذاتية والاستعداد لمسيرتك المهنية بثقة.",
+              "أدوات عملية لبناء السيرة الذاتية والاستعداد للمسار المهني بثقة.",
               "Practical tools to help you build your CV and prepare for your career with confidence."
             )}
           </p>
@@ -54,7 +54,7 @@ export function Services() {
 
             <div className="service-desc">
               {t(
-                "تعرّفي على أهم أساليب الكتابة والتنسيق لإنشاء سيرة احترافية ومتوافقة مع أنظمة ATS.",
+                "أهم أساليب الكتابة والتنسيق لإنشاء سيرة ذاتية احترافية ومتوافقة مع أنظمة ATS.",
                 "Learn essential writing and formatting techniques for a professional, ATS-friendly CV."
               )}
             </div>
@@ -86,13 +86,13 @@ export function Services() {
 
             <div className="service-desc">
               {t(
-                "أنشئي سيرتك خطوة بخطوة مع معاينة مباشرة وإمكانية تنزيلها بصيغة PDF.",
+                "إنشاء السيرة الذاتية خطوة بخطوة مع معاينة مباشرة وإمكانية تنزيلها بصيغة PDF.",
                 "Build your CV step by step with live preview and PDF download."
               )}
             </div>
 
             <Link href="/builder/new" className="btn btn-outline btn-sm">
-              {t("ابدئي الآن", "Start Now")}
+              {t("ابدأ الآن", "Start Now")}
             </Link>
           </div>
 
@@ -118,13 +118,13 @@ export function Services() {
 
             <div className="service-desc">
               {t(
-                "استعدي للمقابلات من خلال الأسئلة الشائعة ونصائح المقابلات الحضورية والافتراضية.",
+                "الاستعداد للمقابلات من خلال الأسئلة الشائعة ونصائح المقابلات الحضورية والافتراضية.",
                 "Prepare with common interview questions and practical tips for in-person and virtual interviews."
               )}
             </div>
 
             <Link href="/interview-prep" className="btn btn-outline btn-sm">
-              {t("ابدئي التحضير", "Start Preparing")}
+              {t("ابدأ التحضير", "Start Preparing")}
             </Link>
           </div>
 
@@ -151,13 +151,13 @@ export function Services() {
 
             <div className="service-desc">
               {t(
-                "حوّلي سيرتك الذاتية إلى معرض أعمال احترافي قابل للمشاركة مع تصاميم وثيمات متعددة.",
+                "تحويل السيرة الذاتية إلى معرض أعمال احترافي قابل للمشاركة مع تصاميم وثيمات متعددة.",
                 "Turn your CV into a professional, shareable portfolio with multiple designs and themes."
               )}
             </div>
 
             <Link href="/builder/new" className="btn btn-outline btn-sm">
-              {t("أنشئي معرضك", "Create Portfolio")}
+              {t("إنشاء معرض الأعمال", "Create Portfolio")}
             </Link>
           </div>
         </div>
