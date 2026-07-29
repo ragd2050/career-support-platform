@@ -110,7 +110,7 @@ export function Services() {
 
             <div className="service-desc">
               {t(
-                "حوّل سيرتك الذاتية إلى معرض أعمال احترافي قابل للمشاركة، بعدة تصاميم وثيمات مختلفة.",
+                "حوِّل سيرتك الذاتية إلى معرض أعمال احترافي قابل للمشاركة، يضمّ تصاميم وثيمات متعددة.",
                 "Turn your resume into a professional, shareable portfolio website with multiple designs and themes."
               )}
             </div>
