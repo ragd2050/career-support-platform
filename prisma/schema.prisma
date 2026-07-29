@@ -264,13 +264,18 @@ model PlatformVisit {
 }
 
 model AdminAccessLog {
-  id           String   @id @default(cuid())
+  id           String          @id @default(cuid())
   adminUserId  String
-  admin        User     @relation("AdminAccessLogAsAdmin", fields: [adminUserId], references: [id], onDelete: Cascade)
+  admin        User            @relation("AdminAccessLogAsAdmin", fields: [adminUserId], references: [id], onDelete: Cascade)
   targetUserId String
-  targetUser   User     @relation("AdminAccessLogAsTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
-  resumeId     String
-  createdAt    DateTime @default(now())
+  targetUser   User            @relation("AdminAccessLogAsTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+  // اختيارية — تغيير الدور ماله سيرة مرتبطة به، بخلاف عرض السيرة
+  resumeId     String?
+  // نوع العملية — تُحدَّد افتراضياً "عرض سيرة" لأي سجلات قديمة موجودة
+  action       AdminActionType @default(VIEWED_RESUME)
+  // تفاصيل إضافية اختيارية (مثلاً: "USER → CAREER_ADVISOR" لتغيير الدور)
+  metadata     String?
+  createdAt    DateTime        @default(now())
 
   @@index([targetUserId, createdAt])
   @@index([adminUserId, createdAt])
@@ -300,6 +305,11 @@ enum PaymentStatus {
   COMPLETED
   FAILED
   REFUNDED
+}
+
+enum AdminActionType {
+  VIEWED_RESUME
+  CHANGED_ROLE
 }
 
 model ChatMessage {

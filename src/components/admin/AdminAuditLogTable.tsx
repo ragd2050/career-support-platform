@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ScrollText, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ScrollText, ChevronLeft, ChevronRight, ExternalLink, Eye, ShieldCheck } from "lucide-react";
 
 interface AuditLogRow {
   id: string;
@@ -11,7 +11,9 @@ interface AuditLogRow {
   adminName: string;
   targetName: string;
   targetMajor: string | null;
-  resumeId: string;
+  resumeId: string | null;
+  action: "VIEWED_RESUME" | "CHANGED_ROLE";
+  metadata: string | null;
 }
 
 interface Props {
@@ -38,6 +40,13 @@ export function AdminAuditLogTable({ rows, page, pageSize, total }: Props) {
     router.push(`/admin/audit-log?page=${p}`);
   };
 
+  const actionLabel = (action: AuditLogRow["action"]) => {
+    if (action === "CHANGED_ROLE") {
+      return { text: t("تغيير دور", "Changed Role"), Icon: ShieldCheck, color: "text-[#7C3AED]" };
+    }
+    return { text: t("عرض سيرة", "Viewed Resume"), Icon: Eye, color: "text-[#2563EB]" };
+  };
+
   return (
     <div className="space-y-4">
       <div>
@@ -47,8 +56,8 @@ export function AdminAuditLogTable({ rows, page, pageSize, total }: Props) {
         </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-[#8A8078]">
           {t(
-            "كل مرة يفتح فيها مسؤول سيرة طالبة، يُسجَّل هنا تلقائياً — لأجل الشفافية والمساءلة.",
-            "Every time an admin opens a student's resume, it's logged here automatically — for transparency and accountability."
+            "كل عملية حساسة يسويها مسؤول — عرض سيرة طالبة أو تغيير دور مستخدم — تُسجَّل هنا تلقائياً، لأجل الشفافية والمساءلة.",
+            "Every sensitive admin action — viewing a student's resume or changing a user's role — is logged here automatically, for transparency and accountability."
           )}
         </p>
       </div>
@@ -67,6 +76,9 @@ export function AdminAuditLogTable({ rows, page, pageSize, total }: Props) {
                 </th>
                 <th className="px-4 py-3 text-start font-bold text-gray-600 dark:text-[#A89E98]">
                   {t("المسؤول", "Admin")}
+                </th>
+                <th className="px-4 py-3 text-start font-bold text-gray-600 dark:text-[#A89E98]">
+                  {t("العملية", "Action")}
                 </th>
                 <th className="px-4 py-3 text-start font-bold text-gray-600 dark:text-[#A89E98]">
                   {t("الطالبة", "Student")}
@@ -91,18 +103,36 @@ export function AdminAuditLogTable({ rows, page, pageSize, total }: Props) {
                   <td className="px-4 py-3 font-medium text-gray-900 dark:text-[#F0EAE6]">
                     {row.adminName}
                   </td>
+                  <td className="px-4 py-3">
+                    {(() => {
+                      const { text, Icon, color } = actionLabel(row.action);
+                      return (
+                        <span className={`inline-flex items-center gap-1.5 font-medium ${color}`}>
+                          <Icon className="h-3.5 w-3.5" />
+                          {text}
+                          {row.metadata && (
+                            <span className="text-gray-400 dark:text-[#7A716A]">({row.metadata})</span>
+                          )}
+                        </span>
+                      );
+                    })()}
+                  </td>
                   <td className="px-4 py-3 text-gray-700 dark:text-[#D8CFC9]">{row.targetName}</td>
                   <td className="px-4 py-3 text-gray-500 dark:text-[#8A8078]">
                     {row.targetMajor || "—"}
                   </td>
                   <td className="px-4 py-3">
-                    <Link
-                      href={`/preview/${row.resumeId}`}
-                      className="inline-flex items-center gap-1 text-[#8B1E24] hover:underline"
-                    >
-                      {t("عرض", "View")}
-                      <ExternalLink className="h-3 w-3" />
-                    </Link>
+                    {row.resumeId ? (
+                      <Link
+                        href={`/preview/${row.resumeId}`}
+                        className="inline-flex items-center gap-1 text-[#8B1E24] hover:underline"
+                      >
+                        {t("عرض", "View")}
+                        <ExternalLink className="h-3 w-3" />
+                      </Link>
+                    ) : (
+                      <span className="text-gray-300 dark:text-[#5C544F]">—</span>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -54,6 +54,7 @@ export default async function PreviewPage({ params }: Props) {
           adminUserId: admin.id,
           targetUserId: resume.userId,
           resumeId: resume.id,
+          action: "VIEWED_RESUME",
         },
       })
       .catch((err: unknown) => {

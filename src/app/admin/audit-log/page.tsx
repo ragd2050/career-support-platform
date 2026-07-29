@@ -42,6 +42,8 @@ export default async function AuditLogPage({
     targetName: log.targetUser.name || log.targetUser.email,
     targetMajor: log.targetUser.major,
     resumeId: log.resumeId,
+    action: log.action,
+    metadata: log.metadata,
   }));
 
   return (

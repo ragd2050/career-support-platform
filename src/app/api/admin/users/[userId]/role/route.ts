@@ -46,11 +46,31 @@ export async function PATCH(
   }
 
   try {
+    const previous = await prisma.user.findUnique({
+      where: { id: targetUserId },
+      select: { role: true },
+    });
+
     const updated = await prisma.user.update({
       where: { id: targetUserId },
       data: { role },
       select: { id: true, name: true, email: true, role: true },
     });
+
+    // سجل تدقيق — يوثّق مين غيّر دور مين، ومتى، ومن أي دور لأي دور.
+    // فشل التسجيل ما يوقف نجاح العملية نفسها (fire-and-forget).
+    prisma.adminAccessLog
+      .create({
+        data: {
+          adminUserId: admin.id,
+          targetUserId,
+          action: "CHANGED_ROLE",
+          metadata: previous ? `${previous.role} → ${role}` : `→ ${role}`,
+        },
+      })
+      .catch((err: unknown) => {
+        console.error("[PATCH /api/admin/users/[userId]/role] Failed to write audit log:", err);
+      });
 
     return NextResponse.json({ success: true, user: updated });
   } catch (error) {
