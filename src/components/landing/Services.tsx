@@ -18,13 +18,13 @@ export function Services() {
 
           <p className="section-desc">
             {t(
-              "ثلاث خدمات أساسية مصممة لدعم بناء الهوية المهنية وتقديم الذات بأفضل صورة أمام أصحاب العمل.",
-              "Three core services designed to support professional identity building and help students present themselves effectively to employers."
+              "أربع خدمات أساسية مصممة لدعم بناء الهوية المهنية وتقديم الذات بأفضل صورة أمام أصحاب العمل.",
+              "Four core services designed to support professional identity building and help students present themselves effectively to employers."
             )}
           </p>
         </div>
 
-        <div className="grid-3">
+        <div className="grid-4">
           <div className="service-card">
             <div className="service-icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -92,6 +92,31 @@ export function Services() {
 
             <Link href="/interview-prep" className="btn btn-outline btn-sm">
               {t("ابدأ التحضير", "Start Preparing")}
+            </Link>
+          </div>
+
+          <div className="service-card">
+            <div className="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+            </div>
+
+            <div className="service-title">
+              {t("البورتفوليو الشخصي", "Personal Portfolio")}
+            </div>
+
+            <div className="service-desc">
+              {t(
+                "حوّلي سيرتك الذاتية لموقع بورتفوليو احترافي قابل للمشاركة، بعدة تصاميم وثيمات مختلفة.",
+                "Turn your resume into a professional, shareable portfolio website with multiple designs and themes."
+              )}
+            </div>
+
+            <Link href="/builder/new" className="btn btn-outline btn-sm">
+              {t("أنشئي بورتفوليوك", "Create Your Portfolio")}
             </Link>
           </div>
         </div>

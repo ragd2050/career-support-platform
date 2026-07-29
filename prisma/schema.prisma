@@ -8,25 +8,24 @@ datasource db {
 }
 
 model User {
-  id                String        @id @default(cuid())
-  clerkId           String        @unique
-  email             String        @unique
-  name              String?
-  phone             String?
-  imageUrl          String?
-  major             String?
-  role              Role          @default(USER)
-  plan              PlanType      @default(FREE)
-  planExpiresAt     DateTime?
-  consentAcceptedAt DateTime?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  payments          Payment[]
-  resumes           Resume[]
-  chatMessages      ChatMessage[]
-
+  id                      String           @id @default(cuid())
+  clerkId                 String           @unique
+  email                   String           @unique
+  name                    String?
+  imageUrl                String?
+  role                    Role             @default(USER)
+  plan                    PlanType         @default(FREE)
+  planExpiresAt           DateTime?
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  major                   String?
+  phone                   String?
+  consentAcceptedAt       DateTime?
   adminAccessLogsGiven    AdminAccessLog[] @relation("AdminAccessLogAsAdmin")
   adminAccessLogsReceived AdminAccessLog[] @relation("AdminAccessLogAsTarget")
+  chatMessages            ChatMessage[]
+  payments                Payment[]
+  resumes                 Resume[]
 
   @@map("users")
 }
@@ -38,6 +37,14 @@ model Resume {
   template               String          @default("professional")
   language               String          @default("en")
   isPublic               Boolean         @default(false)
+  atsScore               Int?
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  coverLetterData        String?
+  coverLetterFileName    String?
+  coverLetterMimeType    String?
+  skillsSection          Json?
+  experienceOrder        String          @default("auto")
   portfolioEnabled       Boolean         @default(false)
   portfolioSlug          String?         @unique
   portfolioTheme         String          @default("midnight")
@@ -45,24 +52,16 @@ model Resume {
   portfolioTemplate      String          @default("classic")
   portfolioCustomization Json?
   portfolioViewCount     Int             @default(0)
-  experienceOrder        String          @default("auto")
-  skillsSection          Json?
-  atsScore               Int?
-  coverLetterFileName    String?
-  coverLetterMimeType    String?
-  coverLetterData        String?         @db.Text
-  createdAt              DateTime        @default(now())
-  updatedAt              DateTime        @updatedAt
   awards                 Award[]
   certifications         Certification[]
   education              Education[]
   experiences            Experience[]
+  languages              Language[]
   personalInfo           PersonalInfo?
   projects               Project[]
   user                   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   skills                 Skill[]
   softSkills             SoftSkill[]
-  languages              Language[]
   summary                Summary?
   volunteering           Volunteering[]
 
@@ -266,26 +265,35 @@ model PlatformVisit {
 model AdminAccessLog {
   id           String          @id @default(cuid())
   adminUserId  String
-  admin        User            @relation("AdminAccessLogAsAdmin", fields: [adminUserId], references: [id], onDelete: Cascade)
   targetUserId String
-  targetUser   User            @relation("AdminAccessLogAsTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
-  // اختيارية — تغيير الدور ماله سيرة مرتبطة به، بخلاف عرض السيرة
   resumeId     String?
-  // نوع العملية — تُحدَّد افتراضياً "عرض سيرة" لأي سجلات قديمة موجودة
-  action       AdminActionType @default(VIEWED_RESUME)
-  // تفاصيل إضافية اختيارية (مثلاً: "USER → CAREER_ADVISOR" لتغيير الدور)
-  metadata     String?
   createdAt    DateTime        @default(now())
+  action       AdminActionType @default(VIEWED_RESUME)
+  metadata     String?
+  admin        User            @relation("AdminAccessLogAsAdmin", fields: [adminUserId], references: [id], onDelete: Cascade)
+  targetUser   User            @relation("AdminAccessLogAsTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
 
   @@index([targetUserId, createdAt])
   @@index([adminUserId, createdAt])
   @@map("admin_access_logs")
 }
 
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  role      ChatRole
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("chat_messages")
+}
+
 enum Role {
   USER
-  CAREER_ADVISOR
   ADMIN
+  CAREER_ADVISOR
 }
 
 enum PlanType {
@@ -310,18 +318,6 @@ enum PaymentStatus {
 enum AdminActionType {
   VIEWED_RESUME
   CHANGED_ROLE
-}
-
-model ChatMessage {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role      ChatRole
-  content   String   @db.Text
-  createdAt DateTime @default(now())
-
-  @@index([userId, createdAt])
-  @@map("chat_messages")
 }
 
 enum ChatRole {
