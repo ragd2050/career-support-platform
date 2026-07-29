@@ -105,18 +105,18 @@ export function Services() {
             </div>
 
             <div className="service-title">
-              {t("البورتفوليو الشخصي", "Personal Portfolio")}
+              {t("معرض الأعمال", "Personal Portfolio")}
             </div>
 
             <div className="service-desc">
               {t(
-                "حوّلي سيرتك الذاتية لموقع بورتفوليو احترافي قابل للمشاركة، بعدة تصاميم وثيمات مختلفة.",
+                "حوّل سيرتك الذاتية إلى معرض أعمال احترافي قابل للمشاركة، بعدة تصاميم وثيمات مختلفة.",
                 "Turn your resume into a professional, shareable portfolio website with multiple designs and themes."
               )}
             </div>
 
             <Link href="/builder/new" className="btn btn-outline btn-sm">
-              {t("أنشئي بورتفوليوك", "Create Your Portfolio")}
+              {t("أنشئ معرض أعمالك", "Create Your Portfolio")}
             </Link>
           </div>
         </div>
