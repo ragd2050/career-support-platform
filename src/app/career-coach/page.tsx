@@ -7,12 +7,12 @@ export default function CareerCoachPage() {
   return (
     <>
       <Navbar />
-      <PageHeader
-        titleAr="مدرب DAH المهني"
-        titleEn="DAH Career Coach"
-        descAr="محادثة مباشرة مع مدرب مهني ذكي يعرف تفاصيل سيرتك الذاتية، يعطيك ملاحظات مخصصة، ويسوي معاك مقابلات تجريبية."
-        descEn="Chat directly with an AI coach that knows your resume, gives personalized feedback, and runs mock interviews with you."
-      />
+     <PageHeader
+  titleAr="مدرب DAH المهني"
+  titleEn="DAH Career Coach"
+  descAr="مساعد مهني ذكي يقدم ملاحظات مخصصة حول السيرة الذاتية، ويساعد في الاستعداد للمقابلات الوظيفية من خلال مقابلات تجريبية تفاعلية."
+  descEn="An AI-powered career coach that provides personalized resume feedback and helps users prepare for job interviews through interactive mock interviews."
+/>
       <CareerCoachChat />
       <Footer />
     </>

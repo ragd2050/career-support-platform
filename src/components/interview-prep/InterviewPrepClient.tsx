@@ -25,7 +25,7 @@ const TABS: { key: TabKey; ar: string; en: string }[] = [
   { key: "common", ar: "الأسئلة الشائعة", en: "Common Questions" },
   { key: "behavioral", ar: "الأسئلة السلوكية", en: "Behavioral Questions" },
   { key: "star", ar: "طريقة STAR", en: "STAR Method" },
-  { key: "tellme", ar: "حدثنا عن نفسك", en: "Tell Me About Yourself" },
+  { key: "tellme", ar: "التعريف بالنفس", en: "Tell Me About Yourself" },
   { key: "technical", ar: "المقابلات التقنية", en: "Technical Interviews" },
   { key: "body", ar: "لغة الجسد", en: "Body Language" },
   { key: "online", ar: "المقابلات عبر الإنترنت", en: "Online Interviews" },
@@ -34,44 +34,44 @@ const TABS: { key: TabKey; ar: string; en: string }[] = [
 
 const BASICS: { title: Bilingual; body: Bilingual }[] = [
   {
-    title: { ar: "ابحث عن الشركة", en: "Research the company" },
+    title: { ar: "البحث عن الشركة", en: "Research the company" },
     body: {
-      ar: 'اقرأ عن مجال عمل الشركة، رؤيتها، وقيمها قبل المقابلة، فهذا يساعدك على إجابة أسئلة "لماذا تريد العمل معنا" بثقة.',
+      ar: 'الاطلاع على مجال عمل الشركة ورؤيتها وقيمها قبل المقابلة يساعد على الاستعداد لأسئلة مثل "لماذا ترغب في العمل معنا؟" بثقة ووضوح.',
       en: "Read about the company's field, vision, and values before the interview — this helps you confidently answer 'why do you want to work with us'.",
     },
   },
   {
-    title: { ar: "احضر قبل الوقت المحدد", en: "Arrive early" },
+    title: { ar: "الحضور قبل الوقت المحدد", en: "Arrive early" },
     body: {
-      ar: "احضر إلى موقع المقابلة (أو الاتصال الإلكتروني) قبل 10-15 دقيقة من الوقت المحدد لإظهار الالتزام والاحترافية.",
+      ar: "يفضّل الوصول إلى موقع المقابلة أو الانضمام إلى الاتصال الإلكتروني قبل 10–15 دقيقة من الموعد لإظهار الالتزام والاحترافية.",
       en: "Arrive at the interview location (or online call) 10-15 minutes early to show commitment and professionalism.",
     },
   },
   {
-    title: { ar: "ارتدِ لباساً مناسباً", en: "Dress appropriately" },
+    title: { ar: "اختيار لباس مناسب", en: "Dress appropriately" },
     body: {
-      ar: "اختر لباساً مهنياً يتناسب مع طبيعة الشركة وثقافتها، وفي حال عدم التأكد، يفضل الالتزام بالأنسب رسمياً.",
+      ar: "يُنصح باختيار لباس مهني يتناسب مع طبيعة الشركة وثقافتها، وعند عدم التأكد يكون الخيار الأكثر رسمية مناسبًا في الغالب.",
       en: "Choose professional attire that fits the company's nature and culture; when in doubt, lean towards the more formal option.",
     },
   },
   {
-    title: { ar: "جهّز نسخاً من سيرتك الذاتية", en: "Bring copies of your CV" },
+    title: { ar: "تجهيز نسخ من السيرة الذاتية", en: "Bring copies of your CV" },
     body: {
-      ar: "احضر نسخاً مطبوعة من سيرتك الذاتية وأي شهادات أو أعمال داعمة، حتى لو طلبتها الشركة مسبقاً عبر البريد.",
+      ar: "من المفيد تجهيز نسخ مطبوعة من السيرة الذاتية وأي شهادات أو أعمال داعمة، حتى عند إرسالها مسبقًا عبر البريد الإلكتروني.",
       en: "Bring printed copies of your CV and any supporting certificates or work, even if the company already requested them by email.",
     },
   },
   {
-    title: { ar: "جهّز أسئلتك الخاصة", en: "Prepare your own questions" },
+    title: { ar: "تجهيز أسئلة للمحاور", en: "Prepare your own questions" },
     body: {
-      ar: "حضّر 2-3 أسئلة ذكية عن الدور الوظيفي أو فريق العمل أو فرص التطوير، فهذا يظهر اهتمامك الحقيقي.",
+      ar: "يفضّل إعداد سؤالين أو ثلاثة أسئلة مدروسة عن الدور الوظيفي أو فريق العمل أو فرص التطوير، فذلك يعكس اهتمامًا حقيقيًا بالفرصة.",
       en: "Prepare 2-3 thoughtful questions about the role, team, or growth opportunities — this shows genuine interest.",
     },
   },
   {
-    title: { ar: "تنفّس وكن واثقاً", en: "Breathe and stay confident" },
+    title: { ar: "التعامل مع التوتر بثقة", en: "Breathe and stay confident" },
     body: {
-      ar: "من الطبيعي الشعور بالتوتر، لكن التنفس بعمق قبل المقابلة وتذكير نفسك بإنجازاتك يساعد على تهدئة الأعصاب.",
+      ar: "الشعور بالتوتر أمر طبيعي، ويمكن للتنفس بعمق قبل المقابلة واستحضار الإنجازات السابقة أن يساعدا على الهدوء والتركيز.",
       en: "It's normal to feel nervous, but deep breathing before the interview and reminding yourself of your achievements helps calm your nerves.",
     },
   },
@@ -79,44 +79,44 @@ const BASICS: { title: Bilingual; body: Bilingual }[] = [
 
 const COMMON_QA: { q: Bilingual; a: Bilingual }[] = [
   {
-    q: { ar: "ما هي نقاط قوتك؟", en: "What are your strengths?" },
+    q: { ar: "ما أبرز نقاط القوة؟", en: "What are your strengths?" },
     a: {
-      ar: "اختر 2-3 نقاط قوة مرتبطة مباشرة بمتطلبات الوظيفة، ودعّمها بمثال قصير من تجربتك الفعلية.",
+      ar: "يفضّل اختيار نقطتين أو ثلاث نقاط قوة مرتبطة مباشرة بمتطلبات الوظيفة، مع دعمها بمثال قصير من تجربة فعلية.",
       en: "Choose 2-3 strengths directly related to the job requirements, and support them with a short example from your actual experience.",
     },
   },
   {
-    q: { ar: "ما هي نقاط ضعفك؟", en: "What is your weakness?" },
+    q: { ar: "ما أبرز نقاط الضعف؟", en: "What is your weakness?" },
     a: {
-      ar: "اذكر نقطة حقيقية ولكن غير جوهرية للوظيفة، واشرح الخطوات التي تتخذها لتطويرها.",
+      ar: "يمكن ذكر نقطة حقيقية لكنها غير جوهرية للوظيفة، مع توضيح الخطوات المتخذة لتطويرها وتحسينها.",
       en: "Mention a real but non-critical weakness for the role, and explain the steps you're taking to improve it.",
     },
   },
   {
-    q: { ar: "لماذا تريدين العمل معنا؟", en: "Why do you want to work with us?" },
+    q: { ar: "ما الذي يجذبك للعمل معنا؟", en: "Why do you want to work with us?" },
     a: {
-      ar: "اربطي قيمك وأهدافك المهنية برؤية الشركة ومجال عملها، وأظهري أنك بحثتِ عنها فعلاً.",
+      ar: "يمكن ربط القيم والأهداف المهنية برؤية الشركة ومجال عملها، مع إظهار المعرفة المسبقة بالشركة والفرصة الوظيفية.",
       en: "Connect your values and career goals with the company's vision and field, and show that you've genuinely researched it.",
     },
   },
   {
-    q: { ar: "أين ترى نفسك بعد خمس سنوات؟", en: "Where do you see yourself in five years?" },
+    q: { ar: "أين ترى مسارك المهني بعد خمس سنوات؟", en: "Where do you see yourself in five years?" },
     a: {
-      ar: "تحدث عن نمو مهني واقعي يرتبط بالمسار الوظيفي المتاح في الشركة، دون وعود مفرطة أو غير محددة.",
+      ar: "يفضّل الحديث عن نمو مهني واقعي يرتبط بالمسار الوظيفي المتاح في الشركة، مع تجنب الوعود المبالغ فيها أو الإجابات العامة.",
       en: "Talk about realistic professional growth connected to the career path available at the company, without over-promising or vague statements.",
     },
   },
   {
-    q: { ar: "لماذا يجب أن نوظفك دون غيرك؟", en: "Why should we hire you over other candidates?" },
+    q: { ar: "ما الذي يميزك عن بقية المرشحين؟", en: "Why should we hire you over other candidates?" },
     a: {
-      ar: "لخّصي أهم ما يميزك (مهارة، خبرة، أو شخصية) وكيف يضيف قيمة مباشرة لفريق العمل والوظيفة المحددة.",
+      ar: "يمكن تلخيص أهم عناصر التميز، مثل مهارة أو خبرة أو سمة شخصية، وشرح القيمة التي يمكن أن تضيفها مباشرة إلى الفريق والدور الوظيفي.",
       en: "Summarize what makes you stand out (a skill, experience, or trait) and how it adds direct value to the team and the specific role.",
     },
   },
   {
-    q: { ar: "هل لديك أي أسئلة لنا؟", en: "Do you have any questions for us?" },
+    q: { ar: "هل توجد أسئلة تود طرحها؟", en: "Do you have any questions for us?" },
     a: {
-      ar: 'لا تُجب بـ "لا". اسأل عن فريق العمل، التوجهات المستقبلية، أو معايير قياس النجاح في الدور الوظيفي.',
+      ar: 'من الأفضل تجنب الإجابة بـ "لا"، ويمكن السؤال عن فريق العمل أو التوجهات المستقبلية أو معايير قياس النجاح في الدور الوظيفي.',
       en: "Don't answer with 'no'. Ask about the team, future direction, or how success is measured in the role.",
     },
   },
@@ -124,37 +124,37 @@ const COMMON_QA: { q: Bilingual; a: Bilingual }[] = [
 
 const BEHAVIORAL_QA: { q: Bilingual; a: Bilingual }[] = [
   {
-    q: { ar: "تحدث عن وقت واجهت فيه تحدياً صعباً", en: "Tell me about a time you faced a difficult challenge" },
+    q: { ar: "اذكر موقفًا واجهت فيه تحديًا صعبًا", en: "Tell me about a time you faced a difficult challenge" },
     a: {
-      ar: "صف الموقف، التحدي المحدد، الإجراء الذي اتخذته، والنتيجة النهائية التي حققتها.",
+      ar: "يمكن توضيح الموقف والتحدي المحدد والإجراء الذي تم اتخاذه والنتيجة النهائية التي تحققت.",
       en: "Describe the situation, the specific challenge, the action you took, and the final result achieved.",
     },
   },
   {
-    q: { ar: "تحدث عن وقت عملت ضمن فريق", en: "Tell me about a time you worked as part of a team" },
+    q: { ar: "اذكر موقفًا تطلّب العمل ضمن فريق", en: "Tell me about a time you worked as part of a team" },
     a: {
-      ar: "ركّز على دورك المحدد في الفريق، كيف تعاملت مع اختلاف الآراء، وكيف ساهم ذلك في تحقيق هدف مشترك.",
+      ar: "يفضّل التركيز على الدور داخل الفريق، وطريقة التعامل مع اختلاف الآراء، وكيف ساهم ذلك في تحقيق هدف مشترك.",
       en: "Focus on your specific role within the team, how you handled differing opinions, and how that contributed to achieving a shared goal.",
     },
   },
   {
-    q: { ar: "تحدث عن وقت ارتكبت فيه خطأ", en: "Tell me about a time you made a mistake" },
+    q: { ar: "اذكر موقفًا حدث فيه خطأ وكيف تم التعامل معه", en: "Tell me about a time you made a mistake" },
     a: {
-      ar: "كن صادقاً، اشرح كيف تعرّفت على الخطأ، الخطوات التي اتخذتها لتصحيحه، وما تعلمته منه.",
+      ar: "تكون الإجابة أقوى عند توضيح كيفية اكتشاف الخطأ، والخطوات المتخذة لتصحيحه، وأهم ما تم تعلمه من التجربة.",
       en: "Be honest, explain how you identified the mistake, the steps you took to fix it, and what you learned from it.",
     },
   },
   {
-    q: { ar: "تحدث عن وقت تعاملت مع ضغط العمل أو ضيق الوقت", en: "Tell me about a time you handled pressure or a tight deadline" },
+    q: { ar: "اذكر موقفًا تم فيه التعامل مع ضغط العمل أو ضيق الوقت", en: "Tell me about a time you handled pressure or a tight deadline" },
     a: {
-      ar: "اشرح كيف رتّبت أولوياتك، الأدوات أو الاستراتيجيات التي استخدمتها، وكيف أنجزت المهمة في الوقت المحدد.",
+      ar: "يمكن شرح طريقة ترتيب الأولويات، والأدوات أو الاستراتيجيات المستخدمة، وكيف تم إنجاز المهمة ضمن الوقت المحدد.",
       en: "Explain how you prioritized tasks, the tools or strategies you used, and how you completed the task on time.",
     },
   },
   {
-    q: { ar: "تحدث عن وقت تعاملت مع زميل أو عميل صعب", en: "Tell me about a time you dealt with a difficult colleague or client" },
+    q: { ar: "اذكر موقفًا تم فيه التعامل مع زميل أو عميل صعب", en: "Tell me about a time you dealt with a difficult colleague or client" },
     a: {
-      ar: "ركّز على الهدوء والمهنية في تعاملك، وكيف توصلت إلى حل يرضي جميع الأطراف.",
+      ar: "يفضّل التركيز على الهدوء والمهنية في التعامل، والخطوات التي ساعدت على الوصول إلى حل مناسب لجميع الأطراف.",
       en: "Focus on staying calm and professional in your approach, and how you reached a solution that satisfied everyone involved.",
     },
   },
@@ -165,7 +165,7 @@ const STAR_ITEMS: { letter: string; word: Bilingual; desc: Bilingual }[] = [
     letter: "S",
     word: { ar: "الموقف (Situation)", en: "Situation" },
     desc: {
-      ar: "صف السياق والموقف الذي حدث، أين ومتى، وما هي الظروف المحيطة.",
+      ar: "توضيح السياق والموقف، ومكان حدوثه ووقته، والظروف المحيطة به.",
       en: "Describe the context and situation, where and when it happened, and the surrounding circumstances.",
     },
   },
@@ -173,7 +173,7 @@ const STAR_ITEMS: { letter: string; word: Bilingual; desc: Bilingual }[] = [
     letter: "T",
     word: { ar: "المهمة (Task)", en: "Task" },
     desc: {
-      ar: "حدّد بوضوح ما كانت مهمتك أو مسؤوليتك في ذلك الموقف بالتحديد.",
+      ar: "تحديد المهمة أو المسؤولية المطلوبة بوضوح في ذلك الموقف.",
       en: "Clearly identify what your specific task or responsibility was in that situation.",
     },
   },
@@ -181,7 +181,7 @@ const STAR_ITEMS: { letter: string; word: Bilingual; desc: Bilingual }[] = [
     letter: "A",
     word: { ar: "الإجراء (Action)", en: "Action" },
     desc: {
-      ar: "اشرح الخطوات والإجراءات المحددة التي اتخذتها لمعالجة المهمة أو التحدي.",
+      ar: "شرح الخطوات والإجراءات المحددة التي تم اتخاذها لمعالجة المهمة أو التحدي.",
       en: "Explain the specific steps and actions you took to address the task or challenge.",
     },
   },
@@ -189,7 +189,7 @@ const STAR_ITEMS: { letter: string; word: Bilingual; desc: Bilingual }[] = [
     letter: "R",
     word: { ar: "النتيجة (Result)", en: "Result" },
     desc: {
-      ar: "اختم بالنتيجة التي تحققت، مع ذكر أرقام أو نسب إن أمكن، وما تعلمته من التجربة.",
+      ar: "عرض النتيجة التي تحققت، مع ذكر أرقام أو نسب عند توفرها، وما تم تعلمه من التجربة.",
       en: "Conclude with the result achieved, including numbers or percentages if possible, and what you learned from the experience.",
     },
   },
@@ -197,30 +197,30 @@ const STAR_ITEMS: { letter: string; word: Bilingual; desc: Bilingual }[] = [
 
 const TECHNICAL: { title: Bilingual; body: Bilingual }[] = [
   {
-    title: { ar: "فكّر بصوت مرتفع", en: "Think out loud" },
+    title: { ar: "توضيح طريقة التفكير", en: "Think out loud" },
     body: {
-      ar: "عند حل مشكلة تقنية، اشرح طريقة تفكيرك خطوة بخطوة. القائمون على المقابلة يهتمون بأسلوب تفكيرك بقدر اهتمامهم بالحل النهائي.",
+      ar: "عند حل مشكلة تقنية، من المفيد شرح طريقة التفكير خطوة بخطوة، لأن القائمين على المقابلة يهتمون بمنهجية التفكير بقدر اهتمامهم بالحل النهائي.",
       en: "When solving a technical problem, explain your thinking step by step. Interviewers care about your thought process as much as the final solution.",
     },
   },
   {
-    title: { ar: "اسأل عن المتطلبات", en: "Clarify requirements" },
+    title: { ar: "توضيح المتطلبات قبل الحل", en: "Clarify requirements" },
     body: {
-      ar: "لا تبدأ الحل فوراً، اسأل أسئلة توضيحية للتأكد من فهمك الصحيح للمسألة قبل كتابة الحل.",
+      ar: "قبل البدء بالحل، يفضّل طرح أسئلة توضيحية للتأكد من فهم المسألة والمتطلبات بصورة صحيحة.",
       en: "Don't jump into the solution immediately — ask clarifying questions to make sure you understand the problem correctly first.",
     },
   },
   {
-    title: { ar: "راجع أساسيات تخصصك", en: "Review your major's fundamentals" },
+    title: { ar: "مراجعة أساسيات التخصص", en: "Review your major's fundamentals" },
     body: {
-      ar: "راجع المفاهيم الأساسية والمصطلحات الشائعة في مجالك، فالأسئلة غالباً تركز على الأساسيات أكثر من التفاصيل المتقدمة.",
+      ar: "مراجعة المفاهيم الأساسية والمصطلحات الشائعة في المجال تساعد على الاستعداد، إذ تركز كثير من المقابلات التقنية على الأساسيات أكثر من التفاصيل المتقدمة.",
       en: "Review core concepts and common terminology in your field — questions often focus on fundamentals more than advanced details.",
     },
   },
   {
-    title: { ar: "من الطبيعي ألا تعرف كل الإجابات", en: "It's okay not to know everything" },
+    title: { ar: "عدم معرفة كل الإجابات أمر طبيعي", en: "It's okay not to know everything" },
     body: {
-      ar: "إذا لم تعرف الإجابة، قل ذلك بصدق واقترح كيف ستصل إليها (بحث، توضيح، أو تقدير منطقي).",
+      ar: "عند عدم معرفة الإجابة، يمكن توضيح ذلك بصدق مع ذكر الطريقة المناسبة للوصول إليها، مثل البحث أو طلب توضيح إضافي أو تقديم تقدير منطقي.",
       en: "If you don't know the answer, say so honestly and suggest how you would find it (research, clarification, or a logical estimate).",
     },
   },
@@ -228,44 +228,44 @@ const TECHNICAL: { title: Bilingual; body: Bilingual }[] = [
 
 const BODY_LANGUAGE: { title: Bilingual; body: Bilingual }[] = [
   {
-    title: { ar: "تواصل العين", en: "Eye contact" },
+    title: { ar: "التواصل البصري", en: "Eye contact" },
     body: {
-      ar: "حافظ على تواصل عين طبيعي ومريح مع المحاور، فهذا يعكس الثقة والانتباه دون النظر بثبات مزعج.",
+      ar: "الحفاظ على تواصل بصري طبيعي ومريح مع المحاور يعكس الثقة والانتباه دون مبالغة أو تحديق مستمر.",
       en: "Maintain natural, comfortable eye contact with the interviewer — this conveys confidence and attentiveness without an uncomfortable stare.",
     },
   },
   {
     title: { ar: "وضعية الجسم", en: "Posture" },
     body: {
-      ar: "اجلس بشكل مستقيم مع وضعية مريحة، وتجنب تكتيف الذراعين أو الانحناء الزائد، فهذا يعكس الانفتاح والثقة.",
+      ar: "الجلوس بوضعية مستقيمة ومريحة، مع تجنب تكتيف الذراعين أو الانحناء الزائد، يساعد على إظهار الانفتاح والثقة.",
       en: "Sit upright in a relaxed posture, and avoid crossing your arms or slouching, which conveys openness and confidence.",
     },
   },
   {
-    title: { ar: "الابتسامة والنغمة", en: "Smile and tone of voice" },
+    title: { ar: "الابتسامة ونبرة الصوت", en: "Smile and tone of voice" },
     body: {
-      ar: "ابتسم بشكل طبيعي عند المناسب، وتحدث بنغمة واضحة ومناسبة السرعة، لا سريعة جداً ولا بطيئة جداً.",
+      ar: "الابتسامة الطبيعية عند المناسبة والتحدث بنبرة واضحة وبسرعة معتدلة يساهمان في ترك انطباع مهني ومريح.",
       en: "Smile naturally when appropriate, and speak with a clear tone at a moderate pace — not too fast, not too slow.",
     },
   },
   {
     title: { ar: "حركة اليدين", en: "Hand gestures" },
     body: {
-      ar: "استخدم حركات يد طبيعية لدعم كلامك، وتجنب اللعب بالأقلام أو الهاتف أو الشعر، فهذه إشارات تشتت.",
+      ar: "يمكن استخدام حركات يد طبيعية لدعم الحديث، مع تجنب الحركات المشتتة مثل اللعب بالأقلام أو الهاتف أو الشعر.",
       en: "Use natural hand gestures to support your speech, and avoid fidgeting with pens, your phone, or hair — these are distracting signals.",
     },
   },
   {
     title: { ar: "المصافحة", en: "Handshake" },
     body: {
-      ar: "إذا كانت المقابلة حضورية، قدّم مصافحة قوية ومحترمة في البداية والنهاية كعلامة على الثقة والاحترافية.",
+      ar: "في المقابلات الحضورية، قد تكون المصافحة الواثقة والمحترمة في البداية والنهاية مناسبة بحسب السياق والثقافة المهنية للمكان.",
       en: "If the interview is in person, offer a firm, respectful handshake at the beginning and end as a sign of confidence and professionalism.",
     },
   },
   {
     title: { ar: "الاستماع الفعّال", en: "Active listening" },
     body: {
-      ar: "أنصت بانتباه كامل، ولا تقاطع المحاور، وأظهر أنك تستوعب السؤال قبل البدء بالإجابة.",
+      ar: "الإنصات باهتمام وتجنب مقاطعة المحاور والتأكد من فهم السؤال قبل الإجابة من أهم عناصر التواصل المهني الجيد.",
       en: "Listen attentively, don't interrupt the interviewer, and show that you understand the question before starting your answer.",
     },
   },
@@ -273,44 +273,44 @@ const BODY_LANGUAGE: { title: Bilingual; body: Bilingual }[] = [
 
 const ONLINE_TIPS: { title: Bilingual; body: Bilingual }[] = [
   {
-    title: { ar: "اختبر التقنية مسبقاً", en: "Test technology in advance" },
+    title: { ar: "اختبار التقنية مسبقًا", en: "Test technology in advance" },
     body: {
-      ar: "تأكد من عمل الكاميرا، الميكروفون، والاتصال بالإنترنت قبل المقابلة بوقت كافٍ، وجرّب البرنامج المستخدم مسبقاً.",
+      ar: "يُنصح بالتأكد من عمل الكاميرا والميكروفون والاتصال بالإنترنت قبل المقابلة بوقت كافٍ، وتجربة البرنامج المستخدم مسبقًا.",
       en: "Make sure your camera, microphone, and internet connection work well ahead of time, and try the software being used beforehand.",
     },
   },
   {
-    title: { ar: "اختر خلفية مناسبة", en: "Choose an appropriate background" },
+    title: { ar: "اختيار خلفية مناسبة", en: "Choose an appropriate background" },
     body: {
-      ar: "اختر مكاناً هادئاً ذا خلفية مرتبة ومحايدة، وتأكد من الإضاءة الجيدة التي تظهر وجهك بوضوح.",
+      ar: "يفضّل اختيار مكان هادئ بخلفية مرتبة ومحايدة، مع إضاءة جيدة تساعد على الظهور بوضوح أمام الكاميرا.",
       en: "Choose a quiet location with a tidy, neutral background, and make sure the lighting clearly shows your face.",
     },
   },
   {
-    title: { ar: "جهّز خط بديل", en: "Have a backup connection plan" },
+    title: { ar: "تجهيز خطة اتصال بديلة", en: "Have a backup connection plan" },
     body: {
-      ar: "احتفظ بنسخة من رقم هاتف المحاور أو رابط بديل في حال حدوث مشكلة في الاتصال.",
+      ar: "من المفيد الاحتفاظ برقم هاتف المحاور أو رابط بديل لاستخدامه عند حدوث مشكلة تقنية أو انقطاع في الاتصال.",
       en: "Keep the interviewer's phone number or a backup link handy in case of a connection issue.",
     },
   },
   {
-    title: { ar: "ارتدِ ملابس مناسبة كاملة", en: "Dress fully appropriately" },
+    title: { ar: "اختيار ملابس مهنية كاملة", en: "Dress fully appropriately" },
     body: {
-      ar: "ارتدِ ملابس مهنية كاملة حتى في المقابلة عبر الإنترنت، فهذا يؤثر على ثقتك بنفسك وانطباعك المهني.",
+      ar: "الالتزام بملابس مهنية كاملة في المقابلات عبر الإنترنت يساعد على تعزيز الاستعداد والثقة والانطباع المهني.",
       en: "Wear fully professional attire even for an online interview — it affects your confidence and professional impression.",
     },
   },
   {
-    title: { ar: "انظر إلى الكاميرا", en: "Look at the camera" },
+    title: { ar: "النظر إلى الكاميرا أثناء الحديث", en: "Look at the camera" },
     body: {
-      ar: "انظر إلى الكاميرا وليس إلى الشاشة عند التحدث، فهذا يحاكي تواصل العين الطبيعي مع المحاور.",
+      ar: "النظر إلى الكاميرا أثناء الحديث بدلًا من الشاشة يساعد على محاكاة التواصل البصري الطبيعي مع المحاور.",
       en: "Look at the camera, not the screen, when speaking — this mimics natural eye contact with the interviewer.",
     },
   },
   {
-    title: { ar: "أوقف الإشعارات", en: "Mute notifications" },
+    title: { ar: "إيقاف الإشعارات", en: "Mute notifications" },
     body: {
-      ar: "أغلق جميع الإشعارات والتطبيقات غير الضرورية على جهازك، وأخبر من حولك بعدم المقاطعة.",
+      ar: "إيقاف الإشعارات والتطبيقات غير الضرورية، وإبلاغ المحيطين بوقت المقابلة، يساعد على تقليل المقاطعات والتشتت.",
       en: "Turn off all unnecessary notifications and apps on your device, and let those around you know not to interrupt.",
     },
   },
@@ -321,7 +321,7 @@ const TELLME_STEPS: { num: number; title: Bilingual; body: Bilingual }[] = [
     num: 1,
     title: { ar: "الحاضر", en: "Present" },
     body: {
-      ar: "ابدأ بمن أنت الآن: تخصصك، سنتك الدراسية، ودورك الحالي (طالب، متدرب، إلخ).",
+      ar: "البدء بتعريف مختصر عن الوضع الحالي، مثل التخصص والسنة الدراسية والدور الحالي كطالب أو متدرب أو موظف.",
       en: "Start with who you are now: your major, academic year, and current role (student, intern, etc.).",
     },
   },
@@ -329,7 +329,7 @@ const TELLME_STEPS: { num: number; title: Bilingual; body: Bilingual }[] = [
     num: 2,
     title: { ar: "الماضي", en: "Past" },
     body: {
-      ar: "اذكر بإيجاز خبرة أو تجربة سابقة ذات صلة (تدريب، مشروع، نشاط) ساهمت في بناء مهاراتك.",
+      ar: "ذكر خبرة أو تجربة سابقة ذات صلة، مثل تدريب أو مشروع أو نشاط، مع توضيح أثرها في بناء المهارات.",
       en: "Briefly mention a relevant past experience (internship, project, activity) that helped build your skills.",
     },
   },
@@ -337,26 +337,26 @@ const TELLME_STEPS: { num: number; title: Bilingual; body: Bilingual }[] = [
     num: 3,
     title: { ar: "المستقبل", en: "Future" },
     body: {
-      ar: "اختم بربط أهدافك المهنية بهذه الوظيفة بالتحديد، ولماذا تعتبرها الخطوة التالية المناسبة لك.",
+      ar: "ربط الأهداف المهنية بالوظيفة المطروحة وتوضيح سبب ملاءمتها كخطوة تالية في المسار المهني.",
       en: "Conclude by connecting your career goals to this specific role, and why it's the right next step for you.",
     },
   },
 ];
 
 const CHECKLIST_A: Bilingual[] = [
-  { ar: "بحثتُ عن الشركة ومجال عملها", en: "I researched the company and its field" },
-  { ar: "راجعتُ سيرتي الذاتية وأعرف كل ما فيها", en: "I reviewed my CV and know everything in it" },
-  { ar: "جهّزتُ إجابات لأسئلة شائعة وسلوكية", en: "I prepared answers for common and behavioral questions" },
-  { ar: "جهّزتُ أسئلتي الخاصة لطرحها", en: "I prepared my own questions to ask" },
-  { ar: "حدّدتُ موقع المقابلة أو رابط الاتصال", en: "I confirmed the interview location or call link" },
+  { ar: "تم البحث عن الشركة ومجال عملها", en: "I researched the company and its field" },
+  { ar: "تمت مراجعة السيرة الذاتية والتأكد من معرفة محتواها", en: "I reviewed my CV and know everything in it" },
+  { ar: "تم تجهيز إجابات لأسئلة شائعة وسلوكية", en: "I prepared answers for common and behavioral questions" },
+  { ar: "تم تجهيز أسئلة مناسبة لطرحها خلال المقابلة", en: "I prepared my own questions to ask" },
+  { ar: "تم التأكد من موقع المقابلة أو رابط الاتصال", en: "I confirmed the interview location or call link" },
 ];
 
 const CHECKLIST_B: Bilingual[] = [
-  { ar: "جهّزتُ ملابسي المناسبة", en: "I prepared my appropriate attire" },
-  { ar: "طبعتُ نسخاً من سيرتي الذاتية", en: "I printed copies of my CV" },
-  { ar: "اختبرتُ الكاميرا والميكروفون (للمقابلات الإلكترونية)", en: "I tested my camera and microphone (for online interviews)" },
-  { ar: "خططتُ لطريق الوصول والوقت اللازم", en: "I planned my route and travel time" },
-  { ar: "حصلتُ على قسط كافٍ من النوم", en: "I got enough sleep" },
+  { ar: "تم تجهيز الملابس المناسبة", en: "I prepared my appropriate attire" },
+  { ar: "تم تجهيز نسخ من السيرة الذاتية عند الحاجة", en: "I printed copies of my CV" },
+  { ar: "تم اختبار الكاميرا والميكروفون للمقابلات الإلكترونية", en: "I tested my camera and microphone (for online interviews)" },
+  { ar: "تم التخطيط لطريق الوصول والوقت اللازم", en: "I planned my route and travel time" },
+  { ar: "تم الحصول على قسط كافٍ من النوم", en: "I got enough sleep" },
 ];
 
 export function InterviewPrepClient() {
@@ -372,12 +372,15 @@ export function InterviewPrepClient() {
       return next;
     });
   };
-  const headStyle = { textAlign: lang === "ar" ? ("right" as const) : ("left" as const), marginBottom: "1.5rem" };
+
+  const headStyle = {
+    textAlign: lang === "ar" ? ("right" as const) : ("left" as const),
+    marginBottom: "1.5rem",
+  };
 
   return (
     <section className="section-sm">
       <div className="container">
-        {/* Tabs */}
         <div className="prep-nav">
           {TABS.map((tab) => (
             <div
@@ -390,7 +393,6 @@ export function InterviewPrepClient() {
           ))}
         </div>
 
-        {/* Panel 1: Basics */}
         {active === "basics" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
@@ -409,12 +411,11 @@ export function InterviewPrepClient() {
           </div>
         )}
 
-        {/* Panel 2: Common Questions */}
         {active === "common" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
               <h2 className="section-title" style={{ fontSize: "1.5rem" }}>
-                {t("أكثر الأسئلة شيوعاً في المقابلات", "Most Common Interview Questions")}
+                {t("أكثر الأسئلة شيوعًا في المقابلات", "Most Common Interview Questions")}
               </h2>
             </div>
             {COMMON_QA.map((item, i) => (
@@ -426,7 +427,6 @@ export function InterviewPrepClient() {
           </div>
         )}
 
-        {/* Panel 3: Behavioral */}
         {active === "behavioral" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
@@ -435,7 +435,7 @@ export function InterviewPrepClient() {
               </h2>
               <p className="section-desc" style={{ margin: 0 }}>
                 {t(
-                  "تركز هذه الأسئلة على تجاربك السابقة لتوقع كيفية تصرفك في المستقبل، وتُجاب عادة باستخدام طريقة STAR.",
+                  "تركز هذه الأسئلة على التجارب السابقة لفهم أسلوب التعامل مع المواقف المختلفة مستقبلًا، وغالبًا تكون طريقة STAR مناسبة لتنظيم الإجابة.",
                   "These questions focus on past experiences to predict future behavior, and are best answered using the STAR method."
                 )}
               </p>
@@ -449,7 +449,6 @@ export function InterviewPrepClient() {
           </div>
         )}
 
-        {/* Panel 4: STAR */}
         {active === "star" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
@@ -458,7 +457,7 @@ export function InterviewPrepClient() {
               </h2>
               <p className="section-desc" style={{ margin: 0 }}>
                 {t(
-                  "إطار عمل منظم يساعدك على بناء إجابات واضحة ومقنعة لأي سؤال سلوكي.",
+                  "إطار منظم يساعد على بناء إجابات واضحة ومقنعة للأسئلة السلوكية.",
                   "A structured framework that helps you build clear, convincing answers to any behavioral question."
                 )}
               </p>
@@ -476,7 +475,7 @@ export function InterviewPrepClient() {
               <div className="card-title">{t("مثال تطبيقي", "Applied Example")}</div>
               <div className="card-desc">
                 {t(
-                  'السؤال: "تحدث عن وقت قُدت فيه فريقاً". الإجابة: (الموقف) كنت مسؤولاً عن فعالية لنادي الطلاب بمشاركة 8 أعضاء. (المهمة) كان عليّ تنسيق المهام وضمان جاهزية الفعالية قبل أسبوعين. (الإجراء) قسّمت المهام حسب نقاط قوة كل عضو، وعقدت اجتماعات أسبوعية لتتبع التقدم. (النتيجة) أُقيمت الفعالية بنجاح بحضور أكثر من 120 طالباً وطالبة، وحصلت على تقييم إيجابي من إدارة النادي.',
+                  'السؤال: "اذكر موقفًا توليت فيه قيادة فريق". الإجابة: (الموقف) تم تولي مسؤولية فعالية لنادي طلابي بمشاركة 8 أعضاء. (المهمة) كان المطلوب تنسيق المهام وضمان جاهزية الفعالية قبل أسبوعين. (الإجراء) تم توزيع المهام بحسب نقاط قوة أعضاء الفريق، مع عقد اجتماعات أسبوعية لمتابعة التقدم. (النتيجة) أُقيمت الفعالية بنجاح بحضور أكثر من 120 طالبًا وطالبة، وحصلت على تقييم إيجابي من إدارة النادي.',
                   "Question: 'Tell me about a time you led a team'. Answer: (Situation) I was responsible for a student club event with 8 members. (Task) I had to coordinate tasks and ensure readiness two weeks ahead. (Action) I assigned tasks based on each member's strengths and held weekly progress meetings. (Result) The event was held successfully with over 120 students attending, and received positive feedback from the club's management."
                 )}
               </div>
@@ -484,7 +483,6 @@ export function InterviewPrepClient() {
           </div>
         )}
 
-        {/* Panel 5: Tell Me About Yourself */}
         {active === "tellme" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
@@ -493,7 +491,7 @@ export function InterviewPrepClient() {
               </h2>
               <p className="section-desc" style={{ margin: 0 }}>
                 {t(
-                  "غالباً يكون السؤال الأول في المقابلة، ويحدد الانطباع الأولي. استخدم هذا الهيكل المكون من ثلاثة أجزاء.",
+                  "يُطرح هذا السؤال غالبًا في بداية المقابلة ويؤثر في الانطباع الأول، ويمكن تنظيم الإجابة باستخدام ثلاثة أجزاء رئيسية.",
                   "Often the first question in an interview and sets the first impression. Use this three-part structure."
                 )}
               </p>
@@ -513,7 +511,7 @@ export function InterviewPrepClient() {
               <div className="card-title">{t("مثال تطبيقي", "Applied Example")}</div>
               <div className="card-desc" style={{ fontStyle: "italic" }}>
                 {t(
-                  "أنا طالبة في السنة الرابعة لتخصص إدارة الأعمال بجامعة دار الحكمة، أركز على مجال التسويق الرقمي. خلال الصيف الماضي، عملت كمتدربة في إدارة حسابات التواصل الاجتماعي لشركة محلية، حيث ساعدت في رفع التفاعل بنسبة 30٪. أبحث الآن عن فرصة تتيح لي تطبيق هذه المهارات في بيئة عمل أكبر، وأعتقد أن هذا الدور يمثل بداية مثالية لذلك.",
+                  "مثال: طالب في السنة الرابعة بتخصص إدارة الأعمال في جامعة دار الحكمة، مع اهتمام بمجال التسويق الرقمي. خلال الصيف الماضي، تم إكمال تدريب في إدارة حسابات التواصل الاجتماعي لشركة محلية والمساهمة في رفع التفاعل بنسبة 30٪. الهدف الحالي هو الحصول على فرصة لتطبيق هذه المهارات في بيئة عمل أوسع، ويُعد هذا الدور خطوة مناسبة في هذا المسار.",
                   "I'm a fourth-year Business Administration student at Dar Al-Hekma University, focusing on digital marketing. Last summer, I interned managing social media accounts for a local company, helping increase engagement by 30%. I'm now looking for an opportunity to apply these skills in a larger work environment, and I believe this role is the perfect starting point."
                 )}
               </div>
@@ -521,7 +519,6 @@ export function InterviewPrepClient() {
           </div>
         )}
 
-        {/* Panel 6: Technical */}
         {active === "technical" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
@@ -540,7 +537,6 @@ export function InterviewPrepClient() {
           </div>
         )}
 
-        {/* Panel 7: Body Language */}
         {active === "body" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
@@ -559,7 +555,6 @@ export function InterviewPrepClient() {
           </div>
         )}
 
-        {/* Panel 8: Online */}
         {active === "online" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
@@ -578,7 +573,6 @@ export function InterviewPrepClient() {
           </div>
         )}
 
-        {/* Panel 9: Checklist */}
         {active === "checklist" && (
           <div className="prep-panel active">
             <div className="section-header" style={headStyle}>
@@ -587,7 +581,7 @@ export function InterviewPrepClient() {
               </h2>
               <p className="section-desc" style={{ margin: 0 }}>
                 {t(
-                  "راجع هذه القائمة في الليلة السابقة وفي صباح يوم المقابلة.",
+                  "يمكن استخدام هذه القائمة للمراجعة في الليلة السابقة وفي صباح يوم المقابلة.",
                   "Review this checklist the night before and on the morning of your interview."
                 )}
               </p>
@@ -638,20 +632,16 @@ export function InterviewPrepCTA() {
     <section className="section cta">
       <div className="container">
         <div className="cta-box">
-          <h2>{t("اختبر جاهزيتك للمقابلة الوظيفية", "Test Your Interview Readiness")}</h2>
+          <h2>{t("اختبار الجاهزية للمقابلة الوظيفية", "Test Your Interview Readiness")}</h2>
           <p>
             {t(
-              "بعد الاطلاع على دليل التحضير للمقابلات، يمكنكِ تجربة مقابلة تفاعلية تحاكي أجواء المقابلات الحقيقية. سيطرح عليكِ DAH Career Coach أسئلة شائعة وسلوكية، ويقيّم إجاباتك، ويقدم ملاحظات ونصائح تساعدك على تحسين أدائك وزيادة ثقتك بنفسك قبل المقابلة الفعلية.",
+              "بعد الاطلاع على دليل التحضير للمقابلات، يمكن تجربة مقابلة تفاعلية تحاكي أجواء المقابلات الحقيقية. يطرح DAH Career Coach مجموعة من الأسئلة الشائعة والسلوكية، مع تقييم الإجابات وتقديم ملاحظات ونصائح تساعد على تحسين الأداء وتعزيز الثقة قبل المقابلة الفعلية.",
               "After reviewing the interview preparation guide, you can experience a realistic mock interview. DAH Career Coach will ask common and behavioral interview questions, evaluate your answers, and provide personalized feedback to help you improve your performance and confidence before the real interview."
             )}
           </p>
           <div className="cta-actions">
-            <Link
-              href="/career-coach"
-              target="_blank"
-              className="btn btn-gold btn-lg"
-            >
-              {t("ابدأ المقابلة التجريبية", "Start Mock Interview")}
+            <Link href="/career-coach" target="_blank" className="btn btn-gold btn-lg">
+              {t("بدء المقابلة التجريبية", "Start Mock Interview")}
             </Link>
           </div>
         </div>

@@ -78,6 +78,7 @@ export default async function handler(
   currentUser.role === "ADMIN" ||
   currentUser.role === "CAREER_ADVISOR";
 
+
   /* =====================================================
      RESUME ACCESS
   ===================================================== */
@@ -159,32 +160,32 @@ export default async function handler(
     });
   }
 
-  /* =====================================================
-     ADMIN AUDIT LOG
-  ===================================================== */
+ /* =====================================================
+   ADMIN / CAREER ADVISOR AUDIT LOG
+===================================================== */
 
-  // إذا الأدمن حمّل CV لطالبة ثانية نسجل العملية.
-  // فشل الـlog لا يمنع تحميل الملف.
-  if (
-  currentUser.role === "ADMIN" &&
+// عند تنزيل مسؤول أو مستشار مهني سيرة مستخدم آخر، تُسجّل العملية.
+// فشل تسجيل العملية لا يمنع تنزيل ملف PDF.
+if (
+  canAccessStudentResumes &&
   resume.userId !== currentUser.id
 ) {
-    try {
-      await prisma.adminAccessLog.create({
-        data: {
-          adminUserId: currentUser.id,
-          targetUserId: resume.userId,
-          resumeId: resume.id,
-        },
-      });
-    } catch (error) {
-      console.error(
-        "[GET /api/pdf/[id]] Failed to write admin access log:",
-        error
-      );
-    }
+  try {
+    await prisma.adminAccessLog.create({
+      data: {
+        adminUserId: currentUser.id,
+        targetUserId: resume.userId,
+        resumeId: resume.id,
+        action: "DOWNLOADED_RESUME",
+      },
+    });
+  } catch (error) {
+    console.error(
+      "[GET /api/pdf/[id]] Failed to write audit log:",
+      error
+    );
   }
-
+}
   /* =====================================================
      PDF DATA
   ===================================================== */

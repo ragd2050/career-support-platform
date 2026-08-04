@@ -8,21 +8,22 @@ datasource db {
 }
 
 model User {
-  id                      String           @id @default(cuid())
-  clerkId                 String           @unique
-  email                   String           @unique
+  id                      String            @id @default(cuid())
+  clerkId                 String            @unique
+  email                   String            @unique
   name                    String?
   imageUrl                String?
-  role                    Role             @default(USER)
-  plan                    PlanType         @default(FREE)
+  role                    Role              @default(USER)
+  plan                    PlanType          @default(FREE)
   planExpiresAt           DateTime?
-  createdAt               DateTime         @default(now())
-  updatedAt               DateTime         @updatedAt
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
   major                   String?
   phone                   String?
   consentAcceptedAt       DateTime?
-  adminAccessLogsGiven    AdminAccessLog[] @relation("AdminAccessLogAsAdmin")
-  adminAccessLogsReceived AdminAccessLog[] @relation("AdminAccessLogAsTarget")
+  careerPreference        CareerPreference?
+  adminAccessLogsGiven    AdminAccessLog[]  @relation("AdminAccessLogAsAdmin")
+  adminAccessLogsReceived AdminAccessLog[]  @relation("AdminAccessLogAsTarget")
   chatMessages            ChatMessage[]
   payments                Payment[]
   resumes                 Resume[]
@@ -65,7 +66,6 @@ model Resume {
   summary                Summary?
   volunteering           Volunteering[]
 
-  @@index([userId])
   @@map("resumes")
 }
 
@@ -268,8 +268,7 @@ model AdminAccessLog {
   targetUserId String
   resumeId     String?
   createdAt    DateTime        @default(now())
-  action       AdminActionType @default(VIEWED_RESUME)
-  metadata     String?
+  action       AdminActionType
   admin        User            @relation("AdminAccessLogAsAdmin", fields: [adminUserId], references: [id], onDelete: Cascade)
   targetUser   User            @relation("AdminAccessLogAsTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
 
@@ -296,6 +295,12 @@ enum Role {
   CAREER_ADVISOR
 }
 
+enum CareerPreference {
+  INTERNSHIP
+  FULL_TIME
+  BOTH
+}
+
 enum PlanType {
   FREE
   PREMIUM
@@ -318,6 +323,7 @@ enum PaymentStatus {
 enum AdminActionType {
   VIEWED_RESUME
   CHANGED_ROLE
+  DOWNLOADED_RESUME
 }
 
 enum ChatRole {

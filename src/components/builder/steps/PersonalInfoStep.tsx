@@ -19,11 +19,17 @@ function readFileAsBase64(file: File): Promise<string> {
 }
 
 export function PersonalInfoStep() {
-  const { resume, setPersonalInfo, setResume, setIsDirty } = useResumeStore();
+  const { resume, setPersonalInfo, setResume, setIsDirty, setCareerPreference } = useResumeStore();
   const info = resume.personalInfo;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importing, setImporting] = useState(false);
   const [importedFileName, setImportedFileName] = useState<string | null>(null);
+
+  const careerPreferenceOptions: { value: "INTERNSHIP" | "FULL_TIME" | "BOTH"; label: string }[] = [
+    { value: "INTERNSHIP", label: "Internship" },
+    { value: "FULL_TIME", label: "Full-time Job" },
+    { value: "BOTH", label: "Both" },
+  ];
 
   const fields: {
   key: keyof typeof info;
@@ -155,6 +161,46 @@ export function PersonalInfoStep() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Career Preferences — lives on the User record (shared across
+          all of the student's resumes), not on this specific resume.
+          Selecting it marks the store dirty the same way as any other
+          personal-info field, so it rides along with the existing
+          autosave/Save Draft flow — no separate API call needed. */}
+      <div className="mt-8 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#201A17] p-5">
+        <h3 className="text-sm font-bold text-gray-900 dark:text-[#F0EAE6]">Career Preferences</h3>
+        <p className="mt-0.5 text-xs text-gray-500 dark:text-[#8A8078]">
+          Help the Career Development Office understand your current career goals.
+        </p>
+
+        <fieldset className="mt-4">
+          <legend className="mb-2 block text-sm font-medium text-gray-700 dark:text-[#D8CFC9]">
+            What are you currently looking for? <span className="text-red-400">*</span>
+          </legend>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {careerPreferenceOptions.map((option) => (
+              <label
+                key={option.value}
+                className={`flex cursor-pointer items-center gap-2.5 rounded-lg border px-3.5 py-2.5 text-sm transition-colors ${
+                  resume.careerPreference === option.value
+                    ? "border-[#8B1E24] bg-[#8B1E24]/5 font-semibold text-[#8B1E24]"
+                    : "border-gray-200 dark:border-white/10 text-gray-700 dark:text-[#D8CFC9] hover:border-gray-300 dark:hover:border-white/20"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="careerPreference"
+                  value={option.value}
+                  checked={resume.careerPreference === option.value}
+                  onChange={() => setCareerPreference(option.value)}
+                  className="h-4 w-4 accent-[#8B1E24]"
+                />
+                {option.label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
       </div>
     </StepWrapper>
   );

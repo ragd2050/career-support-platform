@@ -70,6 +70,7 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
   currentStep,
   setCurrentStep,
   setResume,
+  setCareerPreference,
   resetResume,
   isDirty,
   setIsDirty,
@@ -102,6 +103,17 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
 
   if (!initialData || resumeId === "new") {
     setActiveResumeId("new");
+    // careerPreference يعيش على User، مو على Resume — نطبّقه حتى لو
+    // ماكو سيرة بعد، عشان الطالبة تشوف اختيارها السابق (لو موجود).
+    const preference = (initialData as Record<string, unknown> | null)?.careerPreference as
+      | "INTERNSHIP"
+      | "FULL_TIME"
+      | "BOTH"
+      | null
+      | undefined;
+    if (preference) {
+      setCareerPreference(preference);
+    }
     setReady(true);
     return;
   }
@@ -122,6 +134,7 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
     portfolioSectionOrder: (data.portfolioSectionOrder as { key: string; visible: boolean }[]) ?? undefined,
     portfolioTemplate: (data.portfolioTemplate as string) ?? "classic",
     portfolioViewCount: (data.portfolioViewCount as number) ?? 0,
+    careerPreference: (data.careerPreference as "INTERNSHIP" | "FULL_TIME" | "BOTH" | null) ?? null,
     portfolioCustomization: (data.portfolioCustomization as ResumeData["portfolioCustomization"]) ?? undefined,
 
     personalInfo: {
@@ -155,7 +168,7 @@ export function BuilderClient({ resumeId, initialData, userId }: BuilderClientPr
   });
 
   setReady(true);
-}, [storeKey, initialData, resetResume, setIsDirty, setResume, userId, resumeId]);
+}, [storeKey, initialData, resetResume, setIsDirty, setResume, setCareerPreference, userId, resumeId]);
 
   const performSave = useCallback(async (): Promise<boolean> => {
     if (user && user.id !== userId) {

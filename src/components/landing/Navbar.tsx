@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -24,7 +25,7 @@ export function Navbar() {
     { href: "/", ar: "الرئيسية", en: "Home" },
     { href: "/cv-tips", ar: "نصائح السيرة الذاتية", en: "CV Tips" },
     {
-      href: isSignedIn ? "/dashboard" : "/builder/new",
+      href: isSignedIn ? "/dashboard" : "/auth/sign-in",
       ar: "إنشاء السيرة الذاتية",
       en: "CV Builder",
     },

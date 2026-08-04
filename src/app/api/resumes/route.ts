@@ -158,6 +158,16 @@ const resumeId =
     );
   }
 
+  // careerPreference يعيش على User مو Resume — نتحقق منه هنا بدل ما
+  // نثق بأي قيمة توصل من العميل. undefined يعني "ما تغيّر شي" (نتفادى
+  // مسح قيمة محفوظة سابقاً لو الطلب الحالي ما فيه هالحقل إطلاقاً).
+  const VALID_CAREER_PREFERENCES = new Set(["INTERNSHIP", "FULL_TIME", "BOTH"]);
+  const careerPreference: "INTERNSHIP" | "FULL_TIME" | "BOTH" | undefined =
+    typeof data.careerPreference === "string" &&
+    VALID_CAREER_PREFERENCES.has(data.careerPreference)
+      ? (data.careerPreference as "INTERNSHIP" | "FULL_TIME" | "BOTH")
+      : undefined;
+
   try {
     const accountEmail =
       clerkUser.emailAddresses[0]?.emailAddress ||
@@ -179,6 +189,7 @@ if (!user) {
       name: accountName,
       role: "USER",
       plan: "FREE",
+      careerPreference,
     },
   });
 } else {
@@ -189,6 +200,8 @@ if (!user) {
     data: {
       email: accountEmail,
       name: accountName,
+      // undefined = Prisma يتجاهل الحقل ويبقي القيمة المحفوظة سابقاً
+      careerPreference,
     },
   });
 }
@@ -478,6 +491,7 @@ if (!user) {
   return NextResponse.json({
     success: true,
     resume: updatedResume,
+    careerPreference: user.careerPreference,
   });
 }
 
@@ -542,7 +556,7 @@ if (!user) {
       include: includeResumeRelations,
     });
 
-    return NextResponse.json({ success: true, resume });
+    return NextResponse.json({ success: true, resume, careerPreference: user.careerPreference });
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("[POST /api/resumes] Prisma error:", {

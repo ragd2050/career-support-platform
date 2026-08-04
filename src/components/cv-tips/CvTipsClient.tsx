@@ -23,44 +23,44 @@ const FILTERS: { key: Category; ar: string; en: string }[] = [
 
 const WRITING_TIPS: { title: Bilingual; body: Bilingual }[] = [
   {
-    title: { ar: "ابدأ بملخص قوي", en: "Start with a strong summary" },
+    title: { ar: "ملخص مهني قوي", en: "Start with a strong summary" },
     body: {
-      ar: "اكتب ملخصاً مهنياً من 2-3 جمل يوضح من أنت، تخصصك، وأهم نقاط قوتك. يجب أن يجذب القارئ من السطر الأول.",
+      ar: "يُفضّل كتابة ملخص مهني من 2-3 جمل يوضح التخصص وأهم نقاط القوة، ويجذب انتباه القارئ من السطر الأول.",
       en: "Write a professional summary of 2-3 sentences that explains who you are, your major, and your key strengths. It should grab attention from the first line.",
     },
   },
   {
-    title: { ar: "رتب المعلومات بترتيب زمني عكسي", en: "Use reverse chronological order" },
+    title: { ar: "ترتيب المعلومات زمنياً بشكل عكسي", en: "Use reverse chronological order" },
     body: {
-      ar: "ضع أحدث خبراتك التعليمية والعملية أولاً، حيث يهتم أصحاب العمل بمعرفة أحدث إنجازاتك بشكل سريع.",
+      ar: "يُفضّل وضع أحدث الخبرات التعليمية والعملية أولاً، حتى يتمكن أصحاب العمل من الاطلاع على أحدث الإنجازات بسرعة.",
       en: "Put your most recent education and work experience first, as employers want to quickly see your latest achievements.",
     },
   },
   {
-    title: { ar: "ركّز على النتائج لا المهام", en: "Focus on results, not duties" },
+    title: { ar: "التركيز على النتائج لا المهام", en: "Focus on results, not duties" },
     body: {
-      ar: "بدلاً من ذكر المهام اليومية فقط، اذكر الإنجازات والنتائج القابلة للقياس باستخدام أرقام ونسب عند الإمكان.",
+      ar: "بدلاً من ذكر المهام اليومية فقط، يُفضّل إبراز الإنجازات والنتائج القابلة للقياس باستخدام الأرقام والنسب عند الإمكان.",
       en: "Instead of just listing daily tasks, mention measurable achievements using numbers and percentages whenever possible.",
     },
   },
   {
-    title: { ar: "خصص سيرتك لكل وظيفة", en: "Tailor your CV for each job" },
+    title: { ar: "تخصيص السيرة الذاتية لكل وظيفة", en: "Tailor your CV for each job" },
     body: {
-      ar:"عدل ترتيب المهارات والخبرات بما يتناسب مع متطلبات الوظيفة المتقدمة لها، فهذا يزيد فرصتك في الظهور كمرشح مناسب.",
+      ar:"يُفضّل تعديل ترتيب المهارات والخبرات بما يتناسب مع متطلبات الوظيفة، مما يزيد فرصة ظهور السيرة الذاتية بشكل أكثر ملاءمة للفرصة.",
       en: "Adjust the order of your skills and experience to match the job requirements, increasing your chances of appearing as a suitable candidate.",
     },
   },
   {
-    title: { ar: "حافظ على الإيجاز", en: "Keep it concise" },
+    title: { ar: "الحفاظ على الإيجاز", en: "Keep it concise" },
     body: {
-      ar: "يفضل أن تكون السيرة الذاتية في صفحة واحدة لمن لديهن خبرة محدودة، وصفحتين كحد أقصى للخبرات الأوسع.",
+      ar: "يفضل أن تكون السيرة الذاتية في صفحة واحدة لمن لديهم خبرة محدودة، وصفحتين كحد أقصى للخبرات الأوسع.",
       en: "A one-page CV is preferred for limited experience, with a maximum of two pages for broader experience.",
     },
   },
   {
-    title: { ar: "استخدم بريداً إلكترونياً مهنياً", en: "Use a professional email address" },
+    title: { ar: "استخدام بريد إلكتروني مهني", en: "Use a professional email address" },
     body: {
-      ar: "استخدم بريدك الجامعي أو بريداً يحتوي على اسمك الكامل فقط، وتجنب الأسماء أو الأرقام غير الرسمية.",
+      ar: "يُفضّل استخدام البريد الجامعي أو بريد يحتوي على الاسم الكامل، مع تجنب الأسماء أو الأرقام غير الرسمية.",
       en: "Use your university email or one containing only your full name, and avoid informal nicknames or numbers.",
     },
   },
@@ -70,42 +70,42 @@ const MISTAKES: { title: Bilingual; body: Bilingual }[] = [
   {
     title: { ar: "الأخطاء الإملائية واللغوية", en: "Spelling and grammar errors" },
     body: {
-      ar: "راجع سيرتك الذاتية أكثر من مرة، واطلب من شخص آخر مراجعتها قبل الإرسال، حيث تعطي الأخطاء انطباعاً سلبياً فورياً.",
+      ar: "يُنصح بمراجعة السيرة الذاتية أكثر من مرة والاستعانة بشخص آخر لمراجعتها قبل الإرسال، إذ قد تعطي الأخطاء انطباعاً سلبياً.",
       en: "Review your CV more than once, and ask someone else to check it before sending, as mistakes create an immediate negative impression.",
     },
   },
   {
     title: { ar: "استخدام تنسيق غير منظم", en: "Inconsistent formatting" },
     body: {
-      ar: "تجنب اختلاف أنواع الخطوط والأحجام والمسافات بين الأقسام، فالتنسيق الموحد يعكس احترافية أعلى.",
+      ar: "يُفضّل تجنب اختلاف أنواع الخطوط والأحجام والمسافات بين الأقسام، فالتنسيق الموحد يعكس مستوى أعلى من الاحترافية.",
       en: "Avoid mixing fonts, sizes, and spacing between sections; consistent formatting reflects higher professionalism.",
     },
   },
   {
     title: { ar: "إدراج معلومات غير ضرورية", en: "Including unnecessary information" },
     body: {
-      ar: "لا حاجة لإضافة الحالة الاجتماعية، الصورة الشخصية، أو تفاصيل شخصية غير متعلقة بالوظيفة.",
+      ar: "لا حاجة إلى إضافة الحالة الاجتماعية أو الصورة الشخصية أو أي تفاصيل شخصية غير مرتبطة بالوظيفة.",
       en: "There's no need to add marital status, a personal photo, or personal details unrelated to the job.",
     },
   },
   {
     title: { ar: "استخدام بيانات تواصل قديمة", en: "Using outdated contact information" },
     body: {
-      ar: "تأكد من أن جميع وسائل التواصل في سيرتك الذاتية محدثة وفعالة، فقد تفوتك فرصة بسبب معلومات قديمة.",
+      ar: "يجب أن تكون جميع بيانات التواصل في السيرة الذاتية محدثة وفعالة لتجنب فقدان فرص بسبب معلومات قديمة.",
       en: "Make sure all contact details in your CV are up to date and active, as you might miss an opportunity due to outdated information.",
     },
   },
   {
     title: { ar: "جمل عامة وغير محددة", en: "Generic and vague phrases" },
     body: {
-      ar: 'تجنب عبارات مثل "أعمل بجد" أو "شخص نشيط"، واستبدلها بأمثلة ملموسة على إنجازاتك الفعلية.',
+      ar: 'يُفضّل تجنب عبارات مثل "أعمل بجد" أو "شخص نشيط"، واستبدالها بأمثلة ملموسة على الإنجازات الفعلية.',
       en: "Avoid phrases like 'hard worker' or 'active person', and replace them with concrete examples of your actual achievements.",
     },
   },
   {
     title: { ar: "عدم تحديث السيرة الذاتية", en: "Not updating your CV regularly" },
     body: {
-      ar: "راجع سيرتك الذاتية بشكل دوري وأضف أي مهارات أو إنجازات أو شهادات جديدة حصلت عليها.",
+      ar: "يُنصح بمراجعة السيرة الذاتية بشكل دوري وإضافة أي مهارات أو إنجازات أو شهادات جديدة.",
       en: "Review your CV periodically and add any new skills, achievements, or certifications you've earned.",
     },
   },
@@ -115,35 +115,35 @@ const FORMAT_ITEMS: { title: Bilingual; body: Bilingual }[] = [
   {
     title: { ar: "استخدام الخطوط المناسبة", en: "Using the right fonts" },
     body: {
-      ar: "استخدم خطوطاً واضحة ومهنية مثل Calibri أو Arial أو Times New Roman، بحجم 10-12 نقطة للنص الأساسي، و14-16 للعناوين. تجنب الخطوط الزخرفية تماماً.",
+      ar: "يُفضّل استخدام خطوط واضحة ومهنية مثل Calibri أو Arial أو Times New Roman، بحجم 10-12 نقطة للنص الأساسي و14-16 للعناوين، مع تجنب الخطوط الزخرفية.",
       en: "Use clear, professional fonts such as Calibri, Arial, or Times New Roman, sized 10-12pt for body text and 14-16pt for headings. Avoid decorative fonts entirely.",
     },
   },
   {
     title: { ar: "المسافات والهوامش", en: "Spacing and margins" },
     body: {
-      ar: "اترك هوامش متساوية (2.5 سم تقريباً) حول الصفحة، واستخدم تباعداً منتظماً بين الأقسام لتسهيل القراءة وتجنب الازدحام البصري.",
+      ar: "يُفضّل ترك هوامش متساوية (2.5 سم تقريباً) حول الصفحة واستخدام تباعد منتظم بين الأقسام لتسهيل القراءة وتجنب الازدحام البصري.",
       en: "Leave equal margins (about 2.5 cm) around the page, and use consistent spacing between sections to ease reading and avoid clutter.",
     },
   },
   {
     title: { ar: "استخدام النقاط بدلاً من الفقرات الطويلة", en: "Using bullet points instead of long paragraphs" },
     body: {
-      ar: "قسم وصف الخبرات إلى نقاط قصيرة (3-5 نقاط لكل وظيفة)، فهذا يسهل على القارئ مسح المحتوى بسرعة واستيعاب أهم المعلومات.",
+      ar: "يُفضّل تقسيم وصف الخبرات إلى نقاط قصيرة (3-5 نقاط لكل وظيفة)، مما يسهّل قراءة المحتوى واستيعاب أهم المعلومات بسرعة.",
       en: "Break down experience descriptions into short bullet points (3-5 per role); this helps the reader quickly scan and absorb key information.",
     },
   },
   {
     title: { ar: "حفظ الملف بصيغة PDF", en: "Saving the file as PDF" },
     body: {
-      ar: 'احفظ سيرتك الذاتية النهائية بصيغة PDF للحفاظ على التنسيق عند فتحها على أي جهاز، وسم الملف باسمك الكامل بدلاً من "CV" أو "Resume".',
+      ar: 'يُفضّل حفظ السيرة الذاتية النهائية بصيغة PDF للحفاظ على التنسيق عند فتحها على أي جهاز، وتسمية الملف بالاسم الكامل بدلاً من "CV" أو "Resume".',
       en: "Save your final CV as PDF to preserve formatting across devices, and name the file with your full name instead of 'CV' or 'Resume'.",
     },
   },
   {
     title: { ar: "الألوان والتصميم", en: "Colors and design" },
     body: {
-      ar: "إن أردت استخدام الألوان، التزم بلون واحد أو لونين هادئين فقط للعناوين، وحافظ على خلفية بيضاء ونص أسود لضمان القراءة الواضحة.",
+      ar: "عند استخدام الألوان، يُفضّل الاكتفاء بلون واحد أو لونين هادئين للعناوين، مع الحفاظ على خلفية بيضاء ونص أسود لضمان وضوح القراءة.",
       en: "If using color, stick to one or two muted tones for headings only, and keep a white background with black text for clear readability.",
     },
   },
@@ -177,23 +177,23 @@ const ATS_CARDS: { title: Bilingual; body: Bilingual }[] = [
     },
   },
   {
-    title: { ar: "استخدم تنسيقاً بسيطاً", en: "Use a simple format" },
+    title: { ar: "استخدام تنسيق بسيط", en: "Use a simple format" },
     body: {
-      ar: "تجنب الجداول، الأعمدة المتعددة، الصور، والرسومات، فبعض أنظمة ATS لا تستطيع قراءتها بشكل صحيح وقد تتجاهل أقساماً كاملة.",
+      ar: "يُفضّل تجنب الجداول والأعمدة المتعددة والصور والرسومات، لأن بعض أنظمة ATS قد لا تتمكن من قراءتها بشكل صحيح وقد تتجاهل أقساماً كاملة.",
       en: "Avoid tables, multiple columns, images, and graphics — some ATS systems cannot read them correctly and may skip entire sections.",
     },
   },
   {
-    title: { ar: "استخدم كلمات مفتاحية من الإعلان الوظيفي", en: "Use keywords from the job posting" },
+    title: { ar: "استخدام كلمات مفتاحية من الإعلان الوظيفي", en: "Use keywords from the job posting" },
     body: {
-      ar: "اقرأ إعلان الوظيفة بعناية، وادمج المهارات والمصطلحات المذكورة فيه ضمن سيرتك الذاتية بشكل طبيعي.",
+      ar: "يُنصح بقراءة إعلان الوظيفة بعناية ودمج المهارات والمصطلحات المذكورة فيه ضمن السيرة الذاتية بشكل طبيعي.",
       en: "Read the job posting carefully, and naturally incorporate the skills and terms mentioned into your CV.",
     },
   },
   {
     title: { ar: "عناوين أقسام واضحة وتقليدية", en: "Clear, conventional section headings" },
     body: {
-      ar: 'استخدم عناوين معروفة مثل "الخبرات العملية" و"التعليم" و"المهارات" بدلاً من عناوين إبداعية قد لا يفهمها النظام.',
+      ar: 'يُفضّل استخدام عناوين معروفة مثل "الخبرات العملية" و"التعليم" و"المهارات" بدلاً من عناوين إبداعية قد لا يتعرف عليها النظام.',
       en: "Use familiar headings like 'Experience', 'Education', and 'Skills' instead of creative titles the system might not recognize.",
     },
   },
@@ -201,16 +201,16 @@ const ATS_CARDS: { title: Bilingual; body: Bilingual }[] = [
 
 const SUMMARY_EXAMPLES: { title: Bilingual; body: Bilingual }[] = [
   {
-    title: { ar: "مثال — طالبة إدارة أعمال", en: "Example — Business Administration Student" },
+    title: { ar: "مثال — تخصص إدارة الأعمال", en: "Example — Business Administration Student" },
     body: {
-      ar: "طالبة سنة رابعة في إدارة الأعمال بجامعة دار الحكمة، بمعدل تراكمي 3.8/4.0. لديها خبرة عملية في التسويق الرقمي من خلال التدريب الصيفي، ومهارات قوية في التحليل وإدارة الوقت والعمل الجماعي.",
+      ar: "في السنة الرابعة من تخصص إدارة الأعمال بجامعة دار الحكمة، بمعدل تراكمي 3.8/4.0، مع خبرة عملية في التسويق الرقمي من خلال التدريب الصيفي ومهارات قوية في التحليل وإدارة الوقت والعمل الجماعي.",
       en: "Fourth-year Business Administration student at Dar Al-Hekma University with a 3.8/4.0 GPA. Has practical experience in digital marketing through a summer internship, with strong analytical, time management, and teamwork skills.",
     },
   },
   {
-    title: { ar: "مثال — طالبة علوم حاسب", en: "Example — Computer Science Student" },
+    title: { ar: "مثال — تخصص علوم الحاسب", en: "Example — Computer Science Student" },
     body: {
-      ar: "مطورة برمجيات طموحة وطالبة علوم حاسب آلي، شاركت في بناء تطبيقات ويب باستخدام JavaScript وReact، ولديها شغف بحل المشكلات التقنية والعمل ضمن فرق برمجية.",
+      ar: "مهتم بمجال تطوير البرمجيات ومن تخصص علوم الحاسب، مع خبرة في بناء تطبيقات ويب باستخدام JavaScript وReact واهتمام بحل المشكلات التقنية والعمل ضمن فرق برمجية.",
       en: "Aspiring software developer and Computer Science student who has built web applications using JavaScript and React, with a passion for technical problem-solving and teamwork.",
     },
   },
@@ -227,7 +227,7 @@ const CHECKLIST_A: Bilingual[] = [
 const CHECKLIST_B: Bilingual[] = [
   { ar: "الطول مناسب (صفحة إلى صفحتين)", en: "Length is appropriate (one to two pages)" },
   { ar: "تم حفظ الملف بصيغة PDF", en: "File is saved as PDF" },
-  { ar: "اسم الملف يحتوي على اسمك الكامل", en: "The file name includes your full name" },
+  { ar: "اسم الملف يحتوي على الاسم الكامل", en: "The file name includes your full name" },
   { ar: "تمت مراجعتها من شخص آخر", en: "It has been reviewed by someone else" },
   { ar: "الكلمات المفتاحية من الإعلان الوظيفي موجودة", en: "Keywords from the job posting are included" },
 ];
@@ -335,7 +335,7 @@ export function CvTipsClient() {
           <>
             <div className="section-header" style={{ textAlign: lang === "ar" ? "right" : "left", marginBottom: "1.5rem" }}>
               <h2 className="section-title" style={{ fontSize: "1.5rem" }}>
-                {t("كيف تكتب سيرة ذاتية احترافية", "How to Write a Professional CV")}
+                {t("كيفية كتابة سيرة ذاتية احترافية", "How to Write a Professional CV")}
               </h2>
             </div>
             <div className="grid-3" style={{ marginBottom: "3rem" }}>
@@ -412,7 +412,7 @@ export function CvTipsClient() {
               </h2>
               <p className="section-desc" style={{ margin: 0 }}>
                 {t(
-                  "استخدم هذه الأفعال في بداية كل نقطة لوصف خبراتك بقوة وفاعلية.",
+                  "يمكن استخدام هذه الأفعال في بداية كل نقطة لوصف الخبرات بصورة قوية وفعّالة.",
                   "Use these verbs at the start of each bullet point to describe your experience powerfully."
                 )}
               </p>
@@ -476,7 +476,7 @@ export function CvTipsClient() {
               </h2>
               <p className="section-desc" style={{ margin: 0 }}>
                 {t(
-                  "راجع هذه القائمة قبل إرسال سيرتك الذاتية لأي وظيفة.",
+                  "يمكن مراجعة هذه القائمة قبل إرسال السيرة الذاتية لأي وظيفة.",
                   "Review this checklist before submitting your CV for any job."
                 )}
               </p>
@@ -528,16 +528,16 @@ export function CvTipsCTA() {
     <section className="section cta">
       <div className="container">
         <div className="cta-box">
-          <h2>{t("جاهز لإنشاء سيرتك الذاتية؟", "Ready to Build Your CV?")}</h2>
+          <h2>{t("هل السيرة الذاتية جاهزة للإنشاء؟", "Ready to Build Your CV?")}</h2>
           <p>
             {t(
-              "أنشئ سيرة ذاتية احترافية ومتوافقة مع أنظمة ATS باستخدام باني السيرة الذاتية الذكي، وابدأ رحلتك المهنية بثقة.",
+              "يمكن إنشاء سيرة ذاتية احترافية ومتوافقة مع أنظمة ATS باستخدام أداة بناء السيرة الذاتية الذكية والاستعداد للمسيرة المهنية بثقة.",
               "Create a professional ATS-friendly resume using our intelligent CV Builder and start your career journey with confidence."
             )}
           </p>
           <div className="cta-actions">
             <Link href={builderHref} className="btn btn-gold btn-lg">
-              {t("ابدأ بناء سيرتك الذاتية", "Start Building Your CV")}
+              {t("بدء بناء السيرة الذاتية", "Start Building Your CV")}
             </Link>
           </div>
         </div>

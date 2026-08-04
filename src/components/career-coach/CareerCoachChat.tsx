@@ -18,9 +18,9 @@ interface PendingFile {
 }
 
 const SUGGESTIONS: { ar: string; en: string }[] = [
-  { ar: "راجع سيرتي الذاتية وأعطني ملاحظات", en: "Review my resume and give me feedback" },
-  { ar: "ابدأ معي مقابلة تجريبية", en: "Start a mock interview with me" },
-  { ar: "كيف أحسّن ملخصي المهني؟", en: "How can I improve my professional summary?" },
+  { ar: "مراجعة السيرة الذاتية وتقديم ملاحظات", en: "Review my resume and give me feedback" },
+  { ar: "بدء مقابلة تجريبية", en: "Start a mock interview with me" },
+  { ar: "كيفية تحسين الملخص المهني", en: "How can I improve my professional summary?" },
 ];
 
 const MAX_FILE_BYTES = 8 * 1024 * 1024;
@@ -139,7 +139,7 @@ export function CareerCoachChat() {
       setError(
         err instanceof Error && err.message !== "Request failed"
           ? err.message
-          : t("تعذّر إرسال الرسالة. حاولي مرة أخرى.", "Failed to send message. Please try again.")
+          : t("تعذّر إرسال الرسالة. يرجى المحاولة مرة أخرى.", "Failed to send message. Please try again.")
       );
       setMessages((prev) => prev.filter((m) => m.id !== optimisticUser.id));
       setInput(trimmed);
@@ -150,7 +150,7 @@ export function CareerCoachChat() {
   };
 
   const handleClear = async () => {
-    if (!confirm(t("هل تريدين مسح المحادثة بالكامل؟", "Clear the entire conversation?"))) return;
+    if (!confirm(t("هل يتم مسح المحادثة بالكامل؟", "Clear the entire conversation?"))) return;
     try {
       await fetch("/api/chat", { method: "DELETE" });
       setMessages([]);
@@ -203,7 +203,7 @@ export function CareerCoachChat() {
                 </div>
                 <p className="max-w-[380px] text-[13.5px] leading-relaxed text-[var(--text-muted)]">
                   {t(
-                    "أهلًا! أنا مدرب DAH المهني. أقدر أراجع سيرتك الذاتية وأعطيك ملاحظات، أو أسوي معاك مقابلة تجريبية. جربي أحد الاقتراحات، أو ارفعي ملف سيرتك مباشرة:",
+                    "أهلًا! أنا مدرب DAH المهني. يمكنني مراجعة السيرة الذاتية وتقديم ملاحظات مخصصة، أو إجراء مقابلة تجريبية. يمكن اختيار أحد الاقتراحات أو إرفاق ملف السيرة الذاتية مباشرة:",
                     "Hi! I'm DAH Career Coach. I can review your resume and give feedback, or run a mock interview with you. Try one of these, or upload your resume file directly:"
                   )}
                 </p>
@@ -299,7 +299,7 @@ export function CareerCoachChat() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={t("اكتب رسالتك...", "Type your message...")}
+              placeholder={t("الرسالة...", "Type your message...")}
               disabled={sending || loadingHistory}
               className="flex-1 rounded-[var(--radius-md)] border border-[var(--border)] px-4 py-2.5 text-[13.5px] outline-none transition-[var(--transition)] focus:border-[var(--maroon)] disabled:bg-[var(--bg)]"
             />

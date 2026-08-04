@@ -35,6 +35,14 @@ export default async function BuilderPage({ params }: Props) {
 
   const { id } = await params;
 
+  // careerPreference يعيش على User مو Resume — نجيبه دايمًا بغض النظر
+  // لو سيرة جديدة أو موجودة، عشان الطالبة تشوف اختيارها السابق حتى
+  // وهي تبني سيرة جديدة (نفس الطالبة، تفضيل واحد).
+  const currentUser = await prisma.user.findUnique({
+    where: { clerkId: userId },
+    select: { careerPreference: true },
+  });
+
   const resumeData =
     id === "new"
       ? null
@@ -53,6 +61,12 @@ export default async function BuilderPage({ params }: Props) {
     redirect("/dashboard");
   }
 
+  const initialData = resumeData
+    ? { ...resumeData, careerPreference: currentUser?.careerPreference ?? null }
+    : id === "new"
+    ? { careerPreference: currentUser?.careerPreference ?? null }
+    : null;
+
   // ✅ key يجمع userId + id:
   //    - يتغير عند تغيير المستخدم → React يعمل unmount كامل للـ BuilderClient
   //    - يتغير عند تغيير السيرة → نفس الشيء
@@ -61,7 +75,7 @@ export default async function BuilderPage({ params }: Props) {
       key={`${userId}|${id}`}
       userId={userId}
       resumeId={resumeData?.id ?? "new"}
-      initialData={resumeData as Record<string, unknown> | null}
+      initialData={initialData as Record<string, unknown> | null}
     />
   );
 }

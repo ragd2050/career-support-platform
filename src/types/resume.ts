@@ -152,6 +152,10 @@ export interface ResumeData {
   };
   // "auto" = تلقائي (خبرة أولاً لو موجودة، وإلا مشاريع أولاً)
   experienceOrder?: "auto" | "experience_first" | "projects_first";
+  // What the student is currently looking for — lives on the User
+  // record (not per-resume), but travels through this same object
+  // since the builder autosave endpoint already handles user upserts.
+  careerPreference?: "INTERNSHIP" | "FULL_TIME" | "BOTH" | null;
   personalInfo: PersonalInfo;
   summary: Summary;
   // Legacy — تبقى بالنوع لأجل التوافق العكسي، غير مستخدمة بالواجهة

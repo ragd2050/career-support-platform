@@ -21,6 +21,7 @@ const defaultResume: ResumeData = {
   portfolioSlug: null,
   portfolioTheme: "midnight",
   experienceOrder: "auto",
+  careerPreference: null,
   personalInfo: {
     fullName: "", title: "", email: "", phone: "",
     location: "", linkedin: "", github: "", website: "", profilePic: "",
@@ -41,6 +42,7 @@ interface ResumeStore {
   setResume: (resume: ResumeData) => void;
   setCurrentStep: (step: BuilderStep) => void;
   setPersonalInfo: (info: Partial<PersonalInfo>) => void;
+  setCareerPreference: (value: "INTERNSHIP" | "FULL_TIME" | "BOTH") => void;
   setSummary: (summary: Summary) => void;
   setIsPublic: (isPublic: boolean) => void;
   setPortfolioStatus: (
@@ -156,6 +158,12 @@ export const useResumeStore = create<ResumeStore>((set) => ({
   setPersonalInfo: (info) =>
     set((state) => ({
       resume: { ...state.resume, personalInfo: { ...state.resume.personalInfo, ...info } },
+      isDirty: true,
+    })),
+
+  setCareerPreference: (value) =>
+    set((state) => ({
+      resume: { ...state.resume, careerPreference: value },
       isDirty: true,
     })),
 
