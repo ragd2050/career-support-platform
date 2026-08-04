@@ -32,10 +32,12 @@ export function AdminUsersTable({
   users,
   query,
   careerGoal,
+  major,
 }: {
   users: UserRow[];
   query: string;
   careerGoal: string;
+  major: string;
 }) {
   const { t, lang } = useLanguage();
 
@@ -44,6 +46,30 @@ export function AdminUsersTable({
     const [ar, en] = CAREER_GOAL_LABELS[value];
     return t(ar, en);
   };
+
+  const MAJORS = [
+  { value: "ba_architecture", ar: "بكالوريوس العمارة", en: "Bachelor of Architecture" },
+  { value: "ba_interior_design", ar: "بكالوريوس التصميم الداخلي", en: "Bachelor of Interior Design" },
+  { value: "ba_visual_communication", ar: "بكالوريوس الاتصال البصري", en: "Bachelor of Visual Communication" },
+  { value: "ba_computer_science", ar: "بكالوريوس علوم الحاسب", en: "Bachelor of Computer Science" },
+  { value: "ba_information_systems", ar: "بكالوريوس نظم المعلومات", en: "Bachelor of Information Systems" },
+  { value: "ba_cybersecurity", ar: "بكالوريوس الأمن السيبراني", en: "Bachelor of Cybersecurity" },
+  { value: "ba_banking_finance", ar: "بكالوريوس الأعمال المصرفية والتمويل", en: "Bachelor of Banking and Finance" },
+  { value: "ba_marketing", ar: "بكالوريوس التسويق", en: "Bachelor of Marketing" },
+  { value: "ba_law", ar: "بكالوريوس القانون", en: "Bachelor of Law" },
+  { value: "ba_diplomacy", ar: "بكالوريوس الآداب في الدبلوماسية والعلاقات الدولية", en: "Bachelor of Arts in Diplomacy and International Relations" },
+  { value: "ba_psychology", ar: "بكالوريوس علم النفس", en: "Bachelor of Psychology" },
+  { value: "ba_speech_language_hearing", ar: "بكالوريوس علوم النطق واللغة والسمع", en: "Bachelor of Speech-Language and Hearing Sciences" },
+
+  { value: "ms_mba", ar: "ماجستير إدارة الأعمال", en: "Master of Business Administration (MBA)" },
+  { value: "ms_international_relations", ar: "ماجستير الآداب في العلاقات الدولية", en: "Master of Arts in International Relations" },
+  { value: "ms_commercial_law", ar: "ماجستير القانون التجاري", en: "Master of Commercial Law" },
+  { value: "ms_educational_leadership", ar: "ماجستير القيادة التربوية", en: "Master of Educational Leadership" },
+  { value: "ms_speech_language_disorders", ar: "ماجستير العلوم في اضطرابات النطق واللغة", en: "Master of Science in Speech-Language Disorders" },
+  { value: "ms_applied_behavior_analysis", ar: "ماجستير العلوم في تحليل السلوك التطبيقي", en: "Master of Science in Applied Behavior Analysis" },
+  { value: "ms_architecture", ar: "ماجستير العمارة", en: "Master of Architecture" },
+  { value: "ms_information_systems", ar: "ماجستير العلوم في نظم المعلومات", en: "Master of Science in Information Systems" },
+];
 
   const handleExportCsv = () => {
     const headers = [
@@ -97,43 +123,80 @@ export function AdminUsersTable({
         </div>
 
         <div className="flex items-center gap-2.5">
-          <form action="/admin/users" method="GET" className="flex w-full items-center gap-2 sm:w-auto">
-            <div className="relative flex-1 sm:w-72">
-              <Search className="pointer-events-none absolute inset-y-0 right-3 my-auto h-4 w-4 text-[#9CA3AF]" />
-              <input
-                type="text"
-                name="q"
-                defaultValue={query}
-                placeholder={t("ابحثي بالاسم، التخصص، أو البريد...", "Search by name, major, or email...")}
-                className="w-full rounded-[10px] border border-[#E5E7EB] bg-white py-2 pr-9 pl-3 text-[13px] text-[#111827] placeholder:text-[#9CA3AF] focus:border-[#8B1E24] focus:outline-none focus:ring-2 focus:ring-[#8B1E24]/20 dark:border-white/10 dark:bg-[#2E211D] dark:text-[#F0EAE6]"
-              />
-            </div>
+  <form
+    action="/admin/users"
+    method="GET"
+    className="flex w-full items-center gap-2 sm:w-auto"
+  >
+    <div className="relative flex-1 sm:w-72">
+      <Search className="pointer-events-none absolute inset-y-0 right-3 my-auto h-4 w-4 text-[#9CA3AF]" />
 
-            {/* فلتر الهدف الوظيفي — بنفس الفورم عشان يشتغل مع البحث
-                بنفس الوقت (طلب GET واحد يحمل q وgoal مع بعض). يتحدّث
-                تلقائياً بدون زر "تطبيق" إضافي. */}
-            <select
-              name="goal"
-              defaultValue={careerGoal}
-              onChange={(e) => e.currentTarget.form?.requestSubmit()}
-              className="shrink-0 rounded-[10px] border border-[#E5E7EB] bg-white py-2 px-3 text-[13px] text-[#111827] focus:border-[#8B1E24] focus:outline-none focus:ring-2 focus:ring-[#8B1E24]/20 dark:border-white/10 dark:bg-[#2E211D] dark:text-[#F0EAE6]"
-            >
-              <option value="ALL">{t("كل الأهداف", "All")}</option>
-              <option value="INTERNSHIP">{t("تدريب", "Internship")}</option>
-              <option value="FULL_TIME">{t("وظيفة دوام كامل", "Full-time Job")}</option>
-              <option value="BOTH">{t("كلاهما", "Both")}</option>
-            </select>
-          </form>
+      <input
+        type="text"
+        name="q"
+        defaultValue={query}
+        placeholder={t(
+          "ابحثي بالاسم، التخصص، أو البريد...",
+          "Search by name, major, or email..."
+        )}
+        className="w-full rounded-[10px] border border-[#E5E7EB] bg-white py-2 pr-9 pl-3 text-[13px] text-[#111827] placeholder:text-[#9CA3AF] focus:border-[#8B1E24] focus:outline-none focus:ring-2 focus:ring-[#8B1E24]/20 dark:border-white/10 dark:bg-[#2E211D] dark:text-[#F0EAE6]"
+      />
+    </div>
 
-          <button
-            type="button"
-            onClick={handleExportCsv}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-[10px] border border-[#E5E7EB] bg-white px-3.5 py-2 text-[13px] font-bold text-[#374151] transition-colors hover:border-[#8B1E24] hover:text-[#8B1E24] dark:border-white/10 dark:bg-[#2E211D] dark:text-[#D8CFC9]"
-          >
-            <Download className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">{t("تصدير CSV", "Export CSV")}</span>
-          </button>
-        </div>
+    <select
+      name="goal"
+      defaultValue={careerGoal}
+      onChange={(e) => e.currentTarget.form?.requestSubmit()}
+      className="shrink-0 rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-2 text-[13px] text-[#111827] focus:border-[#8B1E24] focus:outline-none focus:ring-2 focus:ring-[#8B1E24]/20 dark:border-white/10 dark:bg-[#2E211D] dark:text-[#F0EAE6]"
+    >
+      <option value="ALL">{t("كل الأهداف", "All Goals")}</option>
+      <option value="INTERNSHIP">{t("تدريب", "Internship")}</option>
+      <option value="FULL_TIME">
+        {t("وظيفة دوام كامل", "Full-time Job")}
+      </option>
+      <option value="BOTH">{t("كلاهما", "Both")}</option>
+    </select>
+
+    <select
+      name="major"
+      defaultValue={major}
+      onChange={(e) => e.currentTarget.form?.requestSubmit()}
+      className="shrink-0 rounded-[10px] border border-[#E5E7EB] bg-white px-3 py-2 text-[13px] text-[#111827] focus:border-[#8B1E24] focus:outline-none focus:ring-2 focus:ring-[#8B1E24]/20 dark:border-white/10 dark:bg-[#2E211D] dark:text-[#F0EAE6]"
+    >
+      <option value="ALL">
+        {t("كل التخصصات", "All Majors")}
+      </option>
+
+      <optgroup label={t("برامج البكالوريوس", "Bachelor's Programs")}>
+        {MAJORS.slice(0, 12).map((item) => (
+          <option key={item.value} value={item.value}>
+            {t(item.ar, item.en)}
+          </option>
+        ))}
+      </optgroup>
+
+      <optgroup label={t("برامج الماجستير", "Master's Programs")}>
+        {MAJORS.slice(12).map((item) => (
+          <option key={item.value} value={item.value}>
+            {t(item.ar, item.en)}
+          </option>
+        ))}
+      </optgroup>
+    </select>
+  </form>
+
+  <button
+    type="button"
+    onClick={handleExportCsv}
+    className="inline-flex shrink-0 items-center gap-1.5 rounded-[10px] border border-[#E5E7EB] bg-white px-3.5 py-2 text-[13px] font-bold text-[#374151] transition-colors hover:border-[#8B1E24] hover:text-[#8B1E24] dark:border-white/10 dark:bg-[#2E211D] dark:text-[#D8CFC9]"
+  >
+    <Download className="h-3.5 w-3.5" />
+
+    <span className="hidden sm:inline">
+      {t("تصدير CSV", "Export CSV")}
+    </span>
+  </button>
+</div>
       </div>
 
       <div className="overflow-hidden rounded-[16px] border border-[#E5E7EB] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:border-white/10 dark:bg-[#201A17]">
